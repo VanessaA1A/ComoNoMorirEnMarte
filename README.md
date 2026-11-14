@@ -37,6 +37,10 @@ El juego va en **Vercel** y la API en **Render**; la base de datos está en **Ne
 2. **Vercel:** New Project → este repo, Root Directory `Frontend`, y la variable `VITE_API_URL`.
 3. **Vuelve a Render** y confirma que `CORS_ORIGIN` incluye el dominio exacto que te dio Vercel (con `https://`, sin `/` al final).
 
+Todo va en planes gratis (Render **Free**, Vercel **Hobby**); no hace falta conectar ninguna tarjeta.
+
+> **Aviso:** Render gratis se duerme tras 15 min sin uso; antes de una demo, abrir `/api/salud` unos 2 minutos antes.
+
 Sin `VITE_API_URL`, o si la API no responde, el juego sigue funcionando: guarda en el navegador y sincroniza cuando vuelve la conexión.
 
 **Nunca subas un `.env`**: están en `.gitignore` (raíz, `Backend/` y `Frontend/`). Solo se versionan los `.env.example`.

@@ -64,7 +64,7 @@ Para probar todo, abre `pruebas.http` con la extensión **REST Client** de VS Co
    - `PORT` no hace falta: Render lo pone solo.
 4. Copia la URL que te da Render (ej. `https://marte-api.onrender.com`) y ponla en Vercel como `VITE_API_URL=https://marte-api.onrender.com/api`.
 
-El plan gratis de Render se duerme tras 15 min sin uso; la primera petición tarda ~50 s. Abre `/api/salud` antes de la demo.
+Render gratis se duerme tras 15 min sin uso; antes de una demo, abrir `/api/salud` unos 2 minutos antes (la primera petición tarda ~50 s).
 
 ## Endpoints (`/api`)
 
