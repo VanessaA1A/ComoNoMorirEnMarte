@@ -1,0 +1,190 @@
+{
+  "capitulo": 1,
+  "titulo": "Despegue",
+  "inicio": "c01_01",
+  "dato": "La Tierra vista desde órbita, como en las imágenes satelitales de NASA Worldview.",
+  "fuentes": [
+    "https://worldview.earthdata.nasa.gov/"
+  ],
+  "escenas": [
+    {
+      "id": "c01_01",
+      "fondo": "bg_c01_cabina.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Cabina de la nave Aurora-1. Faltan diez minutos para el despegue."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Hola! Soy Zinn-IA, tu guía de supervivencia. Vivo en la tablet de tu traje."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Me llamo así por la zinnia, la primera flor que floreció en la Estación Espacial Internacional, en 2016."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Antes de despegar: ¿cómo te llamas?"
+        }
+      ],
+      "accion": "pedirNombre",
+      "ir": "c01_02"
+    },
+    {
+      "id": "c01_02",
+      "fondo": "bg_c01_cabina.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Mucho gusto, {nombre}. ¿Cómo quieres que me refiera a ti?"
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Él",
+          "pronombre": "el",
+          "ir": "c01_03"
+        },
+        {
+          "texto": "Ella",
+          "pronombre": "ella",
+          "ir": "c01_03"
+        },
+        {
+          "texto": "Elle",
+          "pronombre": "elle",
+          "ir": "c01_03"
+        }
+      ]
+    },
+    {
+      "id": "c01_03",
+      "fondo": "bg_c01_cabina.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Perfecto. Te hablaré así durante toda la misión."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Nuestro plan: llegar a Marte, caminar hasta las crestas boxwork de Mount Sharp, tomar muestras y volver viv{o|a|e}."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Esta misión se llama \"Cómo no morir en Marte\". Así que presta atención, {nombre}."
+        }
+      ],
+      "ir": "c01_04"
+    },
+    {
+      "id": "c01_04",
+      "fondo": "bg_c01_cabina.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "accion": "mostrarHUD",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Mira arriba: son tus 5 barras de vida. Oxígeno, batería del traje, alimentación, integridad del traje y radiación."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Si el oxígeno o la integridad llegan a cero, o la radiación llega al máximo... mejor no averiguarlo."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "El reloj marca cuánto falta para que despegue el módulo de regreso desde Marte."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Y la Guía de supervivencia está siempre en el botón del libro: reglas, mapa y fuentes de NASA."
+        }
+      ],
+      "ir": "c01_05"
+    },
+    {
+      "id": "c01_05",
+      "fondo": "bg_c01_tierra.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Despegue. Minutos después, la Tierra entera aparece en la ventana."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Se parece a las imágenes que toman los satélites de NASA y que se ven en Worldview. Mira, ahí está Centroamérica."
+        },
+        {
+          "quien": "{nombre}",
+          "texto": "Nicaragua se ve tan pequeña desde aquí..."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Revisión de suministros: el viaje dura meses. ¿Cómo quieres manejar la comida?"
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Racionar desde ahora y guardar una ración extra para Marte",
+          "efecto": {
+            "alimentacion": -35
+          },
+          "marca": "racion_extra",
+          "ir": "c01_06a"
+        },
+        {
+          "texto": "Comer normal; ya habrá comida en la base",
+          "ir": "c01_06b"
+        }
+      ]
+    },
+    {
+      "id": "c01_06a",
+      "fondo": "bg_c01_tierra.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Buena previsión. Tendrás menos energía, pero esa ración extra puede salvarte en la caminata."
+        }
+      ],
+      "ir": "c01_07"
+    },
+    {
+      "id": "c01_06b",
+      "fondo": "bg_c01_tierra.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Llegarás con la energía al 100 %. Solo recuerda: en Marte no hay tiendas."
+        }
+      ],
+      "ir": "c01_07"
+    },
+    {
+      "id": "c01_07",
+      "fondo": "bg_c01_tierra.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Próxima parada: el espacio profundo. Allá afuera la radiación es otra historia."
+        }
+      ],
+      "siguienteCapitulo": 2
+    }
+  ]
+}
