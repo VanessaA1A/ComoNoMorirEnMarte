@@ -26,11 +26,11 @@ export function useFocoAtrapado(activo = true) {
 }
 
 /** Ventana centrada sobre un velo oscuro. */
-export function Modal({ titulo, onCerrar, children, ancho = false }) {
+export function Modal({ titulo, onCerrar, children, ancho = false, className = '' }) {
   const ref = useFocoAtrapado();
   return (
     <div className="velo" onClick={(e) => e.target === e.currentTarget && onCerrar?.()}>
-      <div ref={ref} className={`modal ${ancho ? 'ancho' : ''}`} role="dialog" aria-modal="true" aria-label={titulo} tabIndex={-1}>
+      <div ref={ref} className={`modal ${ancho ? 'ancho' : ''} ${className}`} role="dialog" aria-modal="true" aria-label={titulo} tabIndex={-1}>
         {onCerrar && <button className="boton-icono cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>}
         <h2>{titulo}</h2>
         {children}
