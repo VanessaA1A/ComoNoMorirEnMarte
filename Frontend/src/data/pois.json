@@ -1,0 +1,26 @@
+[
+  {
+    "id": "P2",
+    "nombre": "Zona de transición",
+    "tipo": "muestra",
+    "x": 412,
+    "y": 288,
+    "nota": "Rocas antes de las crestas; comparar con la cresta muestra cómo actuó el agua.",
+    "dato": "Unidad de sulfatos estratificados",
+    "mision": "MRO / CRISM",
+    "fuente": "https://science.nasa.gov/mission/mro/",
+    "pov": "bg_c05_transicion.jpg"
+  },
+  {
+    "id": "D1",
+    "nombre": "Hondonada arenosa (Decisión de ruta)",
+    "tipo": "peligro",
+    "x": 520,
+    "y": 340,
+    "nota": "Arena suelta con baja inercia térmica. Riesgo de atascarse y mayor consumo de oxígeno.",
+    "dato": "Inercia térmica baja (se enfría rápido de noche)",
+    "mision": "Mars Odyssey / THEMIS",
+    "fuente": "https://mars.nasa.gov/odyssey/mission/instruments/themis/",
+    "pov": "bg_c06_hondonada.jpg"
+  }
+]
