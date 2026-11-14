@@ -111,7 +111,7 @@ function Esquema({ capa, mini, apagado }) {
               <rect x="20" y="20" width="360" height="98" rx="8" fill="rgba(36,7,63,.85)" />
               <text x="34" y="48">Dosis de fondo: ~0,64 mSv/día (RAD)</text>
               <text x="34" y="74">De noche puede bajar a −100 °C (REMS)</text>
-              <text x="34" y="100" fill="#FA932E">⚠ Eventos solares: difíciles de predecir</text>
+              <text x="34" y="100" fill="#FA932E">Atención: los eventos solares son difíciles de predecir</text>
               <circle cx="940" cy="640" r="30" fill="#FA932E" /><text x="770" y="690">Alerta solar</text>
             </g>
           )}
@@ -294,7 +294,7 @@ export function MapaMarte({ fichas, enMarte, onGale }) {
               respaldo={<div className="foto-ficha foto-pendiente">Foto pendiente: {sel.imagen}</div>} />
           )}
           {sel.galeria && (
-            <p><a className="boton secundario" href={sel.galeria} target="_blank" rel="noreferrer">Ver fotos de Perseverance ↗</a></p>
+            <p><a className="boton secundario" href={sel.galeria} target="_blank" rel="noreferrer">Ver fotos de Perseverance<span className="oculto-lector"> (se abre en otra pestaña)</span></a></p>
           )}
           {sel.jugable && <button className="boton principal" onClick={onGale}>Abrir el mapa de la ruta en Gale</button>}
         </div>
