@@ -269,3 +269,29 @@ a { color: var(--turquesa); }
 .mapa-marte .pin { cursor: pointer; }
 .mapa-marte .pin:focus-visible { outline: none; }
 .mapa-marte .pin:focus-visible circle { stroke: var(--lima); stroke-width: 4; }
+
+/* ===== Imágenes del equipo (public/img/logos, fondos, zinnia, astronauta, ui) ===== */
+.zinnia-real { image-rendering: pixelated; object-fit: contain; }
+.zinnia-filtro-triste { filter: saturate(.25) brightness(.85); image-rendering: auto; }
+.personaje-zinnia { width: 10%; aspect-ratio: 3 / 4; display: flex; align-items: flex-end; justify-content: center; }
+.astro-envoltura { position: relative; width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
+.astro-envoltura .astro { image-rendering: pixelated; }
+.astro-envoltura.astro-herido { filter: drop-shadow(0 0 .35em var(--zinnia-mejilla)) sepia(.45) saturate(2.2) hue-rotate(-25deg); }
+.astro-herramienta { position: absolute; right: 12%; bottom: 30%; width: 12%; }
+.inicio { position: relative; }
+.inicio > :not(.fondo):not(.fondo-respaldo) { position: relative; z-index: 1; }
+.inicio .zinnia-inicio { width: 10em; height: 14em; display: flex; align-items: flex-end; justify-content: center; }
+.inicio .logo-nombre { image-rendering: auto; }
+.cabecera-final { display: flex; align-items: center; gap: 1em; }
+.zinnia-celebra { width: 6em; height: 8em; flex: none; display: flex; align-items: flex-end; justify-content: center; }
+.zinnia-sin-conexion { width: 9em; height: 12em; margin: 0 auto; display: flex; align-items: flex-end; justify-content: center; }
+.carga-pie { position: absolute; left: 1em; right: 1em; bottom: 1em; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
+.semilla-cargando { width: 3.5em; height: 3.5em; object-fit: contain; image-rendering: pixelated; animation: girar 6s linear infinite; }
+.logo-carga { width: 6em; height: 6em; object-fit: contain; }
+.creditos-logos { display: flex; gap: 1em; align-items: flex-end; justify-content: center; }
+.logo-equipo { max-height: 9em; max-width: 40%; object-fit: contain; }
+.cajon-cabecera .cara img { width: 100%; height: 100%; object-fit: contain; }
+.foto-ficha { display: block; width: 100%; max-height: 14em; object-fit: cover; border-radius: .5em; margin: .4em 0; }
+.foto-pendiente { display: grid; place-items: center; height: 7em; background: rgba(32, 130, 166, .25); border: 1px dashed var(--aurora-3); font-size: .8em; }
+.icono-zinnia img { image-rendering: pixelated; }
+a.boton { display: inline-block; text-decoration: none; }

@@ -13,6 +13,7 @@
       "lineas": [
         { "quien": "Narración", "texto": "Llegas a una zona de rocas claras, justo antes de las crestas." },
         { "quien": "Zinn-IA", "texto": "Esta zona es parte de una capa rica en sulfatos: sales que se forman cuando el agua se evapora." },
+        { "quien": "Zinn-IA", "texto": "El mapa geológico de USGS y NASA lo confirma desde arriba: Mount Sharp está hecha de rocas sedimentarias en capas, apiladas por el agua y el viento.", "capa": "geologia" },
         { "quien": "Zinn-IA", "texto": "Curiosity tomó aquí una de sus muestras: una roca de transición, antes de entrar a las crestas." },
         { "quien": "Zinn-IA", "texto": "En la capa Minerales, CRISM marca dónde hay sulfatos. Una roca así está un poco más lejos." }
       ],

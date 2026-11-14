@@ -1,26 +1,86 @@
 [
-  { "id": "avanzar-texto", "disparador": "inicio-capitulo:1", "objetivo": "dialogo", "zinnia": "feliz",
-    "texto": "Antes de despegar, un truco: para avanzar el diálogo haz clic aquí o presiona Espacio o Enter. Si el texto va lento, el primer clic lo completa." },
-  { "id": "barras", "disparador": "hud", "objetivo": "hud", "zinnia": "curiosa",
-    "texto": "Estas son tus 5 barras de vida. Verde es bien, amarillo es cuidado y rojo es peligro. Ojo: la radiación va al revés, mientras más alta, peor." },
-  { "id": "reloj", "disparador": "hud", "objetivo": "reloj", "zinnia": "alerta",
-    "texto": "Y este es el reloj del módulo de regreso. Cada tramo y cada muestra le restan minutos. El módulo no espera a nadie, ni siquiera a ti, {nombre}." },
-  { "id": "decisiones", "disparador": "opciones", "objetivo": "opciones", "zinnia": "curiosa",
-    "texto": "Tu primera decisión. Cada opción mueve tus barras de forma distinta, y no hay botón de deshacer... bueno, salvo cargar una partida." },
-  { "id": "icono-zinnia", "disparador": "fin-capitulo:1", "objetivo": "icono-zinnia", "zinnia": "feliz",
-    "texto": "¿Ves mi flor en la esquina? Tócala, o presiona Z, cuando quieras: te digo cómo vas, te doy pistas y respondo tus dudas. Estoy siempre aquí." },
-  { "id": "menu-guardar", "disparador": "inicio-capitulo:2", "objetivo": "menu", "zinnia": "curiosa",
-    "texto": "En el menú ☰ (o con Esc) puedes guardar en 3 ranuras y cargar. Yo además guardo sola al empezar cada capítulo y antes de cada decisión." },
-  { "id": "minimapa-capas", "disparador": "tablet", "objetivo": "capas", "zinnia": "curiosa",
-    "texto": "Esta es mi tablet: el mapa de tu caminata. Cambia de capa con estos botones; cada una viene de una misión de NASA. Durante la caminata la verás en la esquina: tócala para abrirla en grande." },
-  { "id": "mapa-marte", "disparador": "fin-capitulo:3", "objetivo": "mapa-marte", "zinnia": "feliz",
-    "texto": "Con este botón abres el mapa de todo Marte: ahí están los aterrizajes reales de cada misión y lugares por descubrir." },
-  { "id": "azar", "disparador": "probabilidad", "objetivo": "opciones", "zinnia": "alerta",
-    "texto": "Algunas decisiones tienen riesgo: pueden salir bien o mal. No es magia y no te lo escondo: mira la etiqueta de riesgo en la opción." },
-  { "id": "barra-roja", "disparador": "barra-roja", "objetivo": "hud", "zinnia": "alerta",
-    "texto": "¡Una barra pasó a rojo! Si el oxígeno o la integridad llegan a 0, o la radiación a 100, la misión termina. Ábreme y te digo qué hacer." },
-  { "id": "ficha-nueva", "disparador": "ficha-nueva", "objetivo": "guia", "zinnia": "feliz",
-    "texto": "¡Desbloqueaste una ficha! Son datos reales de NASA y las guardo en la Guía de supervivencia, en el botón del libro." },
-  { "id": "sin-conexion", "disparador": "sin-conexion", "objetivo": "icono-zinnia", "zinnia": "triste",
-    "texto": "Sin señal con la Tierra no pasa nada: el juego sigue y tu partida se guarda aquí. Los astronautas reales también deciden sin respuesta inmediata." }
+  {
+    "id": "avanzar-texto",
+    "disparador": "inicio-capitulo:1",
+    "objetivo": "dialogo",
+    "zinnia": "feliz",
+    "texto": "Antes de despegar, un truco: para avanzar el diálogo haz clic aquí o presiona Espacio o Enter. Si el texto va lento, el primer clic lo completa."
+  },
+  {
+    "id": "barras",
+    "disparador": "hud",
+    "objetivo": "hud",
+    "zinnia": "curiosa",
+    "texto": "Estas son tus 5 barras de vida. Verde es bien, amarillo es cuidado y rojo es peligro. Ojo: la radiación va al revés, mientras más alta, peor."
+  },
+  {
+    "id": "reloj",
+    "disparador": "hud",
+    "objetivo": "reloj",
+    "zinnia": "alerta",
+    "texto": "Y este es el reloj del módulo de regreso. Cada tramo y cada muestra le restan minutos. El módulo no espera a nadie, ni siquiera a ti, {nombre}."
+  },
+  {
+    "id": "decisiones",
+    "disparador": "opciones",
+    "objetivo": "opciones",
+    "zinnia": "curiosa",
+    "texto": "Tu primera decisión. Cada opción mueve tus barras de forma distinta, y no hay botón de deshacer... bueno, salvo cargar una partida."
+  },
+  {
+    "id": "icono-zinnia",
+    "disparador": "fin-capitulo:1",
+    "objetivo": "icono-zinnia",
+    "zinnia": "feliz",
+    "texto": "¿Ves mi flor en la esquina? Tócala, o presiona Z, cuando quieras: te digo cómo vas, te doy pistas y respondo tus dudas. Estoy siempre aquí."
+  },
+  {
+    "id": "menu-guardar",
+    "disparador": "inicio-capitulo:2",
+    "objetivo": "menu",
+    "zinnia": "curiosa",
+    "texto": "En el menú ☰ (o con Esc) puedes guardar en 3 ranuras y cargar. Yo además guardo sola al empezar cada capítulo y antes de cada decisión."
+  },
+  {
+    "id": "minimapa-capas",
+    "disparador": "tablet",
+    "objetivo": "capas",
+    "zinnia": "curiosa",
+    "texto": "Esta es mi tablet: el mapa de tu caminata. Cambia de capa con estos botones; cada una viene de una misión de NASA. Durante la caminata la verás en la esquina: tócala para abrirla en grande."
+  },
+  {
+    "id": "mapa-marte",
+    "disparador": "fin-capitulo:3",
+    "objetivo": "mapa-marte",
+    "zinnia": "feliz",
+    "texto": "Con este botón abres el mapa de todo Marte: ahí están los aterrizajes reales de cada misión y lugares por descubrir."
+  },
+  {
+    "id": "azar",
+    "disparador": "probabilidad",
+    "objetivo": "opciones",
+    "zinnia": "alerta",
+    "texto": "Algunas decisiones tienen riesgo: pueden salir bien o mal. No es magia y no te lo escondo: mira la etiqueta de riesgo en la opción."
+  },
+  {
+    "id": "barra-roja",
+    "disparador": "barra-roja",
+    "objetivo": "hud",
+    "zinnia": "peligro",
+    "texto": "¡Una barra pasó a rojo! Si el oxígeno o la integridad llegan a 0, o la radiación a 100, la misión termina. Ábreme y te digo qué hacer."
+  },
+  {
+    "id": "ficha-nueva",
+    "disparador": "ficha-nueva",
+    "objetivo": "guia",
+    "zinnia": "feliz",
+    "texto": "¡Desbloqueaste una ficha! Son datos reales de NASA y las guardo en la Guía de supervivencia, en el botón del libro."
+  },
+  {
+    "id": "sin-conexion",
+    "disparador": "sin-conexion",
+    "objetivo": "icono-zinnia",
+    "zinnia": "triste",
+    "texto": "Sin señal con la Tierra no pasa nada: el juego sigue y tu partida se guarda aquí. Los astronautas reales también deciden sin respuesta inmediata."
+  }
 ]

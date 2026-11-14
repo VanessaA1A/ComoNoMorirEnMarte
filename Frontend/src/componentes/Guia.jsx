@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { CAPITULOS, INDEX } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import { fichasDe } from '../juego/fichas.js';
+import { fichasDe, esDestacada } from '../juego/fichas.js';
 import { Cajon } from './Modal.jsx';
-import { Enlace } from './Mapas.jsx';
+import { Enlace, etiquetaCapa } from './Mapas.jsx';
+import Recurso from './Recurso.jsx';
 import GLOSARIO from '../data/glosario.json';
+import RECURSOS from '../data/recursos_nasa.json';
 
-const PESTANAS = ['Barras y reglas', 'Capas del mapa', 'Fichas', 'Glosario', 'Fuentes'];
+const PESTANAS = ['Barras y reglas', 'Capas del mapa', 'Fichas', 'Recursos NASA', 'Glosario', 'Fuentes'];
 
 export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
   const j = useJuego();
@@ -18,7 +20,8 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
   useEffect(() => () => { if (pestana === 'Fichas') j.marcarFichasVistas(); }, [pestana]); // eslint-disable-line
 
   return (
-    <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay}>
+    <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay}
+      cabecera={<div className="cara"><Recurso src="/img/zinnia/triste.png" alt="" className="zinnia" respaldo={null} /></div>}>
       <div className="pestanas" role="tablist">
         {PESTANAS.map((p) => (
           <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)}>
@@ -30,7 +33,7 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
         {pestana === 'Barras y reglas' && <Reglas />}
         {pestana === 'Capas del mapa' && j.catalogo.capas.map((c) => (
           <div key={c.id} className="tarjeta-dato">
-            <strong>{c.etiqueta}: {c.nombre}</strong>
+            <strong>{c.etiqueta ? `${etiquetaCapa(c)}: ${c.nombre}` : c.nombre}</strong>
             <p>{c.descripcion}</p>
             <p>Misión: {c.mision} · Instrumento: {c.instrumento}</p>
             <p>Limitación: {c.limitacion}</p>
@@ -43,13 +46,14 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
             <div key={d.id} className={`tarjeta-dato ${tiene ? '' : 'bloqueada'} ${nuevas.includes(d.id) ? 'nueva' : ''}`}>
               {tiene ? (
                 <>
-                  <strong>{d.id}</strong> {d.texto}
+                  <strong>{d.id}{esDestacada(d) ? ' ★' : ''}</strong> {d.texto}
                   <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · pendiente de revisión'}</p>
                 </>
               ) : <span>{d.id} · Ficha bloqueada: {pista(d.capitulo)}</span>}
             </div>
           );
         })}
+        {pestana === 'Recursos NASA' && <RecursosNasa />}
         {pestana === 'Glosario' && <dl>{GLOSARIO.map((g) => (
           <div key={g.termino} className="tarjeta-dato"><dt><strong>{g.termino}</strong></dt><dd style={{ margin: 0 }}>{g.definicion}</dd></div>
         ))}</dl>}
@@ -70,6 +74,21 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
         )}
       </div>
     </Cajon>
+  );
+}
+
+export function RecursosNasa() {
+  return (
+    <div>
+      <p>Los 5 recursos oficiales del reto que usa el juego:</p>
+      {RECURSOS.map((r) => (
+        <div key={r.id} className="tarjeta-dato">
+          <strong><a href={r.url} target="_blank" rel="noreferrer">{r.nombre} ↗</a></strong>
+          <p>{r.que_es}</p>
+          <ul>{r.uso_en_el_juego.map((u) => <li key={u}>{u}</li>)}</ul>
+        </div>
+      ))}
+    </div>
   );
 }
 

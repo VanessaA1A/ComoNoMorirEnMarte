@@ -4,6 +4,7 @@
 import { useId, useState } from 'react';
 import { escena as escenaDe } from '../engine/motor.js';
 import MARTE from '../data/marte.json';
+import Recurso from './Recurso.jsx';
 
 // Parada donde está el jugador según el capítulo (si la escena no dice "poi").
 const POI_POR_CAPITULO = { 3: 'H', 4: 'P1', 5: 'P2', 6: 'D1', 7: 'P3', 8: 'P4', 9: 'P4', 10: 'H' };
@@ -12,6 +13,9 @@ export function poiActual(partida) {
   return escenaDe(partida.escena)?.poi ?? POI_POR_CAPITULO[partida.capitulo] ?? null;
 }
 
+/** Texto corto de una capa para botones y títulos ("geologia" no trae etiqueta: usa su nombre). */
+export const etiquetaCapa = (c) => c?.etiqueta ?? c?.nombre ?? '';
+
 const COLOR_POI = { base: '#01EFAC', parada: '#0CD3B6', muestra: '#CAFF95', deposito: '#FA932E', peligro: '#DD2811' };
 
 // Ruta segura y atajo (coordenadas del lienzo 1000×700, PROVISIONALES)
@@ -19,6 +23,15 @@ const RUTA_SEGURA = 'M130 580 L260 450 L390 380 L470 420 C 480 330, 560 270, 610
 const ATAJO = 'M470 420 Q 560 410 660 330';
 const DESVIO_DEPOSITO = 'M660 330 L720 240';
 const SUBIDA_P5 = 'M770 420 C 840 330, 880 220, 890 130';
+
+// Unidades de roca de la capa Geología (zonas esquemáticas y provisionales)
+const UNIDADES = [
+  { id: 'sedimentos', nombre: 'Llanura de sedimentos (base)', color: '#C1440E', d: 'M0 470 L330 420 L420 470 L380 700 L0 700 Z' },
+  { id: 'sulfatos', nombre: 'Capas de sulfatos estratificados', color: '#CAFF95', d: 'M0 470 L0 260 L250 300 L440 330 L520 360 L420 470 L330 420 Z' },
+  { id: 'boxwork', nombre: 'Unidad boxwork (crestas cementadas)', color: '#0CD3B6', d: 'M520 200 L880 190 L900 480 L700 500 L520 440 L520 360 Z' },
+  { id: 'arena', nombre: 'Arena y polvo recientes', color: '#FA932E', d: 'M480 400 L640 380 L650 440 L500 450 Z' },
+  { id: 'altas', nombre: 'Capas altas de Mount Sharp', color: '#613395', d: 'M760 0 L1000 0 L1000 330 L900 300 L880 190 L760 120 Z' },
+];
 
 // Red de crestas boxwork (celdas irregulares)
 const CRESTAS = [
@@ -106,6 +119,25 @@ function Esquema({ capa, mini, apagado }) {
           {!mini && <text x="520" y="250" fontSize="16" fill="#01EFAC">Refugio junto a la cresta</text>}
         </g>
       )}
+
+      {capaVisible === 'geologia' && (
+        <g>
+          {/* Unidades de roca (esquema provisional, a escala regional como el mapa de USGS) */}
+          {UNIDADES.map((u) => <path key={u.id} d={u.d} fill={u.color} opacity=".55" stroke="#FFE5C9" strokeWidth="1.5" strokeDasharray="6 4" />)}
+          {!mini && (
+            <g fontSize="17" fill="#FFE5C9">
+              <rect x="20" y="20" width="390" height={34 + UNIDADES.length * 26} rx="8" fill="rgba(36,7,63,.85)" />
+              <text x="34" y="44" fontSize="15" opacity=".85">Unidades de roca (USGS-NASA)</text>
+              {UNIDADES.map((u, i) => (
+                <g key={u.id} transform={`translate(34 ${58 + i * 26})`}>
+                  <rect width="18" height="14" y="-11" fill={u.color} />
+                  <text x="26">{u.nombre}</text>
+                </g>
+              ))}
+            </g>
+          )}
+        </g>
+      )}
     </g>
   );
 }
@@ -118,7 +150,7 @@ export function MapaRuta({ capa, setCapa, capas, pois, poi, apagado = false, mod
   const poiSel = pois.find((p) => p.id === seleccion);
 
   const svg = (
-    <svg viewBox="0 0 1000 700" role="img" aria-label={`Mapa de la ruta, capa ${infoCapa.etiqueta}${aqui ? `; estás en ${aqui.nombre}` : ''}`}>
+    <svg viewBox="0 0 1000 700" role="img" aria-label={`Mapa de la ruta, capa ${etiquetaCapa(infoCapa)}${aqui ? `; estás en ${aqui.nombre}` : ''}`}>
       <Esquema capa={capa} mini={mini} apagado={apagado} />
       {/* Rutas */}
       <path d={RUTA_SEGURA} fill="none" stroke="#01EFAC" strokeWidth={mini ? 8 : 6} strokeLinejoin="round" />
@@ -173,7 +205,7 @@ export function MapaRuta({ capa, setCapa, capas, pois, poi, apagado = false, mod
       <div className="botones-capa" role="group" aria-label="Capas del mapa" data-tutorial="capas">
         {capas.map((c) => (
           <button key={c.id} aria-pressed={c.id === capa} disabled={apagado && c.id !== 'optica'} onClick={() => { setCapa(c.id); setSeleccion(null); }}>
-            {c.etiqueta}
+            {etiquetaCapa(c)}
           </button>
         ))}
       </div>
@@ -189,7 +221,7 @@ export function MapaRuta({ capa, setCapa, capas, pois, poi, apagado = false, mod
         </div>
       ) : (
         <div className="ficha-capa">
-          <h3>{infoCapa.etiqueta}: {infoCapa.nombre}</h3>
+          <h3>{infoCapa.etiqueta ? `${infoCapa.etiqueta}: ${infoCapa.nombre}` : infoCapa.nombre}</h3>
           {modo === 'completo' && <p>{infoCapa.descripcion}</p>}
           <p><strong>Misión:</strong> {infoCapa.mision} · <strong>Instrumento:</strong> {infoCapa.instrumento}</p>
           {modo === 'completo' && <p><strong>Limitación:</strong> {infoCapa.limitacion}</p>}
@@ -257,6 +289,13 @@ export function MapaMarte({ fichas, enMarte, onGale }) {
           <h3>{sel.tipo === 'aterrizaje' ? `${sel.anio} · ${sel.mision}` : sel.nombre}</h3>
           {sel.lugar && <p>{sel.lugar} · {Math.abs(sel.lat).toFixed(2)}° {sel.lat >= 0 ? 'N' : 'S'}, {Math.abs(sel.lon).toFixed(2)}° {sel.lon >= 0 ? 'E' : 'O'}{sel.aproximado ? ' (aproximado)' : ''}</p>}
           <p>{sel.dato}</p>
+          {sel.imagen && (
+            <Recurso src={`/${sel.imagen.replace(/^\/+/, '')}`} alt={`Foto de Perseverance en ${sel.lugar ?? sel.nombre}`} className="foto-ficha"
+              respaldo={<div className="foto-ficha foto-pendiente">Foto pendiente: {sel.imagen}</div>} />
+          )}
+          {sel.galeria && (
+            <p><a className="boton secundario" href={sel.galeria} target="_blank" rel="noreferrer">Ver fotos de Perseverance ↗</a></p>
+          )}
           {sel.jugable && <button className="boton principal" onClick={onGale}>Abrir el mapa de la ruta en Gale</button>}
         </div>
       )}

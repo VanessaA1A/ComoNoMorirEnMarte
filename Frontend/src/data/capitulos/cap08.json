@@ -3,7 +3,7 @@
   "titulo": "Bajar la cresta",
   "inicio": "c08_01",
   "dato": "En las hondonadas entre crestas, Curiosity encontró carbonatos: minerales que se forman en agua y guardan pistas de la atmósfera antigua.",
-  "fuentes": ["https://hothardware.com/news/nasas-curiosity-rover-captures-stunning-images-of-mysterious-martian-spiderwebs", "https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95386/application/10634"],
+  "fuentes": ["https://hothardware.com/news/nasas-curiosity-rover-captures-stunning-images-of-mysterious-martian-spiderwebs", "https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95386/application/10634", "https://science.nasa.gov/resource/curiositys-proposed-path-up-mount-sharp/"],
   "escenas": [
     {
       "id": "c08_01",

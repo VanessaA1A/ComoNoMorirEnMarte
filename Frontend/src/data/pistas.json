@@ -1,16 +1,52 @@
 {
-  "c02_03": { "texto": "En el viaje recibes casi el triple de radiación que en la superficie de Marte. Lo que acumules ahora lo cargas toda la misión." },
-  "c03_04": { "texto": "Piensa en qué barra se te va a gastar más. La batería me mantiene encendida, el kit protege el traje en las crestas y las raciones evitan que te desmayes." },
-  "c04_02": { "texto": "Revisar la capa de radiación cuesta 10 minutos... pero un aviso a tiempo puede valer mucho más si el Sol se enoja.", "capa": "radiacion" },
-  "c05_02": { "texto": "Mira la capa Minerales: la roca con sulfatos cuenta más historia del agua, pero está más lejos. ¿Te sobra tiempo y oxígeno?", "capa": "minerales" },
-  "c06_01": { "texto": "La capa Terreno marca arena suelta en la hondonada. El atajo es rápido si no te hundes: hay 4 posibilidades en 10 de atascarte.", "capa": "termico" },
-  "c06_04": { "texto": "Si tu alimentación está en amarillo o rojo, comer ahora te ahorra tiempo después: con poca energía caminas más lento." },
-  "c07_02": { "texto": "Revisa tus barras: si alguna está en amarillo o rojo, 15 minutos en el depósito pueden salvarte la misión.", "capa": "optica" },
-  "c07_04": { "texto": "Las crestas guardan arcillas, señal de que aquí hubo agua mucho tiempo. Tomar la muestra cuesta 20 minutos.", "capa": "minerales" },
-  "c08_01": { "texto": "En HiRISE se ve que la cresta mide de 1 a 2 metros. Ni Curiosity se arriesgó en una pendiente así: rodeó 150 metros.", "capa": "optica" },
-  "c08_kit": { "texto": "Si tu integridad bajó de 30, el traje pierde oxígeno en cada decisión. El kit lo arregla." },
-  "c08_04": { "texto": "Es la última muestra. Mira el reloj antes de decidir: todavía falta volver a la Base.", "capa": "minerales" },
-  "c09_03": { "texto": "Mira tu radiación: si llegas a la Base con 70 o más, no podrás hacer el viaje a casa. El mirador alto es hermoso... y muy caro.", "capa": "radiacion" },
-  "c09_bat": { "texto": "Con la batería en 0 me apago y el oxígeno se gasta el doble. Cambiarla cuesta solo 5 minutos." },
-  "c09_rac": { "texto": "Si tu alimentación está baja, el último tramo será lento. Comer cuesta 5 minutos." }
+  "c02_03": {
+    "texto": "En el viaje recibes casi el triple de radiación que en la superficie de Marte. Lo que acumules ahora lo cargas toda la misión."
+  },
+  "c03_04": {
+    "texto": "Piensa en qué barra se te va a gastar más. La batería me mantiene encendida, el kit protege el traje en las crestas y las raciones evitan que te desmayes."
+  },
+  "c04_02": {
+    "texto": "Revisar la capa de radiación cuesta 10 minutos... pero un aviso a tiempo puede valer mucho más si el Sol se enoja.",
+    "capa": "radiacion"
+  },
+  "c05_02": {
+    "texto": "Mira la capa Minerales: la roca con sulfatos cuenta más historia del agua, pero está más lejos. ¿Te sobra tiempo y oxígeno?",
+    "capa": "minerales"
+  },
+  "c06_01": {
+    "texto": "La capa Terreno marca arena suelta en la hondonada. El atajo es rápido si no te hundes: hay 4 posibilidades en 10 de atascarte.",
+    "capa": "termico"
+  },
+  "c06_04": {
+    "texto": "Si tu alimentación está en amarillo o rojo, comer ahora te ahorra tiempo después: con poca energía caminas más lento."
+  },
+  "c07_02": {
+    "texto": "Revisa tus barras: si alguna está en amarillo o rojo, 15 minutos en el depósito pueden salvarte la misión.",
+    "capa": "optica"
+  },
+  "c07_04": {
+    "texto": "Las crestas guardan arcillas, señal de que aquí hubo agua mucho tiempo. Tomar la muestra cuesta 20 minutos.",
+    "capa": "minerales"
+  },
+  "c08_01": {
+    "texto": "La cresta mide de 1 a 2 metros: con traje y herramientas, bajarla de frente puede romperte el traje. Hasta Curiosity se desvía: en 2023, ante una pendiente de 23° con arena y rocas, buscó 150 metros más allá un camino más suave.",
+    "capa": "optica"
+  },
+  "c08_kit": {
+    "texto": "Si tu integridad bajó de 30, el traje pierde oxígeno en cada decisión. El kit lo arregla."
+  },
+  "c08_04": {
+    "texto": "Es la última muestra. Mira el reloj antes de decidir: todavía falta volver a la Base.",
+    "capa": "minerales"
+  },
+  "c09_03": {
+    "texto": "Mira tu radiación: si llegas a la Base con 70 o más, no podrás hacer el viaje a casa. El mirador alto es hermoso... y muy caro.",
+    "capa": "radiacion"
+  },
+  "c09_bat": {
+    "texto": "Con la batería en 0 me apago y el oxígeno se gasta el doble. Cambiarla cuesta solo 5 minutos."
+  },
+  "c09_rac": {
+    "texto": "Si tu alimentación está baja, el último tramo será lento. Comer cuesta 5 minutos."
+  }
 }
