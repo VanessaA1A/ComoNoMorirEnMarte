@@ -1,0 +1,24 @@
+[
+  {
+    "id": "termico",
+    "nombre": "Firmeza del terreno",
+    "tipo": "termico",
+    "mision": "Mars Odyssey",
+    "instrumento": "THEMIS",
+    "imagen": "capa_termico.png",
+    "descripcion": "Permite distinguir arena suelta de roca firme midiendo qué tan rápido se enfría el suelo.",
+    "limitacion": "Resolución de ~100 m/px; es una interpretación térmica, no visual directa.",
+    "fuente": "https://mars.nasa.gov/odyssey/mission/instruments/themis/"
+  },
+  {
+    "id": "optica",
+    "nombre": "Base visual",
+    "tipo": "optica",
+    "mision": "Mars Reconnaissance Orbiter (MRO)",
+    "instrumento": "HiRISE",
+    "imagen": "capa_optica.png",
+    "descripcion": "Fotografías orbitales de altísima resolución (~25 cm/px) para ver crestas, hondonadas y rocas grandes.",
+    "limitacion": "Cobertura HiRISE parcial en algunas zonas; imágenes tomadas en fechas distintas.",
+    "fuente": "https://www.uahirise.org/"
+  }
+]
