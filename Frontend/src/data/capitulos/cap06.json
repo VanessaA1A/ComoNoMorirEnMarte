@@ -1,0 +1,179 @@
+{
+  "capitulo": 6,
+  "titulo": "La hondonada",
+  "inicio": "c06_01",
+  "dato": "THEMIS (Mars Odyssey) mide cómo se calienta y se enfría el suelo. La arena suelta tiene baja inercia térmica: se enfría rápido.",
+  "fuentes": [
+    "https://trek.nasa.gov/mars/"
+  ],
+  "escenas": [
+    {
+      "id": "c06_01",
+      "fondo": "bg_c06_hondonada.jpg",
+      "astro": "neutral",
+      "zinnia": "alerta",
+      "poi": "D1",
+      "abrirTablet": true,
+      "capa": "termico",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Frente a ti, una zona baja cubierta de arena rojiza. Al otro lado se ven las primeras crestas."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Activo la capa Terreno, con datos de THEMIS: esta hondonada se enfría muy rápido de noche."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Eso indica arena suelta. Con el traje puedes hundirte o resbalar."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Si la rodeamos por el borde, el suelo es roca firme, pero el camino es el doble de largo."
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Atajo por la arena",
+          "efecto": {
+            "minutos": -20,
+            "oxigeno": -18,
+            "bateria": -8,
+            "alimentacion": -15,
+            "integridad": -10,
+            "radiacion": 2
+          },
+          "probabilidad": {
+            "exito": 0.6,
+            "ir_fallo": "c06_atasco"
+          },
+          "ir": "c06_02a"
+        },
+        {
+          "texto": "Camino largo por terreno firme",
+          "efecto": {
+            "minutos": -40,
+            "oxigeno": -14,
+            "bateria": -12,
+            "alimentacion": -10,
+            "radiacion": 3
+          },
+          "ir": "c06_02b"
+        }
+      ]
+    },
+    {
+      "id": "c06_atasco",
+      "fondo": "bg_c06_atasco.jpg",
+      "astro": "asustado",
+      "zinnia": "alerta",
+      "efecto": {
+        "minutos": -20,
+        "oxigeno": -10,
+        "integridad": -10,
+        "alimentacion": -10
+      },
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "A mitad de camino, tus botas se hunden hasta el tobillo."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡No te muevas rápido! Respira despacio: así gastas menos oxígeno."
+        },
+        {
+          "quien": "Narración",
+          "texto": "Tardas veinte minutos en salir. El traje tiene un raspón."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "La capa Terreno tenía razón. Lo anoto en la guía."
+        }
+      ],
+      "ir": "c06_03"
+    },
+    {
+      "id": "c06_02a",
+      "fondo": "bg_c06_hondonada.jpg",
+      "astro": "caminando",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Lo lograste! Cruzaste rápido, aunque la arena te cansó y rayó un poco el traje."
+        }
+      ],
+      "ir": "c06_03"
+    },
+    {
+      "id": "c06_02b",
+      "fondo": "bg_c06_hondonada.jpg",
+      "astro": "caminando",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Camino largo pero seguro. Así planean las rutas de los rovers: primero la seguridad."
+        }
+      ],
+      "ir": "c06_03"
+    },
+    {
+      "id": "c06_03",
+      "fondo": "bg_c06_hondonada.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [],
+      "ramas": [
+        {
+          "si": {
+            "flag": "racion_extra"
+          },
+          "ir": "c06_04"
+        }
+      ],
+      "ir": "c06_05"
+    },
+    {
+      "id": "c06_04",
+      "fondo": "bg_c06_hondonada.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Por cierto... ¿te acuerdas de la ración que guardaste en el viaje?"
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Comerla ahora (−5 min, +25 alimentación)",
+          "efecto": {
+            "minutos": -5,
+            "alimentacion": 25
+          },
+          "ir": "c06_05"
+        },
+        {
+          "texto": "No tengo hambre, sigamos",
+          "ir": "c06_05"
+        }
+      ]
+    },
+    {
+      "id": "c06_05",
+      "fondo": "bg_c06_hondonada.jpg",
+      "astro": "caminando",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Subes el último tramo y, de pronto, las ves: las crestas boxwork."
+        }
+      ],
+      "siguienteCapitulo": 7
+    }
+  ]
+}
