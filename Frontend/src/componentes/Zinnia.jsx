@@ -8,7 +8,7 @@ import { comoVoy, expresionZinnia, comoRecuperoBateria } from '../juego/comoVoy.
 import { fichasDe } from '../juego/fichas.js';
 import { apiActiva } from '../api.js';
 import { ZinnIA } from './Personajes.jsx';
-import { Cajon, Modal, useFocoAtrapado } from './Modal.jsx';
+import { Cajon, useFocoAtrapado } from './Modal.jsx';
 import { Enlace } from './Mapas.jsx';
 import Recurso from './Recurso.jsx';
 import PISTAS from '../data/pistas.json';
@@ -173,17 +173,19 @@ export function Tutorial() {
 export function SinConexion() {
   const j = useJuego();
   if (!apiActiva || j.conectado || j.sinConexionDescartado) return null;
+  // NO bloquea: el juego es 100 % jugable sin conexión. Solo avisa que el progreso se sincroniza después.
   return (
-    <div className="sin-conexion">
-      <Modal titulo="Sin señal con la Tierra">
-        <div className="zinnia-sin-conexion">
-          <Recurso src="/img/zinnia/sin_conexion.gif" alt="Zinn-IA sin conexión" className="zinnia" escalaEntera
-            respaldo={<img src="/img/logos/isotipo.png" alt="Zinn-IA sin conexión" className="zinnia zinnia-respaldo zinnia-curiosa" />} />
-        </div>
+    <aside className="sin-conexion" role="status" aria-live="polite" aria-label="Sin señal con la Tierra">
+      <div className="zinnia-sin-conexion">
+        <Recurso src="/img/zinnia/sin_conexion.gif" alt="" className="zinnia" escalaEntera
+          respaldo={<img src="/img/logos/isotipo.png" alt="" className="zinnia zinnia-respaldo zinnia-curiosa" />} />
+      </div>
+      <div>
+        <strong>Sin señal con la Tierra</strong>
         <p>{formatear('Perdimos la señal con la Tierra. Tranquil{o|a|e}: tu partida se guarda aquí y la mando cuando vuelva la conexión.', j.partida ?? {})}</p>
-        <button className="boton principal" onClick={j.descartarSinConexion} autoFocus>Seguir sin conexión</button>
-      </Modal>
-    </div>
+        <button className="boton principal" onClick={j.descartarSinConexion}>Seguir sin conexión</button>
+      </div>
+    </aside>
   );
 }
 

@@ -261,8 +261,9 @@ a { color: var(--turquesa); }
 .tutorial .acciones { display: flex; gap: .5em; justify-content: flex-end; margin-top: .6em; }
 
 /* ===== Sin conexión ===== */
-.sin-conexion .modal { text-align: center; border-color: var(--zinnia-petalo); }
-.sin-conexion img { width: 8em; height: 8em; }
+.sin-conexion { position: absolute; left: .8em; bottom: .8em; z-index: 26; width: min(26em, calc(100% - 6.5em)); display: flex; gap: .7em; align-items: flex-end; background: rgba(36, 7, 63, .95); border: 2px solid var(--zinnia-petalo); border-radius: .8em; padding: .6em .8em; font-size: .9em; }
+.sin-conexion p { margin: .3em 0 .5em; }
+
 
 /* ===== Mapa de Marte ===== */
 .mapa-marte svg { width: 100%; height: auto; display: block; border-radius: .6em; border: 2px solid var(--aurora-2); }
@@ -284,7 +285,7 @@ a { color: var(--turquesa); }
 .inicio .logo-nombre { image-rendering: auto; }
 .cabecera-final { display: flex; align-items: center; gap: 1em; }
 .zinnia-celebra { width: 6em; height: 8em; flex: none; display: flex; align-items: flex-end; justify-content: center; }
-.zinnia-sin-conexion { width: 9em; height: 12em; margin: 0 auto; display: flex; align-items: flex-end; justify-content: center; }
+.zinnia-sin-conexion { width: 5em; height: 7em; flex: none; margin: 0; display: flex; align-items: flex-end; justify-content: center; }
 .carga-pie { position: absolute; left: 1em; right: 1em; bottom: 1em; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
 .semilla-cargando { width: 3.5em; height: 3.5em; object-fit: contain; image-rendering: pixelated; animation: girar 6s linear infinite; }
 .logo-carga { width: 6em; height: 6em; object-fit: contain; }
