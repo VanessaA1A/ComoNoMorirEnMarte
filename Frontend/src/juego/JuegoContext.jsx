@@ -38,6 +38,7 @@ export function JuegoProvider({ children }) {
   const [sinConexionDescartado, setSinConexionDescartado] = useState(false);
 
   const fichasRef = useRef(fichas);
+  const jugadoRef = useRef(0); // segundos de juego de la partida actual (se guardan en cada ranura)
 
   // ---------- avisos y tutorial ----------
   const avisar = useCallback((texto) => {
@@ -91,7 +92,7 @@ export function JuegoProvider({ children }) {
   // ---------- guardado ----------
   const conFichas = (s) => ({ ...s, fichas: fichasRef.current });
   const autoguardar = useCallback((s, lin = 0) => {
-    escribirRanura(0, conFichas(s), lin);
+    escribirRanura(0, conFichas(s), lin, jugadoRef.current);
     api.guardarNube(0, conFichas(s));
   }, []);
 
@@ -118,6 +119,7 @@ export function JuegoProvider({ children }) {
 
   const empezar = useCallback(() => {
     const s = nuevaPartida();
+    jugadoRef.current = 0;
     api.olvidarJugador(); // el jugador nuevo se crea al elegir pronombre
     setPartida(s); setLinea(0); setHistorial([]); setResumen(false); setOverlay(null);
     setCapa('optica'); setTarjeta(1); setPantalla('juego');
@@ -180,7 +182,7 @@ export function JuegoProvider({ children }) {
 
   // ---------- guardar / cargar ----------
   const guardar = useCallback((slot) => {
-    const ok = escribirRanura(slot, conFichas(partida), linea);
+    const ok = escribirRanura(slot, conFichas(partida), linea, jugadoRef.current);
     api.guardarNube(slot, conFichas(partida));
     avisar(ok ? `Partida guardada en la ranura ${slot}` : 'No se pudo guardar en este navegador. Puedes seguir jugando.');
   }, [partida, linea, avisar]);
@@ -188,6 +190,7 @@ export function JuegoProvider({ children }) {
   const cargar = useCallback((slot) => {
     const r = leerRanura(slot);
     if (!r) return;
+    jugadoRef.current = r.jugado ?? 0;
     const esc = escenaDe(r.estado.escena);
     setPartida(r.estado); setLinea(r.linea ?? 0); setTarjeta(null); setResumen(false);
     setOverlay(null); setHistorial([]); setCapa(esc?.capa ?? 'optica'); setPantalla('juego');
@@ -240,6 +243,13 @@ export function JuegoProvider({ children }) {
   }, [colaTutorial.length, panelZinnia, overlay, pantalla, resumen, abrirPanelZinnia]);
 
   const pausado = Boolean(overlay || panelZinnia || colaTutorial.length || tarjeta || resumen);
+
+  // Tiempo de juego: cuenta solo mientras se juega (sin menús abiertos y con la pestaña visible).
+  useEffect(() => {
+    if (pantalla !== 'juego' || pausado) return;
+    const t = setInterval(() => { if (!document.hidden) jugadoRef.current += 1; }, 1000);
+    return () => clearInterval(t);
+  }, [pantalla, pausado]);
 
   const valor = useMemo(() => ({
     pantalla, setPantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, setCapa,

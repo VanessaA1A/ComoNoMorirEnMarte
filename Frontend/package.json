@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "probar": "node tools/probar-motor.mjs && node tools/probar-zinnia.mjs && node tools/probar-guardado.mjs && node tools/probar-sincronizacion.mjs",
-    "assets": "node tools/assets-pendientes.mjs"
+    "probar": "node tools/probar-motor.mjs && node tools/probar-zinnia.mjs && node tools/probar-guardado.mjs && node tools/probar-sincronizacion.mjs && node tools/probar-recorridos.mjs",
+    "assets": "node tools/assets-pendientes.mjs",
+    "preparar-hooks": "git config core.hooksPath .githooks && echo Hook pre-push instalado: cada push corre npm run probar"
   },
   "dependencies": {
     "react": "18.3.1",

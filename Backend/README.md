@@ -43,25 +43,28 @@ Para probar todo, abre `pruebas.http` con la extensión **REST Client** de VS Co
 
 | Dónde | Variable | Valor |
 |---|---|---|
-| **Render** (esta API) | `DATABASE_URL` | La URL de Neon (solo en el panel de Render, nunca en el repo) |
+| **Render** (esta API) | `DATABASE_URL` | La URL **pooled** de Neon, la que tiene `-pooler` en el host (solo en el panel de Render, nunca en el repo). En local usa la directa para `db:schema` y `db:seed` |
 | **Render** (esta API) | `CORS_ORIGIN` | El dominio de Vercel y, si quieres, el local, separados por coma: `https://tu-juego.vercel.app,http://localhost:5173` |
+| **Render** (esta API) | `ANTHROPIC_API_KEY` | La key de la Claude Console para Zinn-IA (solo en el panel de Render; nunca en el frontend) |
+| **Render** (esta API) | `ZINNIA_MODEL` | `claude-haiku-5-5` |
 | **Vercel** (el juego) | `VITE_API_URL` | La URL de Render terminada en `/api`: `https://<tu-api>.onrender.com/api` |
 
 **CORS_ORIGIN debe incluir el dominio exacto de Vercel** (con `https://` y sin `/` al final). Si no, el navegador bloquea las peticiones y el juego sigue funcionando solo en local, con el aviso "Sin señal con la Tierra". `PORT` no se configura: Render lo pone solo y el servidor lo lee de `process.env.PORT`. `npm start` no usa `--env-file`: en Render las variables vienen del panel.
 
-**Opción rápida (Blueprint):** el repo trae `render.yaml` en la raíz. En Render: **New → Blueprint**, elige el repo y escribe en el panel los valores de `DATABASE_URL` y `CORS_ORIGIN` (están con `sync: false`, así que nunca se guardan en el repo). Usa el plan gratis y revisa la salud en `/api/salud`.
+**Opción rápida (Blueprint):** el repo trae `render.yaml` en la raíz. En Render: **New → Blueprint**, elige el repo y escribe en el panel los valores de `DATABASE_URL`, `CORS_ORIGIN`, `ANTHROPIC_API_KEY` y `ZINNIA_MODEL` (están con `sync: false`, así que nunca se guardan en el repo). Usa el plan gratis y revisa la salud en `/api/salud`.
 
 **Opción manual:**
 
 1. **New → Web Service**, conecta el repo de GitHub.
 2. **Root Directory:** `Backend` · **Build Command:** `npm install` · **Start Command:** `npm start`
 3. **Environment:**
-   - `DATABASE_URL` = la URL de Neon
+   - `DATABASE_URL` = la URL pooled de Neon
    - `CORS_ORIGIN` = `https://tu-juego.vercel.app,http://localhost:5173` (separados por coma)
+   - `ANTHROPIC_API_KEY` = la key de la Claude Console · `ZINNIA_MODEL` = `claude-haiku-5-5`
    - `PORT` no hace falta: Render lo pone solo.
 4. Copia la URL que te da Render (ej. `https://marte-api.onrender.com`) y ponla en Vercel como `VITE_API_URL=https://marte-api.onrender.com/api`.
 
-El plan gratis de Render se duerme tras 15 min sin uso; la primera petición tarda ~50 s. Abre `/api/salud` antes de la demo.
+Render gratis se duerme tras 15 min sin uso; antes de una demo, abrir `/api/salud` unos 2 minutos antes (la primera petición tarda ~50 s).
 
 ## Endpoints (`/api`)
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { escena as escenaDe, lineasVisibles, opcionesVisibles } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import { Fondo, ZinnIA, Astronauta } from './Personajes.jsx';
+import { Fondo, ZinnIA, ZinniaHablando, Astronauta } from './Personajes.jsx';
 import { MapaRuta, poiActual } from './Mapas.jsx';
 import HUD from './HUD.jsx';
 import { barrasEnRojo } from '../juego/comoVoy.js';
@@ -91,7 +91,10 @@ export default function Escena() {
         </div>
       )}
 
-      <div className="personaje-zinnia"><ZinnIA expresion={expresion} /></div>
+      {/* Cuando Zinn-IA habla se usa el GIF parpadeando; apagada (batería 0) nunca habla. */}
+      <div className={`personaje-zinnia ${esZinnia && !apagado ? 'hablando' : ''}`}>
+        {esZinnia && !apagado ? <ZinniaHablando className={`zinnia-${expresion}`} /> : <ZinnIA expresion={expresion} />}
+      </div>
 
       <div className="zona-dialogo">
         {opciones.length > 0 && (

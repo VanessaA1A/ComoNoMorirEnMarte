@@ -3,7 +3,8 @@ import Escena from './componentes/Escena.jsx';
 import TarjetaCapitulo from './componentes/TarjetaCapitulo.jsx';
 import Resumen from './componentes/Resumen.jsx';
 import Guia from './componentes/Guia.jsx';
-import { Inicio, Creditos, MenuJuego, PanelGuardar, Historial } from './componentes/Pantallas.jsx';
+import Inicio from './componentes/Inicio.jsx';
+import { Creditos, MenuJuego, PanelGuardar, Historial } from './componentes/Pantallas.jsx';
 import { MapaRuta, MapaMarte, poiActual } from './componentes/Mapas.jsx';
 import { Modal } from './componentes/Modal.jsx';
 import { PanelZinnia, Tutorial, SinConexion, Avisos } from './componentes/Zinnia.jsx';
@@ -39,7 +40,7 @@ function Escenario() {
   const enJuego = j.pantalla === 'juego' && j.partida;
   return (
     <main className="escenario">
-      {j.pantalla === 'inicio' && <Inicio />}
+      {(j.pantalla === 'inicio' || j.pantalla === 'creditos') && <Inicio />}
       {j.pantalla === 'creditos' && <Creditos />}
       {enJuego && <Escena />}
       {enJuego && j.tarjeta && <TarjetaCapitulo numero={j.tarjeta} />}
