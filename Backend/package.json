@@ -1,0 +1,19 @@
+{
+  "name": "como-no-morir-en-marte-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20.6" },
+  "scripts": {
+    "dev": "node --watch --env-file=.env src/index.js",
+    "start": "node src/index.js",
+    "db:schema": "node --env-file=.env db/aplicar-schema.js",
+    "db:seed": "node --env-file=.env db/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pg": "^8.13.0",
+    "zod": "^3.25.0"
+  }
+}

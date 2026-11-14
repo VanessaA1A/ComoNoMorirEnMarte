@@ -1,0 +1,66 @@
+{
+  "capitulo": 5,
+  "titulo": "La transición",
+  "inicio": "c05_01",
+  "dato": "La zona boxwork está en una capa rica en sulfatos, sales que se forman cuando el agua se evapora. Curiosity tomó una muestra en la zona de transición antes de las crestas.",
+  "fuentes": ["https://www.nasa.gov/missions/mars-science-laboratory/curiosity-rover/NASAs-curiosity-rover-sees-martian-spiderwebs-up-close/", "https://astrogeology-usgs.hub.arcgis.com/pages/interactive-maps-mars"],
+  "escenas": [
+    {
+      "id": "c05_01",
+      "fondo": "bg_c05_transicion.jpg", "astro": "caminando", "zinnia": "curiosa",
+      "poi": "P2", "abrirTablet": true, "capa": "minerales",
+      "efecto": { "minutos": -15, "oxigeno": -10, "bateria": -5, "alimentacion": -5, "radiacion": 1 },
+      "lineas": [
+        { "quien": "Narración", "texto": "Llegas a una zona de rocas claras, justo antes de las crestas." },
+        { "quien": "Zinn-IA", "texto": "Esta zona es parte de una capa rica en sulfatos: sales que se forman cuando el agua se evapora." },
+        { "quien": "Zinn-IA", "texto": "Curiosity tomó aquí una de sus muestras: una roca de transición, antes de entrar a las crestas." },
+        { "quien": "Zinn-IA", "texto": "En la capa Minerales, CRISM marca dónde hay sulfatos. Una roca así está un poco más lejos." }
+      ],
+      "ir": "c05_02"
+    },
+    {
+      "id": "c05_02",
+      "fondo": "bg_c05_transicion.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "¿Qué muestra tomas, {nombre}?" }
+      ],
+      "opciones": [
+        { "texto": "La roca que marca CRISM (más lejos, más valiosa)", "efecto": { "minutos": -20, "oxigeno": -5, "bateria": -10, "alimentacion": -5, "radiacion": 1 }, "muestra": "M1", "marca": "muestra1_valiosa", "ir": "c05_03a" },
+        { "texto": "La roca más cercana", "efecto": { "minutos": -10, "oxigeno": -3, "bateria": -6, "alimentacion": -3 }, "muestra": "M1", "ir": "c05_03b" },
+        { "texto": "Ninguna: hay que ahorrar tiempo", "ir": "c05_03c" }
+      ]
+    },
+    {
+      "id": "c05_03a",
+      "fondo": "bg_c05_transicion.jpg", "astro": "muestra", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "¡Excelente! Esta muestra tiene sulfatos. Compararla con las crestas ayudará a entender cómo actuó el agua." }
+      ],
+      "ir": "c05_04"
+    },
+    {
+      "id": "c05_03b",
+      "fondo": "bg_c05_transicion.jpg", "astro": "muestra", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Es una roca suelta cubierta de polvo. Sirve, pero cuenta menos de la historia del agua." }
+      ],
+      "ir": "c05_04"
+    },
+    {
+      "id": "c05_03c",
+      "fondo": "bg_c05_transicion.jpg", "astro": "caminando", "zinnia": "triste",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Ahorraste tiempo. Pero sin la roca de transición será difícil compararla con las crestas." }
+      ],
+      "ir": "c05_04"
+    },
+    {
+      "id": "c05_04",
+      "fondo": "bg_c05_transicion.jpg", "astro": "caminando", "zinnia": "alerta",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Más adelante hay una hondonada. Tendremos que decidir cómo cruzarla." }
+      ],
+      "siguienteCapitulo": 6
+    }
+  ]
+}

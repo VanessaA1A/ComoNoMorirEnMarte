@@ -1,0 +1,77 @@
+{
+  "capitulo": 7,
+  "titulo": "Las crestas",
+  "inicio": "c07_01",
+  "dato": "Las crestas boxwork miden 1 a 2 m de alto, con hondonadas arenosas entre ellas. Curiosity encontró arcillas en las crestas y nódulos minerales del tamaño de un guisante.",
+  "fuentes": ["https://www.space.com/space-exploration/mars-rovers/curiosity-rover-finds-clues-to-mars-watery-past-in-rocky-spiderwebs", "https://www.nasa.gov/missions/mars-science-laboratory/curiosity-rover/NASAs-curiosity-rover-sees-martian-spiderwebs-up-close/"],
+  "escenas": [
+    {
+      "id": "c07_01",
+      "fondo": "bg_c07_crestas.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "poi": "P3", "abrirTablet": true, "capa": "optica",
+      "lineas": [
+        { "quien": "Narración", "texto": "Paredes bajas de roca forman una red, como un panal, hasta donde alcanza la vista." },
+        { "quien": "Zinn-IA", "texto": "¡Las crestas boxwork! Desde órbita parecen telarañas gigantes." },
+        { "quien": "Zinn-IA", "texto": "Cada cresta mide de 1 a 2 metros de alto, y entre ellas hay hondonadas con arena." },
+        { "quien": "Zinn-IA", "texto": "Curiosity encontró arcillas dentro de las crestas y bolitas minerales, del tamaño de un guisante, llamadas nódulos." },
+        { "quien": "Zinn-IA", "texto": "La idea es que el agua subterránea cementó las grietas y después el viento erosionó la roca más blanda de alrededor." }
+      ],
+      "ir": "c07_02"
+    },
+    {
+      "id": "c07_02",
+      "fondo": "bg_c07_crestas.jpg", "astro": "neutral", "zinnia": "alerta",
+      "poi": "DEP", "abrirTablet": true, "capa": "optica",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Detecto algo en el mapa: un depósito de suministros que dejó un rover de apoyo. Está a 15 minutos." }
+      ],
+      "opciones": [
+        { "texto": "Ir al depósito", "efecto": { "minutos": -15, "oxigeno": 20, "bateria": 30, "alimentacion": 25, "integridad": 10, "radiacion": 1 }, "marca": "deposito", "ir": "c07_03a" },
+        { "texto": "No hay tiempo, sigamos", "ir": "c07_03b" }
+      ]
+    },
+    {
+      "id": "c07_03a",
+      "fondo": "bg_c07_deposito.jpg", "astro": "neutral", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Cartucho de oxígeno, batería cargada, comida y un parche para el traje. ¡Quedaste como nuev{o|a|e}!" }
+      ],
+      "ir": "c07_04"
+    },
+    {
+      "id": "c07_03b",
+      "fondo": "bg_c07_crestas.jpg", "astro": "caminando", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "De acuerdo. Cada minuto cuenta." }
+      ],
+      "ir": "c07_04"
+    },
+    {
+      "id": "c07_04",
+      "fondo": "bg_c07_crestas.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "¿Tomamos una muestra de la cresta?" }
+      ],
+      "opciones": [
+        { "texto": "Sí, tomar muestra de la cresta", "efecto": { "minutos": -20, "oxigeno": -5, "bateria": -10, "alimentacion": -5, "radiacion": 1 }, "muestra": "M2", "ir": "c07_05a" },
+        { "texto": "No, seguir adelante", "ir": "c07_05b" }
+      ]
+    },
+    {
+      "id": "c07_05a",
+      "fondo": "bg_c07_crestas.jpg", "astro": "muestra", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Muestra de cresta guardada. Si confirma las arcillas, sabremos que aquí hubo agua durante mucho tiempo." }
+      ],
+      "siguienteCapitulo": 8
+    },
+    {
+      "id": "c07_05b",
+      "fondo": "bg_c07_crestas.jpg", "astro": "caminando", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Seguimos. Al otro lado de estas crestas está la última parada científica." }
+      ],
+      "siguienteCapitulo": 8
+    }
+  ]
+}
