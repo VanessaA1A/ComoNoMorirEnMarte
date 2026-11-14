@@ -12,6 +12,8 @@
   --barra-verde: #5ACD27; --barra-amarillo: #FA932E; --barra-rojo: #DD2811;
   --fuente-titulo: "Amoria", Georgia, serif;
   --fuente-texto: "Forced Square", "Courier New", monospace;
+  /* Texto secundario y largo: fuente limpia del sistema (no se descarga nada, funciona sin conexión) */
+  --fuente-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -57,12 +59,29 @@ a { color: var(--turquesa); }
 /* ===== Fondos con respaldo ===== */
 .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .fondo-respaldo { position: absolute; inset: 0; }
-.fondo-respaldo.viaje { background: linear-gradient(180deg, var(--noche) 0%, var(--aurora-5) 100%); }
-.fondo-respaldo.viaje::before { /* estrellas */
-  content: ""; position: absolute; inset: 0; opacity: .7;
+/* Viaje (caps. 1-2, dentro de la nave): panel de control en vez de un degradado morado sólido */
+.fondo-respaldo.viaje {
+  background:
+    linear-gradient(rgba(1, 203, 174, .07) 1px, transparent 1px) 0 0 / 2.4em 2.4em,
+    linear-gradient(90deg, rgba(1, 203, 174, .07) 1px, transparent 1px) 0 0 / 2.4em 2.4em,
+    radial-gradient(ellipse at 50% 28%, rgba(32, 130, 166, .28), transparent 65%),
+    var(--noche);
+}
+.fondo-respaldo.viaje::before { /* ventana de la nave con estrellas */
+  content: ""; position: absolute; top: 6%; left: 30%; right: 30%; height: 34%;
+  border: 2px solid rgba(1, 203, 174, .55); border-radius: 1.2em; box-shadow: inset 0 0 1.5em rgba(10, 2, 20, .9);
+  background-color: rgba(10, 2, 20, .9);
   background-image: radial-gradient(1px 1px at 10% 20%, #fff, transparent), radial-gradient(1px 1px at 30% 70%, #fff, transparent),
     radial-gradient(2px 2px at 55% 30%, var(--lima), transparent), radial-gradient(1px 1px at 75% 55%, #fff, transparent),
     radial-gradient(1px 1px at 88% 15%, #fff, transparent), radial-gradient(2px 2px at 20% 45%, var(--turquesa), transparent);
+}
+.fondo-respaldo.viaje::after { /* consola con teclas al pie de la cabina */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26%;
+  background:
+    linear-gradient(rgba(1, 203, 174, .55), rgba(1, 203, 174, .55)) top / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, rgba(82, 64, 148, .75) 0 2.2em, rgba(1, 239, 172, .45) 2.2em 2.6em, transparent 2.6em 3.2em) 0 1.2em / 100% .7em no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 1.6em, rgba(1, 203, 174, .3) 1.6em 2.8em, transparent 2.8em 4em) 0 2.6em / 100% .5em no-repeat,
+    rgba(36, 7, 63, .85);
 }
 .fondo-respaldo.marte { background: linear-gradient(180deg, var(--noche) 0%, #8B3A1A 45%, #C1440E 100%); }
 .fondo-respaldo.marte::after { /* horizonte con colinas */
@@ -101,6 +120,7 @@ a { color: var(--turquesa); }
 /* ===== Escena ===== */
 .personaje-astro { position: absolute; left: 6%; bottom: 24%; width: 17%; height: 52%; }
 .personaje-zinnia { position: absolute; left: 1%; bottom: 3%; width: 9%; aspect-ratio: 1; z-index: 4; }
+.personaje-zinnia.hablando { aspect-ratio: 420 / 594; width: 9.5%; } /* GIF de cuerpo completo */
 .zona-dialogo { position: absolute; left: 11%; right: 2%; bottom: 3%; z-index: 3; display: flex; flex-direction: column; gap: .6em; }
 .escena.con-tablet .zona-dialogo { right: 48%; }
 .escena.con-tablet .personaje-astro { width: 12%; height: 40%; }
@@ -197,17 +217,144 @@ a { color: var(--turquesa); }
 .tarjeta-dato.nueva { border-color: var(--lima); box-shadow: 0 0 .7em var(--lima); }
 .fuente { font-size: .78em; opacity: .85; word-break: break-word; }
 
-/* ===== Ranuras ===== */
-.ranura { display: grid; grid-template-columns: 1fr auto; gap: .3em .8em; align-items: center; border: 1px solid var(--aurora-4); border-radius: .5em; padding: .6em .8em; margin: .4em 0; }
-.mini-barras { display: flex; gap: .2em; height: .5em; }
-.mini-barras span { flex: 1; border-radius: .2em; }
+/* ===== Utilidades compartidas ===== */
+.pixel { image-rendering: pixelated; }
+.texto-ui { font-family: var(--fuente-ui); line-height: 1.45; }
 
-/* ===== Inicio ===== */
-.inicio { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2em; height: 100%; text-align: center; }
-.inicio .logo-nombre { width: min(70%, 34em); }
-.inicio .zinnia-inicio { width: 7em; height: 7em; }
-.inicio .botones { display: grid; grid-template-columns: repeat(2, minmax(11em, 1fr)); gap: .6em; }
-.inicio .botones .boton.principal { grid-column: 1 / -1; font-size: 1.15em; }
+/* ===== Panel de ranuras (guardar / cargar) ===== */
+.modal.panel-ranuras { width: min(94%, 62em); }
+.ranuras-layout { display: grid; grid-template-columns: minmax(9em, 13em) 1fr; gap: 1.2em; align-items: start; }
+.ranuras-guia { display: flex; flex-direction: column; align-items: center; gap: .4em; position: sticky; top: 0; }
+.ranuras-guia .burbuja { position: relative; font-size: .85em; margin: 0; }
+.ranuras-guia .burbuja::after { /* pico de la burbuja apuntando a Zinn-IA */
+  content: ""; position: absolute; left: 50%; bottom: -.6em; transform: translateX(-50%);
+  border: .6em solid transparent; border-bottom: 0; border-top-color: var(--zinnia-crema);
+}
+.ranuras-guia .zinnia-hablando { width: 100%; height: auto; max-height: 15em; }
+.ranuras-lista { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8em; }
+.ranura-tarjeta {
+  display: flex; flex-direction: column; gap: .5em; padding: .8em .9em; border-radius: .8em;
+  border: 2px solid var(--aurora-4); background: rgba(82, 64, 148, .22);
+}
+.ranura-tarjeta header { display: flex; align-items: center; justify-content: space-between; gap: .5em; }
+.ranura-tarjeta h3 { margin: 0; font-size: 1.1em; color: var(--aurora-2); letter-spacing: .03em; }
+.ranura-tarjeta .boton { margin-top: auto; }
+.ranura-tarjeta.auto {
+  grid-column: 1 / -1; border-color: var(--aurora-1);
+  background: linear-gradient(135deg, rgba(1, 239, 172, .14), rgba(82, 64, 148, .3));
+  box-shadow: 0 0 .9em rgba(1, 239, 172, .25);
+}
+.ranura-tarjeta.auto h3 { color: var(--aurora-1); font-size: 1.25em; }
+.ranura-tarjeta.auto .ranura-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.2em; }
+.ranura-tarjeta.auto .mini-barras { grid-column: 2; grid-row: 1 / span 4; }
+.ranura-tarjeta.vacia { border-style: dashed; background: transparent; }
+.ranura-etiqueta { font-family: var(--fuente-ui); font-size: .7em; padding: .15em .55em; border-radius: 1em; background: var(--aurora-1); color: var(--noche); }
+.ranura-datos { font-size: .82em; }
+.ranura-datos p { margin: 0 0 .2em; opacity: .85; }
+.ranura-datos .ranura-capitulo { opacity: 1; font-weight: 600; color: var(--texto); }
+.ranura-vacia { margin: .6em 0; opacity: .55; font-style: italic; }
+.mini-barras { display: flex; flex-direction: column; gap: .25em; margin-top: .4em; }
+.mini-barra { display: grid; grid-template-columns: 5.2em 1fr; align-items: center; gap: .4em; }
+.mini-barra .nombre { font-size: .8em; opacity: .75; order: -1; }
+.mini-barra .pista { height: .45em; border-radius: .3em; background: rgba(244, 246, 255, .12); overflow: hidden; }
+.mini-barra .pista span { display: block; height: 100%; border-radius: .3em; }
+.ranuras-pie { display: flex; justify-content: flex-end; margin-top: 1em; padding-top: .8em; border-top: 1px solid var(--aurora-4); }
+@media (max-width: 760px), (max-aspect-ratio: 1/1) {
+  .ranuras-layout { grid-template-columns: 1fr; }
+  .ranuras-guia { flex-direction: row; position: static; }
+  .ranuras-guia .zinnia-hablando { width: 5em; order: -1; }
+  .ranuras-guia .burbuja::after { left: -.6em; top: 50%; bottom: auto; transform: translateY(-50%); border: .6em solid transparent; border-left: 0; border-right-color: var(--zinnia-crema); }
+  .ranuras-lista { grid-template-columns: 1fr; }
+  .ranura-tarjeta.auto .ranura-datos { grid-template-columns: 1fr; }
+  .ranura-tarjeta.auto .mini-barras { grid-column: auto; grid-row: auto; }
+}
+
+/* ===== Inicio (ZA-12) ===== */
+.inicio {
+  position: absolute; inset: 0; overflow: hidden;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  /* Overlay #24073F al 60% sobre el fondo aurora, para que la interfaz resalte. */
+  background:
+    linear-gradient(rgba(36, 7, 63, .6), rgba(36, 7, 63, .6)),
+    url("/img/FondoPantallaInicio.png") center / cover no-repeat,
+    var(--noche);
+}
+.inicio-cabecera { display: flex; justify-content: center; padding: 1.2em 2em .4em; }
+.inicio .logo-nombre { width: min(46%, 30em); height: auto; filter: drop-shadow(0 .15em .5em rgba(36, 7, 63, .8)); }
+
+.inicio-cuerpo {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, .9fr);
+  align-items: center; gap: 2.2em; padding: .6em 2.5em 1em; min-height: 0;
+}
+.inicio-col { display: flex; flex-direction: column; gap: .8em; }
+
+/* Botones grandes: título en FORCED SQUARE + detalle en fuente del sistema */
+.boton-grande {
+  display: flex; flex-direction: column; align-items: flex-start; gap: .15em; width: 100%;
+  text-align: left; padding: .7em 1.1em; border-radius: .8em;
+  background: rgba(36, 7, 63, .72); border: 2px solid var(--aurora-2);
+  backdrop-filter: blur(3px);
+}
+.boton-grande .boton-titulo { font-family: var(--fuente-texto); font-size: 1.45em; letter-spacing: .05em; line-height: 1.1; }
+.boton-grande .boton-detalle { font-family: var(--fuente-ui); font-size: .78em; opacity: .75; }
+.boton-grande:hover:not(:disabled) { background: rgba(82, 64, 148, .9); border-color: var(--aurora-1); transform: translateX(3px); }
+.boton-grande:disabled { opacity: .5; cursor: not-allowed; }
+.boton-grande.principal { background: var(--aurora-1); color: var(--noche); border-color: var(--aurora-1); padding: 1em 1.2em; box-shadow: 0 0 1.2em rgba(1, 239, 172, .35); }
+.boton-grande.principal .boton-titulo { font-size: 1.9em; }
+.boton-grande.principal .boton-detalle { opacity: .8; }
+.boton-grande.principal:hover:not(:disabled) { background: var(--aurora-2); border-color: var(--aurora-2); }
+.inicio-col.explorar .boton-grande { padding: .55em 1em; border-color: rgba(1, 203, 174, .55); }
+.inicio-col.explorar .boton-grande .boton-titulo { font-size: 1.15em; }
+.inicio-col.explorar .boton-grande:hover:not(:disabled) { transform: translateX(-3px); }
+
+/* Consola de la tripulación: Zinn-IA y el astronauta sobre un panel de control, no sobre un bloque sólido */
+.consola {
+  margin: 0; align-self: stretch; display: flex; flex-direction: column; min-height: 0;
+  border: 2px solid var(--aurora-2); border-radius: 1em; overflow: hidden;
+  background:
+    linear-gradient(rgba(1, 203, 174, .09) 1px, transparent 1px) 0 0 / 1.25em 1.25em,
+    linear-gradient(90deg, rgba(1, 203, 174, .09) 1px, transparent 1px) 0 0 / 1.25em 1.25em,
+    radial-gradient(ellipse at 50% 85%, rgba(1, 239, 172, .16), transparent 60%),
+    rgba(36, 7, 63, .82);
+  box-shadow: inset 0 0 2em rgba(36, 7, 63, .9);
+}
+.consola-barra { display: flex; align-items: center; gap: .35em; padding: .45em .7em; border-bottom: 1px solid rgba(1, 203, 174, .35); background: rgba(86, 42, 131, .55); }
+.consola-barra .luz { width: .55em; height: .55em; border-radius: 50%; background: var(--aurora-1); box-shadow: 0 0 .4em var(--aurora-1); }
+.consola-barra .luz:nth-child(2) { background: var(--aurora-2); animation: pulso 2.4s infinite; }
+.consola-barra .luz:nth-child(3) { background: var(--aurora-3); }
+.consola-etiqueta { margin-left: auto; font-family: var(--fuente-ui); font-size: .68em; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+.consola-escena { flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: .2em; padding: .6em .8em 0; }
+.consola-escena img { height: auto; object-fit: contain; filter: drop-shadow(0 .3em .4em rgba(36, 7, 63, .9)); }
+.consola .zinnia-principal { max-height: 100%; width: 62%; }
+.consola .astronauta-inicio { max-height: 70%; width: 34%; }
+.consola-teclas { display: grid; grid-template-columns: repeat(12, 1fr); gap: .3em; padding: .5em .7em .6em; border-top: 1px solid rgba(1, 203, 174, .35); background: rgba(36, 7, 63, .6); }
+.consola-teclas span { height: .5em; border-radius: .15em; background: rgba(82, 64, 148, .8); }
+.consola-teclas span:nth-child(3n) { background: rgba(1, 203, 174, .45); }
+.consola-teclas span:nth-child(5n) { background: rgba(1, 239, 172, .7); }
+
+/* Franja inferior: hackathon + estado del sistema */
+.inicio-pie {
+  display: flex; align-items: center; justify-content: space-between; gap: 1em;
+  padding: .45em 6em .45em 1.5em; /* a la derecha queda libre para el botón flotante de Zinn-IA */
+  border-top: 1px solid rgba(1, 203, 174, .5);
+  background:
+    linear-gradient(90deg, rgba(36, 7, 63, .75), rgba(36, 7, 63, .45)),
+    url("/img/fondo_inicio_cargando.png") center / cover no-repeat;
+}
+.estado-sistema { display: flex; align-items: center; gap: .5em; font-size: .95em; color: var(--aurora-1); }
+.estado-sistema .zinnia-estatica { height: 4.6em; margin: -.6em 0; width: auto; mix-blend-mode: lighten; /* el GIF trae fondo negro */ }
+.pie-textos { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+.pie-evento { font-size: .85em; letter-spacing: .04em; }
+.pie-leyenda { font-family: var(--fuente-ui); font-size: .72em; font-style: italic; opacity: .75; }
+
+@media (max-aspect-ratio: 1/1) {
+  .inicio { overflow: auto; grid-template-rows: auto auto auto; }
+  .inicio .logo-nombre { width: min(90%, 26em); }
+  .inicio-cuerpo { grid-template-columns: 1fr; gap: 1em; padding: .5em 1.2em 1em; }
+  .consola { order: -1; height: 16em; }
+  .inicio-pie { flex-direction: column; align-items: flex-start; padding-right: 5.5em; }
+  .pie-textos { align-items: flex-start; text-align: left; }
+}
 .titulo-texto { font-family: var(--fuente-titulo); font-size: 3.2em; }
 
 /* ===== Tarjeta de capítulo ===== */
@@ -233,8 +380,10 @@ a { color: var(--turquesa); }
 /* ===== Panel de Zinn-IA 24/7 ===== */
 .icono-zinnia {
   position: absolute; right: .8em; bottom: .8em; z-index: 30; width: 4em; height: 4em; border-radius: 50%;
-  border: 3px solid var(--zinnia-petalo); background: var(--zinnia-crema); padding: .25em;
+  border: 3px solid var(--zinnia-petalo); background: rgba(36, 7, 63, .85); padding: .3em;
+  box-shadow: 0 0 .8em rgba(250, 147, 46, .45); transition: transform .15s;
 }
+.icono-zinnia:hover { transform: scale(1.08); }
 .icono-zinnia img { width: 100%; height: 100%; object-fit: contain; }
 .icono-zinnia .punto { position: absolute; top: .05em; right: .05em; width: .9em; height: .9em; border-radius: 50%; background: var(--zinnia-mejilla); border: 2px solid var(--zinnia-crema); animation: pulso 1s infinite; }
 .panel-zinnia { z-index: 28; border-left-color: var(--zinnia-petalo); }
@@ -256,7 +405,7 @@ a { color: var(--turquesa); }
 .tutorial .velo-tutorial { position: absolute; inset: 0; background: rgba(10, 2, 20, .72); }
 .tutorial .foco { position: absolute; border-radius: .6em; box-shadow: 0 0 0 9999px rgba(10, 2, 20, .72), 0 0 0 3px var(--lima); pointer-events: none; transition: all .25s; }
 .tutorial .caja { position: absolute; left: 50%; transform: translateX(-50%); width: min(92%, 40em); display: flex; gap: .8em; align-items: flex-end; }
-.tutorial .caja .cara { width: 5em; height: 5em; flex: none; }
+.tutorial .caja .cara { width: 5.5em; height: 7.5em; flex: none; }
 .tutorial .caja .dialogo { flex: 1; cursor: default; max-width: none; }
 .tutorial .acciones { display: flex; gap: .5em; justify-content: flex-end; margin-top: .6em; }
 
@@ -296,8 +445,3 @@ a { color: var(--turquesa); }
 .foto-pendiente { display: grid; place-items: center; height: 7em; background: rgba(32, 130, 166, .25); border: 1px dashed var(--aurora-3); font-size: .8em; }
 .icono-zinnia img { image-rendering: pixelated; }
 a.boton { display: inline-block; text-decoration: none; }
-
-/* Íconos SVG de la interfaz (sin emojis) */
-.boton-icono svg, .reloj svg { display: block; }
-.reloj { display: flex; align-items: center; gap: .35em; }
-.destacada { color: var(--lima); font-style: normal; font-size: .85em; }

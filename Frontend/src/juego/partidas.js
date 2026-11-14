@@ -12,12 +12,16 @@ export const leerRanura = (n) => {
   return r?.estado?.escena ? r : null; // una ranura dañada cuenta como vacía
 };
 
-/** Guarda una ranura. Devuelve la ranura guardada, o null si el navegador no permitió guardar. */
-export function escribirRanura(n, estado, linea = 0) {
+/**
+ * Guarda una ranura. Devuelve la ranura guardada, o null si el navegador no permitió guardar.
+ * `jugado` = segundos de juego acumulados en esa partida (se muestran en el panel de Cargar).
+ */
+export function escribirRanura(n, estado, linea = 0, jugado = 0) {
   const ranura = {
     version: 1,
     estado,                                   // estado completo del motor
     linea,                                    // línea del diálogo donde estaba
+    jugado,                                   // segundos de juego
     escena: estado.escena,                    // para mostrar en Cargar sin abrir el estado
     nombre: estado.nombre ?? '',
     pronombre: estado.pronombre ?? 'el',
