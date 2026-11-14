@@ -59,7 +59,7 @@ export function PanelZinnia() {
     <button className="icono-zinnia" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
       aria-label={`Zinn-IA, tu asistente (tecla Z)${j.avisoZinnia ? ': tiene algo nuevo para ti' : ''}`} aria-expanded={j.panelZinnia}
       title="Zinn-IA (tecla Z)">
-      <img src="/img/logo_zinnia.png" alt="" className={expresion === 'apagada' ? 'zinnia-apagada' : ''} />
+      <Recurso src={['/img/ui/icono_zinnia.png', '/img/logos/isotipo.png']} alt="" className={expresion === 'apagada' ? 'zinnia-apagada' : ''} respaldo={null} />
       {j.avisoZinnia && <span className="punto" aria-hidden="true" />}
     </button>
   );
@@ -176,8 +176,10 @@ export function SinConexion() {
   return (
     <div className="sin-conexion">
       <Modal titulo="Sin señal con la Tierra">
-        <Recurso src="/img/zinnia_sin_conexion.gif" alt="Zinn-IA sin conexión"
-          respaldo={<img src="/img/logo_zinnia.png" alt="Zinn-IA sin conexión" className="zinnia zinnia-respaldo zinnia-curiosa" />} />
+        <div className="zinnia-sin-conexion">
+          <Recurso src="/img/zinnia/sin_conexion.gif" alt="Zinn-IA sin conexión" className="zinnia" escalaEntera
+            respaldo={<img src="/img/logos/isotipo.png" alt="Zinn-IA sin conexión" className="zinnia zinnia-respaldo zinnia-curiosa" />} />
+        </div>
         <p>{formatear('Perdimos la señal con la Tierra. Tranquil{o|a|e}: tu partida se guarda aquí y la mando cuando vuelva la conexión.', j.partida ?? {})}</p>
         <button className="boton principal" onClick={j.descartarSinConexion} autoFocus>Seguir sin conexión</button>
       </Modal>

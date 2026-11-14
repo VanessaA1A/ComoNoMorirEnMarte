@@ -1,6 +1,7 @@
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { Barras, formatoReloj } from './HUD.jsx';
 import { formatear } from '../engine/texto.js';
+import { ZinnIA } from './Personajes.jsx';
 
 const TITULO = { bueno: 'Volviste a casa', intermedio: 'Te quedas en Marte', malo: 'No sobreviviste a Marte' };
 
@@ -22,7 +23,10 @@ export default function Resumen() {
   return (
     <div className="velo">
       <div className={`modal ancho resumen ${final}`} role="dialog" aria-modal="true" aria-labelledby="titulo-final">
-        <h1 id="titulo-final" className="titulo-final">{TITULO[final]}</h1>
+        <div className="cabecera-final">
+          {final === 'bueno' && <div className="zinnia-celebra"><ZinnIA expresion="inicio" /></div>}
+          <h1 id="titulo-final" className="titulo-final">{TITULO[final]}</h1>
+        </div>
         <div className="rejilla">
           <div>
             <h3>Cómo quedaron tus barras</h3>

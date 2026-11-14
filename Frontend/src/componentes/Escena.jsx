@@ -5,6 +5,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { Fondo, ZinnIA, Astronauta } from './Personajes.jsx';
 import { MapaRuta, poiActual } from './Mapas.jsx';
 import HUD from './HUD.jsx';
+import { barrasEnRojo } from '../juego/comoVoy.js';
 
 const VELOCIDAD_MS = 22; // por letra
 
@@ -63,7 +64,10 @@ export default function Escena() {
   const quien = actual ? formatear(actual.quien, partida) : '';
   const esZinnia = actual?.quien === 'Zinn-IA';
   const esNarracion = actual?.quien === 'Narración';
-  const expresion = partida.bateria <= 0 ? 'apagada' : esc.zinnia ?? 'feliz';
+  // Con batería en 0 se repliega en semilla; con una barra en rojo usa el GIF de peligro
+  const expresion = partida.bateria <= 0 ? 'apagada'
+    : !esc.esFinal && barrasEnRojo(partida).length ? 'peligro'
+    : esc.zinnia ?? 'feliz';
   const apagado = partida.bateria <= 0;
   const conTablet = Boolean(esc.abrirTablet);
   const verMinimapa = partida.capitulo >= 3 && !conTablet && !esc.esFinal;
