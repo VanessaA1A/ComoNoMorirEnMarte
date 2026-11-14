@@ -39,7 +39,15 @@ npm run dev         # se reinicia solo al guardar cambios
 Prueba en <http://localhost:3001/api/salud> → `{ "ok": true, "db": true }`.
 Para probar todo, abre `pruebas.http` con la extensión **REST Client** de VS Code.
 
-## 5. Desplegar en Render
+## 5. Despliegue
+
+| Dónde | Variable | Valor |
+|---|---|---|
+| **Render** (esta API) | `DATABASE_URL` | La URL de Neon (solo en el panel de Render, nunca en el repo) |
+| **Render** (esta API) | `CORS_ORIGIN` | El dominio de Vercel y, si quieres, el local, separados por coma: `https://tu-juego.vercel.app,http://localhost:5173` |
+| **Vercel** (el juego) | `VITE_API_URL` | La URL de Render terminada en `/api`: `https://<tu-api>.onrender.com/api` |
+
+**CORS_ORIGIN debe incluir el dominio exacto de Vercel** (con `https://` y sin `/` al final). Si no, el navegador bloquea las peticiones y el juego sigue funcionando solo en local, con el aviso "Sin señal con la Tierra". `PORT` no se configura: Render lo pone solo y el servidor lo lee de `process.env.PORT`. `npm start` no usa `--env-file`: en Render las variables vienen del panel.
 
 **Opción rápida (Blueprint):** el repo trae `render.yaml` en la raíz. En Render: **New → Blueprint**, elige el repo y escribe en el panel los valores de `DATABASE_URL` y `CORS_ORIGIN` (están con `sync: false`, así que nunca se guardan en el repo). Usa el plan gratis y revisa la salud en `/api/salud`.
 
