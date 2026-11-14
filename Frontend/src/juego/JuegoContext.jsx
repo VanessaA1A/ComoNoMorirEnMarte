@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { nuevaPartida, escena as escenaDe, lineasVisibles, continuar, elegir as elegirMotor } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import * as api from '../api.js';
-import { leer, escribir, alFallarAlmacen } from './almacen.js';
+import { leer, escribir } from './almacen.js';
 import { escribirRanura, leerRanura } from './partidas.js';
 import { fichasPara } from './fichas.js';
 import { barrasEnRojo } from './comoVoy.js';
@@ -38,6 +38,7 @@ export function JuegoProvider({ children }) {
   const [sinConexionDescartado, setSinConexionDescartado] = useState(false);
 
   const fichasRef = useRef(fichas);
+  const jugadoRef = useRef(0); // segundos de juego de la partida actual (se guardan en cada ranura)
 
   // ---------- avisos y tutorial ----------
   const avisar = useCallback((texto) => {
@@ -91,7 +92,7 @@ export function JuegoProvider({ children }) {
   // ---------- guardado ----------
   const conFichas = (s) => ({ ...s, fichas: fichasRef.current });
   const autoguardar = useCallback((s, lin = 0) => {
-    escribirRanura(0, conFichas(s), lin);
+    escribirRanura(0, conFichas(s), lin, jugadoRef.current);
     api.guardarNube(0, conFichas(s));
   }, []);
 
@@ -111,13 +112,13 @@ export function JuegoProvider({ children }) {
     if (res.cambioCapitulo) {
       disparar(`fin-capitulo:${previo.capitulo}`);
       setTarjeta(res.cambioCapitulo); // las fichas del capítulo se dan al cerrar la tarjeta
+      autoguardar(s, 0);
     }
-    // Autoguardado (ranura 0) en cada cambio de escena y después de cada decisión
-    if (s.escena !== previo.escena || res.decision) autoguardar(s, 0);
   }, [disparar, desbloquear, autoguardar]);
 
   const empezar = useCallback(() => {
     const s = nuevaPartida();
+    jugadoRef.current = 0;
     api.olvidarJugador(); // el jugador nuevo se crea al elegir pronombre
     setPartida(s); setLinea(0); setHistorial([]); setResumen(false); setOverlay(null);
     setCapa('optica'); setTarjeta(1); setPantalla('juego');
@@ -147,7 +148,7 @@ export function JuegoProvider({ children }) {
     if (opcion.pronombre) api.nuevoJugador(s.nombre, opcion.pronombre);
     api.registrarDecision({ ...res.estado, capitulo: s.capitulo }, s.escena, opcion.texto);
     setHistorial((h) => [...h, { quien: 'Tú elegiste', texto: formatear(opcion.texto, res.estado) }].slice(-50));
-    aplicar({ ...res, decision: true }, s);
+    aplicar(res, s);
   }, [partida, aplicar]);
 
   /** La escena muestra sus opciones: autoguardado "antes de cada decisión" y avisos. */
@@ -180,14 +181,15 @@ export function JuegoProvider({ children }) {
 
   // ---------- guardar / cargar ----------
   const guardar = useCallback((slot) => {
-    const ok = escribirRanura(slot, conFichas(partida), linea);
+    escribirRanura(slot, conFichas(partida), linea, jugadoRef.current);
     api.guardarNube(slot, conFichas(partida));
-    avisar(ok ? `Partida guardada en la ranura ${slot}` : 'No se pudo guardar en este navegador. Puedes seguir jugando.');
+    avisar(`Partida guardada en la ranura ${slot}`);
   }, [partida, linea, avisar]);
 
   const cargar = useCallback((slot) => {
     const r = leerRanura(slot);
     if (!r) return;
+    jugadoRef.current = r.jugado ?? 0;
     const esc = escenaDe(r.estado.escena);
     setPartida(r.estado); setLinea(r.linea ?? 0); setTarjeta(null); setResumen(false);
     setOverlay(null); setHistorial([]); setCapa(esc?.capa ?? 'optica'); setPantalla('juego');
@@ -209,9 +211,6 @@ export function JuegoProvider({ children }) {
     setPanelZinnia(abierto);
     if (abierto) setAvisoZinnia(false);
   }, []);
-
-  // Si el navegador no deja guardar (modo privado, cuota llena), se avisa UNA vez y el juego sigue en memoria
-  useEffect(() => alFallarAlmacen(() => avisar('Este navegador no deja guardar (modo privado o espacio lleno). Puedes jugar, pero el progreso no se guardará al cerrar.')), [avisar]);
 
   // ---------- conexión y catálogo ----------
   useEffect(() => api.alCambiarConexion((c) => {
@@ -240,6 +239,13 @@ export function JuegoProvider({ children }) {
   }, [colaTutorial.length, panelZinnia, overlay, pantalla, resumen, abrirPanelZinnia]);
 
   const pausado = Boolean(overlay || panelZinnia || colaTutorial.length || tarjeta || resumen);
+
+  // Tiempo de juego: cuenta solo mientras se juega (sin menús abiertos y con la pestaña visible).
+  useEffect(() => {
+    if (pantalla !== 'juego' || pausado) return;
+    const t = setInterval(() => { if (!document.hidden) jugadoRef.current += 1; }, 1000);
+    return () => clearInterval(t);
+  }, [pantalla, pausado]);
 
   const valor = useMemo(() => ({
     pantalla, setPantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, setCapa,
