@@ -4,7 +4,8 @@ import { BARRAS, colorBarra } from '../engine/reglas.js';
 import { CAPITULOS } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { RANURAS, leerRanura, hayAutoguardado } from '../juego/partidas.js';
-import { ZinnIA } from './Personajes.jsx';
+import { ZinnIA, Fondo } from './Personajes.jsx';
+import { RecursosNasa } from './Guia.jsx';
 import { Modal } from './Modal.jsx';
 import { Enlace } from './Mapas.jsx';
 import Recurso from './Recurso.jsx';
@@ -15,9 +16,11 @@ export function Inicio() {
   const hayPartida = hayAutoguardado();
   return (
     <div className="inicio">
-      <Recurso src="/img/logo_nombre.png" alt="Cómo no morir en Marte" className="logo-nombre"
-        respaldo={<h1 className="titulo-texto">Cómo no morir en Marte</h1>} />
-      <div className="zinnia-inicio"><ZinnIA expresion="feliz" /></div>
+      <Fondo archivo="inicio.png" capitulo={1} />
+      <h1 className="oculto-lector">Cómo no morir en Marte</h1>
+      <Recurso src="/img/logos/titulo.png" alt="" className="logo-nombre"
+        respaldo={<span className="titulo-texto" aria-hidden="true">Cómo no morir en Marte</span>} />
+      <div className="zinnia-inicio"><ZinnIA expresion="inicio" /></div>
       <div className="botones">
         <button className="boton principal" onClick={() => (hayPartida ? setConfirmar(true) : j.empezar())} autoFocus>Empezar</button>
         <button className="boton" disabled={!hayPartida} onClick={() => j.cargar(0)}>Continuar</button>
@@ -45,10 +48,16 @@ export function Creditos() {
   const fuentes = [...new Set([...CAPITULOS.flatMap((c) => c.fuentes ?? []), ...j.catalogo.datos.map((d) => d.fuente)])];
   return (
     <Modal titulo="Créditos y fuentes" onCerrar={() => j.setPantalla('inicio')} ancho>
+      <div className="creditos-logos">
+        <Recurso src="/img/logos/logotipo_zinnia_aurora.png" alt="Logotipo del equipo Zinnia Aurora" className="logo-equipo" respaldo={null} />
+        <Recurso src="/img/zinnia/triste.png" alt="Zinn-IA" className="logo-equipo" respaldo={null} />
+      </div>
       <p><strong>Equipo Zinnia Aurora:</strong> Vanessa, Valeria, Sefora, Ulisis, Kelly y Moises.</p>
       <p><strong>Tipografías:</strong> AMORIA de gunastudio (versión demo, solo para uso personal y no comercial) y FORCED SQUARE de Paul IJsendoorn (Drawperfect).</p>
       <p><strong>Imágenes:</strong> NASA/JPL-Caltech (y NASA/JPL-Caltech/MSSS en las fotos de Curiosity).</p>
       <p><strong>Zinn-IA:</strong> todos sus diálogos están escritos por el equipo; no usa IA generativa en vivo.</p>
+      <h3>Recursos NASA del reto</h3>
+      <RecursosNasa />
       <h3>Fuentes científicas</h3>
       <ul className="fuente">{fuentes.map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
     </Modal>

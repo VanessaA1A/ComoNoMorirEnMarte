@@ -59,7 +59,7 @@
     },
     {
       "id": "c02_05",
-      "fondo": "bg_c02_nave.jpg", "astro": "neutral", "zinnia": "feliz",
+      "fondo": "bg_c02_llegada.jpg", "astro": "neutral", "zinnia": "feliz",
       "lineas": [
         { "quien": "Narración", "texto": "Meses después, un punto rojo llena la ventana." },
         { "quien": "Zinn-IA", "texto": "Marte. Prepárate para aterrizar en el cráter Gale." }

@@ -9,7 +9,7 @@
     { "id": "phoenix", "anio": 2008, "mision": "Phoenix (NASA)", "lugar": "Llanuras árticas", "lat": 68.22, "lon": -125.75, "dato": "Descubrió los percloratos." },
     { "id": "curiosity", "anio": 2012, "mision": "Curiosity (NASA)", "lugar": "Cráter Gale", "lat": -4.59, "lon": 137.44, "jugable": true, "dato": "Nuestra base: aquí está la Base Aurora y la ruta del Marswalk." },
     { "id": "insight", "anio": 2018, "mision": "InSight (NASA)", "lugar": "Elysium Planitia", "lat": 4.5, "lon": 135.62, "dato": "Módulo fijo; trabajó hasta diciembre de 2022." },
-    { "id": "perseverance", "anio": 2021, "mision": "Perseverance + Ingenuity (NASA)", "lugar": "Cráter Jezero", "lat": 18.4, "lon": 77.5, "aproximado": true, "dato": "Encontró la roca Cheyava Falls (posible biofirma)." },
+    { "id": "perseverance", "anio": 2021, "mision": "Perseverance + Ingenuity (NASA)", "lugar": "Cráter Jezero", "lat": 18.4, "lon": 77.5, "aproximado": true, "dato": "Encontró la roca Cheyava Falls (posible biofirma).", "galeria": "https://mars.nasa.gov/mars2020/multimedia/raw-images/", "imagen": "img/marte/jezero_perseverance.jpg" },
     { "id": "zhurong", "anio": 2021, "mision": "Zhurong (China)", "lugar": "Utopia Planitia", "lat": 25, "lon": 110, "aproximado": true, "dato": "Primer rover chino en Marte." }
   ],
   "destinos": [
@@ -17,7 +17,7 @@
     { "id": "valles", "nombre": "Valles Marineris", "lat": -12, "lon": -65, "aproximado": true, "ficha": "D16", "dato": "Cañones de más de 4.000 km y hasta 7 km de profundidad; se formaron sobre todo por fallas, no por un río." },
     { "id": "hellas", "nombre": "Cuenca Hellas", "lat": -42, "lon": 70, "aproximado": true, "ficha": "D15", "dato": "Cráter de impacto gigante: su fondo está 8,2 km bajo la altura cero, el punto más bajo de Marte." },
     { "id": "polos", "nombre": "Polo sur", "lat": -84, "lon": 0, "aproximado": true, "ficha": "D26", "dato": "Casquetes de hielo de agua y dióxido de carbono que crecen y se encogen con las estaciones." },
-    { "id": "jezero", "nombre": "Cráter Jezero", "lat": 18.4, "lon": 77.5, "aproximado": true, "ficha": "D22", "dato": "Antiguo lago y delta de río; aquí está la roca Cheyava Falls." },
+    { "id": "jezero", "nombre": "Cráter Jezero", "lat": 18.4, "lon": 77.5, "aproximado": true, "ficha": "D22", "dato": "Antiguo lago y delta de río; aquí está la roca Cheyava Falls.", "galeria": "https://mars.nasa.gov/mars2020/multimedia/raw-images/", "imagen": "img/marte/jezero_perseverance.jpg" },
     { "id": "gediz", "nombre": "Gediz Vallis", "lat": -5.2, "lon": 137.8, "aproximado": true, "ficha": "D18", "dato": "Canal en Mount Sharp con piedras de azufre puro." },
     { "id": "airy0", "nombre": "Airy-0", "lat": -5.1, "lon": 0, "aproximado": true, "ficha": "D14", "dato": "Cráter que marca el meridiano 0° de Marte." }
   ]

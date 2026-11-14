@@ -14,7 +14,8 @@ cp .env.example .env      # en PowerShell: Copy-Item .env.example .env
 
 1. Entra a <https://neon.tech>, crea un proyecto (plan gratis) y la región más cercana (us-east).
 2. En **Connection string** copia la URL que empieza con `postgresql://` y termina en `?sslmode=require`.
-3. Pégala en `DATABASE_URL` dentro de `.env`. **Nunca subas el `.env` al repo**; compártela por privado.
+3. Pégala en `DATABASE_URL` dentro de `.env`. **Nunca subas el `.env` al repo** (`.gitignore` ya lo excluye); compártela por privado.
+4. Si al conectar aparece un error de autenticación, SCRAM o *channel binding*, quita solo `&channel_binding=require` del final de la URL.
 
 ## 3. Crear tablas y cargar datos
 
@@ -23,7 +24,11 @@ npm run db:schema   # crea las tablas (se puede repetir sin problema)
 npm run db:seed     # carga Frontend/src/data/capas.json, pois.json y datos.json (los que existan)
 ```
 
-Cuando Sefora corrija los JSON, vuelve a correr `npm run db:seed`: actualiza sin duplicar.
+Cuando Sefora corrija los JSON, vuelve a correr `npm run db:seed`: actualiza sin duplicar (UPSERT en una sola transacción; si una fila falla, no se guarda nada). Los campos extra de los JSON, como `provisional` o `etiqueta`, se ignoran.
+
+Resultado esperado: **6 capas** (incluida `geologia`), **8 pois** y **30 datos**.
+
+**Capa Geología (tipo `geologico`).** `schema.sql` la acepta y trae una migración idempotente: si tu base se creó antes, `npm run db:schema` reemplaza el CHECK viejo de `capas.tipo` (busca en `pg_constraint` aunque tenga otro nombre) por `capas_tipo_check` con los 6 tipos. Córrelo antes del seed.
 
 ## 4. Levantar en local
 
@@ -34,7 +39,19 @@ npm run dev         # se reinicia solo al guardar cambios
 Prueba en <http://localhost:3001/api/salud> → `{ "ok": true, "db": true }`.
 Para probar todo, abre `pruebas.http` con la extensión **REST Client** de VS Code.
 
-## 5. Desplegar en Render
+## 5. Despliegue
+
+| Dónde | Variable | Valor |
+|---|---|---|
+| **Render** (esta API) | `DATABASE_URL` | La URL de Neon (solo en el panel de Render, nunca en el repo) |
+| **Render** (esta API) | `CORS_ORIGIN` | El dominio de Vercel y, si quieres, el local, separados por coma: `https://tu-juego.vercel.app,http://localhost:5173` |
+| **Vercel** (el juego) | `VITE_API_URL` | La URL de Render terminada en `/api`: `https://<tu-api>.onrender.com/api` |
+
+**CORS_ORIGIN debe incluir el dominio exacto de Vercel** (con `https://` y sin `/` al final). Si no, el navegador bloquea las peticiones y el juego sigue funcionando solo en local, con el aviso "Sin señal con la Tierra". `PORT` no se configura: Render lo pone solo y el servidor lo lee de `process.env.PORT`. `npm start` no usa `--env-file`: en Render las variables vienen del panel.
+
+**Opción rápida (Blueprint):** el repo trae `render.yaml` en la raíz. En Render: **New → Blueprint**, elige el repo y escribe en el panel los valores de `DATABASE_URL` y `CORS_ORIGIN` (están con `sync: false`, así que nunca se guardan en el repo). Usa el plan gratis y revisa la salud en `/api/salud`.
+
+**Opción manual:**
 
 1. **New → Web Service**, conecta el repo de GitHub.
 2. **Root Directory:** `Backend` · **Build Command:** `npm install` · **Start Command:** `npm start`
