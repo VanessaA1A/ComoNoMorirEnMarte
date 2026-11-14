@@ -1,0 +1,92 @@
+[
+  {
+    "id": "p2_transicion",
+    "capitulo": 5,
+    "fondo": "bg_c05_transicion.jpg",
+    "astronauta": "astro_neutral",
+    "personaje": "zinnia_curiosa",
+    "poi": "P2",
+    "abrirTablet": false,
+    "lineas": [
+      {
+        "quien": "Narración",
+        "texto": "Llegas a una zona de rocas claras, justo antes de las crestas."
+      },
+      {
+        "quien": "Zinn-IA",
+        "texto": "Llegamos a la zona de transición. ¿Estás list{o|a|e} para la primera muestra?"
+      }
+    ],
+    "opciones": [
+      {
+        "texto": "Tomar la muestra que marca CRISM (más lejos, más valiosa)",
+        "efecto": {
+          "minutos": -20,
+          "oxigeno": -5,
+          "bateria": -10,
+          "alimentacion": -5,
+          "radiacion": 1,
+          "muestra": "M1"
+        },
+        "marca": "muestra1_valiosa",
+        "ir": "d1_decision"
+      },
+      {
+        "texto": "Seguir sin muestra para ahorrar tiempo",
+        "efecto": {},
+        "ir": "d1_decision"
+      }
+    ]
+  },
+  {
+    "id": "d1_decision",
+    "capitulo": 6,
+    "fondo": "bg_c06_hondonada.jpg",
+    "astronauta": "astro_neutral",
+    "personaje": "zinnia_alerta",
+    "poi": "D1",
+    "abrirTablet": true,
+    "lineas": [
+      {
+        "quien": "Zinn-IA",
+        "texto": "Activo la capa Terreno, con datos de THEMIS: esta hondonada se enfría muy rápido de noche."
+      },
+      {
+        "quien": "Zinn-IA",
+        "texto": "Eso indica arena suelta. Con el traje puedes hundirte o resbalar, {nombre}.",
+        "requiere": {
+          "flag": "clima_revisado"
+        }
+      }
+    ],
+    "opciones": [
+      {
+        "texto": "Atajo por la arena (riesgo de atasco)",
+        "efecto": {
+          "minutos": -20,
+          "oxigeno": -18,
+          "bateria": -8,
+          "alimentacion": -15,
+          "integridad": -10,
+          "radiacion": 2
+        },
+        "probabilidad": {
+          "exito": 0.6,
+          "ir_fallo": "c06_atasco"
+        },
+        "ir": "c06_02a"
+      },
+      {
+        "texto": "Camino largo por terreno firme",
+        "efecto": {
+          "minutos": -40,
+          "oxigeno": -14,
+          "bateria": -12,
+          "alimentacion": -10,
+          "radiacion": 3
+        },
+        "ir": "c06_02b"
+      }
+    ]
+  }
+]

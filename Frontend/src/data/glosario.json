@@ -1,0 +1,17 @@
+[
+  { "termino": "Areoide", "definicion": "La \"altura cero\" de Marte: una superficie de igual gravedad definida con datos de MOLA. Marte no tiene nivel del mar." },
+  { "termino": "Biofirma", "definicion": "Señal química o de forma que podría haber sido hecha por vida. En Marte solo hay posibles biofirmas: ninguna vida confirmada." },
+  { "termino": "Boxwork", "definicion": "Red de crestas de roca de 1 a 2 m de alto con hondonadas entre ellas. El agua subterránea cementó las grietas y el viento erosionó lo demás." },
+  { "termino": "Carbonatos", "definicion": "Minerales que se forman en agua y guardan pistas de la atmósfera antigua. Curiosity los encontró en las hondonadas del boxwork." },
+  { "termino": "CRISM", "definicion": "Espectrómetro del Mars Reconnaissance Orbiter que detecta minerales desde órbita." },
+  { "termino": "HiRISE", "definicion": "Cámara del Mars Reconnaissance Orbiter con 25–32 cm por píxel: distingue objetos de unos 75 cm." },
+  { "termino": "Inercia térmica", "definicion": "Qué tan rápido se calienta o se enfría el suelo. La arena suelta tiene baja inercia térmica: se enfría rápido de noche." },
+  { "termino": "MOLA", "definicion": "Altímetro láser de Mars Global Surveyor que midió la altura de todo Marte con un error de ~1 m." },
+  { "termino": "mSv (milisievert)", "definicion": "Unidad de dosis de radiación. En la superficie de Marte se reciben ~0,64 mSv por día; en el viaje, ~1,84." },
+  { "termino": "Opacidad (tau)", "definicion": "Cuánto polvo hay en el aire. En la tormenta de 2018 llegó a 10,8 sobre Opportunity, el récord en Marte." },
+  { "termino": "Percloratos", "definicion": "Sales del suelo marciano (0,5–1 %), tóxicas para la tiroides. Las detectó el módulo Phoenix en 2008." },
+  { "termino": "Regolito", "definicion": "Capa de polvo, arena y roca suelta que cubre la superficie de Marte." },
+  { "termino": "Sol", "definicion": "Un día marciano: 24 h 39 min 35 s." },
+  { "termino": "Sulfatos", "definicion": "Sales que se forman cuando el agua se evapora. La zona boxwork está en una capa rica en sulfatos." },
+  { "termino": "THEMIS", "definicion": "Cámara térmica de Mars Odyssey. Su inercia térmica ayuda a distinguir arena suelta de roca firme." }
+]

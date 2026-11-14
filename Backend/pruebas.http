@@ -1,0 +1,91 @@
+# Pruebas con la extensión REST Client de VS Code: clic en "Send Request" sobre cada bloque.
+# Corre primero "1. Crear jugador": las demás usan su id.
+
+@api = http://localhost:3001/api
+@playerId = {{jugador.response.body.id}}
+
+### Salud de la API y de la base
+GET {{api}}/salud
+
+### 1. Crear jugador
+# @name jugador
+POST {{api}}/players
+Content-Type: application/json
+
+{ "nombre": "Ana", "pronombre": "ella" }
+
+### 2. Guardar en el slot 0 (autoguardado)
+PUT {{api}}/saves/{{playerId}}/0
+Content-Type: application/json
+
+{
+  "capitulo": 6,
+  "escena": "c06_01",
+  "barras": { "oxigeno": 72, "bateria": 80, "alimentacion": 64, "integridad": 100, "radiacion": 14 },
+  "minutos": 150,
+  "muestras": ["M1"],
+  "flags": { "clima_revisado": true },
+  "fichas": ["D04", "D08"]
+}
+
+### 3. Leer el slot 0
+GET {{api}}/saves/{{playerId}}/0
+
+### 4. Registrar una decisión
+POST {{api}}/decisiones
+Content-Type: application/json
+
+{
+  "playerId": "{{playerId}}",
+  "capitulo": 6,
+  "escena": "c06_01",
+  "opcion": "Camino largo por terreno firme",
+  "barras": { "oxigeno": 58, "bateria": 68, "alimentacion": 54, "integridad": 100, "radiacion": 17 }
+}
+
+### 5. Registrar un final
+POST {{api}}/finales
+Content-Type: application/json
+
+{
+  "playerId": "{{playerId}}",
+  "final": "bueno",
+  "causa": "exito",
+  "barras": { "oxigeno": 30, "bateria": 25, "alimentacion": 40, "integridad": 90, "radiacion": 32 },
+  "muestras": 3
+}
+
+### 6. Estadísticas
+GET {{api}}/stats
+
+### --- Resto de endpoints ---
+
+### Resumen de ranuras del jugador
+GET {{api}}/saves/{{playerId}}
+
+### Borrar el slot 0
+DELETE {{api}}/saves/{{playerId}}/0
+
+### Catálogo: capas
+GET {{api}}/capas
+
+### Catálogo: paradas
+GET {{api}}/pois
+
+### Catálogo: datos para pantallas de carga
+GET {{api}}/datos?uso=C
+
+### Desbloquear ficha (el dato debe existir: corre antes npm run db:seed)
+POST {{api}}/fichas/{{playerId}}
+Content-Type: application/json
+
+{ "datoId": "D04" }
+
+### Fichas del jugador
+GET {{api}}/fichas/{{playerId}}
+
+### Error esperado (400): barra fuera de rango y slot inválido
+PUT {{api}}/saves/{{playerId}}/7
+Content-Type: application/json
+
+{ "capitulo": 1, "escena": "c01_01", "barras": { "oxigeno": 150 }, "minutos": 210 }

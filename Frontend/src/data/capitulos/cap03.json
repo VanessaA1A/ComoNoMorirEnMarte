@@ -1,0 +1,89 @@
+{
+  "capitulo": 3,
+  "titulo": "Base Aurora",
+  "inicio": "c03_01",
+  "dato": "Mount Sharp mide unos 5 km de alto; Curiosity la sube desde 2014 y estudió las crestas boxwork en 2025.",
+  "fuentes": ["https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-starts-unpacking-boxwork-formations/", "https://trek.nasa.gov/mars/"],
+  "escenas": [
+    {
+      "id": "c03_01",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Narración", "texto": "Cráter Gale, Marte. La Base Aurora te espera en las faldas de Mount Sharp." },
+        { "quien": "Zinn-IA", "texto": "En el centro del cráter se levanta Mount Sharp, una montaña de unos 5 km de alto." },
+        { "quien": "Zinn-IA", "texto": "El rover Curiosity la sube desde 2014. Hoy caminarás por la zona que estudió en 2025." }
+      ],
+      "ir": "c03_02"
+    },
+    {
+      "id": "c03_02",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "abrirTablet": true, "capa": "optica",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Esta es mi tablet: el mapa de tu caminata. Tócala en la esquina y se amplía." },
+        { "quien": "Zinn-IA", "texto": "Capa Óptica: fotos de la cámara HiRISE desde órbita. Se ven rocas de menos de un metro.", "capa": "optica" },
+        { "quien": "Zinn-IA", "texto": "Capa Relieve: alturas medidas por el láser MOLA. Te avisa de pendientes peligrosas.", "capa": "relieve" },
+        { "quien": "Zinn-IA", "texto": "Capa Terreno: datos térmicos de THEMIS. Lo que se enfría rápido de noche suele ser arena suelta.", "capa": "termico" },
+        { "quien": "Zinn-IA", "texto": "Capa Minerales: CRISM detecta minerales desde órbita. Así sabemos dónde buscar huellas de agua.", "capa": "minerales" },
+        { "quien": "Zinn-IA", "texto": "Capa Radiación y clima: lo que miden los instrumentos de Curiosity aquí abajo.", "capa": "radiacion" }
+      ],
+      "ir": "c03_03"
+    },
+    {
+      "id": "c03_03",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "abrirTablet": true, "capa": "optica",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Objetivo: las crestas boxwork, una red de paredes de roca de 1 a 2 metros de alto. Las formó el agua subterránea hace miles de millones de años." },
+        { "quien": "Zinn-IA", "texto": "Ruta: mirador, zona de transición, hondonada, crestas, fondo con carbonatos y regreso. Unos 4 km." },
+        { "quien": "Zinn-IA", "texto": "El módulo de regreso despega en 3 horas y media. Si no estás aquí, se va sin ti." }
+      ],
+      "ir": "c03_04"
+    },
+    {
+      "id": "c03_04",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Puedes llevar un equipo extra. Solo uno: el traje ya pesa bastante." }
+      ],
+      "opciones": [
+        { "texto": "Batería de repuesto", "marca": "equipo_bateria", "ir": "c03_05a" },
+        { "texto": "Kit de reparación del traje", "marca": "equipo_kit", "ir": "c03_05b" },
+        { "texto": "Raciones extra", "marca": "equipo_raciones", "ir": "c03_05c" }
+      ]
+    },
+    {
+      "id": "c03_05a",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "La batería mantiene la calefacción del traje... y me mantiene encendida a mí. Buena elección." }
+      ],
+      "ir": "c03_06"
+    },
+    {
+      "id": "c03_05b",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "El kit sella rasgaduras del traje. Con crestas y rocas filosas, puede salvarte." }
+      ],
+      "ir": "c03_06"
+    },
+    {
+      "id": "c03_05c",
+      "fondo": "bg_c03_base.jpg", "astro": "neutral", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Caminar con traje cansa muchísimo. Las raciones te darán energía cuando más la necesites." }
+      ],
+      "ir": "c03_06"
+    },
+    {
+      "id": "c03_06",
+      "fondo": "bg_c03_base.jpg", "astro": "caminando", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Narración", "texto": "Se abre la escotilla." },
+        { "quien": "Zinn-IA", "texto": "Tu primer paso en Marte, {nombre}. Respira hondo... bueno, del tanque." }
+      ],
+      "siguienteCapitulo": 4
+    }
+  ]
+}
