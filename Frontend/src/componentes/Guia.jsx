@@ -25,7 +25,7 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
       <div className="pestanas" role="tablist">
         {PESTANAS.map((p) => (
           <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)}>
-            {p === 'Fichas' ? `Fichas (${j.fichas.length}/${todas.length})${nuevas.length ? ' · nuevas' : ''}` : p}
+            {p === 'Fichas' ? `Fichas (${j.fichas.length}/${todas.length})${nuevas.length ? ' ✦' : ''}` : p}
           </button>
         ))}
       </div>
@@ -46,7 +46,7 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
             <div key={d.id} className={`tarjeta-dato ${tiene ? '' : 'bloqueada'} ${nuevas.includes(d.id) ? 'nueva' : ''}`}>
               {tiene ? (
                 <>
-                  <strong>{d.id}</strong>{esDestacada(d) ? <em className="destacada"> (destacada)</em> : null} {d.texto}
+                  <strong>{d.id}{esDestacada(d) ? ' ★' : ''}</strong> {d.texto}
                   <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · pendiente de revisión'}</p>
                 </>
               ) : <span>{d.id} · Ficha bloqueada: {pista(d.capitulo)}</span>}
@@ -83,7 +83,7 @@ export function RecursosNasa() {
       <p>Los 5 recursos oficiales del reto que usa el juego:</p>
       {RECURSOS.map((r) => (
         <div key={r.id} className="tarjeta-dato">
-          <strong><a href={r.url} target="_blank" rel="noreferrer">{r.nombre}<span className="oculto-lector"> (se abre en otra pestaña)</span></a></strong>
+          <strong><a href={r.url} target="_blank" rel="noreferrer">{r.nombre} ↗</a></strong>
           <p>{r.que_es}</p>
           <ul>{r.uso_en_el_juego.map((u) => <li key={u}>{u}</li>)}</ul>
         </div>
@@ -113,7 +113,7 @@ function Reglas() {
         <li><strong>Intermedio:</strong> te quedas en Marte si se te acabó el reloj, te desmayaste o tu radiación quedó entre 70 y 99.</li>
         <li><strong>Malo:</strong> oxígeno o traje en 0, o radiación en 100.</li>
       </ul>
-      <p>Las muestras no cambian el final, cambian tu historia. Guarda desde el menú (las tres rayas) o con Esc; Zinn-IA (tecla Z) te acompaña siempre.</p>
+      <p>Las muestras no cambian el final, cambian tu historia. Guarda con ☰ o Esc; Zinn-IA (tecla Z) te acompaña siempre.</p>
     </div>
   );
 }

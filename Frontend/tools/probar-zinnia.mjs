@@ -53,7 +53,7 @@ ok(fichasPara(3).includes('D29') && fichasPara(5).includes('D29'), 'D29 ("3,5") 
 
 // Datos, capas y recursos nuevos
 const datos = leer('src/data/datos.json');
-ok(datos.length === 30, `30 datos y 30 fichas (${datos.length})`);
+ok(datos.length === 33, `33 datos y 33 fichas (${datos.length})`);
 const esUrl = (u) => /^https?:\/\//.test(u);
 ok(datos.every((d) => esUrl(d.fuente)), 'todas las fuentes de datos.json son URL');
 const todos = ['src/data', 'src/componentes', 'src/juego']
