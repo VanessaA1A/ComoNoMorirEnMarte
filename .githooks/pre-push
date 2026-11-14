@@ -1,0 +1,22 @@
+#!/bin/sh
+# Hook pre-push: corre las pruebas del juego y bloquea el push si alguna falla.
+# Se instala una vez con:  cd Frontend && npm run preparar-hooks
+# Solo para emergencias:   git push --no-verify  (avísale al equipo si lo usas)
+raiz="$(git rev-parse --show-toplevel)" || exit 1
+cd "$raiz/Frontend" || exit 1
+
+if [ ! -d node_modules ]; then
+  echo "pre-push: falta Frontend/node_modules. Corre 'npm install' en Frontend y vuelve a intentar." >&2
+  exit 1
+fi
+
+echo "pre-push: corriendo npm run probar (motor, Zinn-IA, guardado, sincronización y recorridos)..."
+if npm run probar --silent; then
+  echo "pre-push: todas las pruebas pasan. Subiendo."
+  exit 0
+fi
+
+echo "" >&2
+echo "pre-push: FALLÓ al menos una prueba. El push se canceló." >&2
+echo "Arregla lo que dice arriba (o pide ayuda en el grupo) y vuelve a hacer push." >&2
+exit 1

@@ -43,4 +43,10 @@ Todo va en planes gratis (Render **Free**, Vercel **Hobby**); no hace falta cone
 
 Sin `VITE_API_URL`, o si la API no responde, el juego sigue funcionando: guarda en el navegador y sincroniza cuando vuelve la conexión.
 
+## Antes de hacer push (una vez por persona)
+
+1. Corre una sola vez `cd Frontend && npm install && npm run preparar-hooks`.
+2. Desde ahí, cada `git push` corre `npm run probar` (motor, Zinn-IA, guardado, sincronización y recorridos) y **cancela el push si alguna prueba falla**.
+3. Si falla, arregla lo que dice la consola o pide ayuda; `git push --no-verify` es solo para emergencias y hay que avisar al grupo.
+
 **Nunca subas un `.env`**: están en `.gitignore` (raíz, `Backend/` y `Frontend/`). Solo se versionan los `.env.example`.
