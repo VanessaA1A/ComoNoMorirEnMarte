@@ -5,8 +5,10 @@
 // 2) Simula TODAS las rutas posibles con las reglas de las barras y cuenta los finales.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const dir = process.argv[2] || path.join(path.dirname(new URL(import.meta.url).pathname), 'capitulos');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dir = process.argv[2] || path.resolve(__dirname, '../src/data/capitulos');
 const leer = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
 
 const index = leer('index.json');
