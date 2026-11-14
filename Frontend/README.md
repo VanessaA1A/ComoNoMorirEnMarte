@@ -43,18 +43,20 @@ Agrega `?demo=1` a la URL (`http://localhost:5173/?demo=1`): las decisiones con 
 | --- | --- |
 | `src/engine/` | Motor del juego (reglas, finales, navegación). **No tocar** sin correr `npm run probar` |
 | `src/data/capitulos/` | Guion: `index.json`, `cap01…cap10.json`, `finales.json` |
-| `src/data/` | `datos.json` (D01–D28), `capas.json`, `pois.json` (provisionales), `marte.json`, `glosario.json`, `tutorial.json`, `pistas.json`, `zinnia_respuestas.json`. Los tres primeros también los carga el seed del backend |
+| `src/data/` | `datos.json` (D01–D30, las 30 son fichas), `recursos_nasa.json` (5 recursos oficiales del reto), `capas.json`, `pois.json` (provisionales), `marte.json`, `glosario.json`, `tutorial.json`, `pistas.json`, `zinnia_respuestas.json`. Los tres primeros también los carga el seed del backend |
 | `src/juego/` | Estado de la interfaz, guardado (localStorage), fichas, tutorial y lecturas de Zinn-IA |
 | `src/componentes/` | Pantallas, mapas SVG, HUD, Guía, panel de Zinn-IA |
-| `public/img/` | Imágenes: `fondos/`, `personajes/`, `capas/`, `mapa_marte_mola.jpg`, `zinnia_sin_conexion.gif` |
+| `public/img/` | Imágenes: `logos/`, `fondos/`, `zinnia/`, `astronauta/`, `ui/`, `capas/`, `marte/`, `mapa_marte_mola.jpg` (ver `tools/mapa-imagenes.md`) |
 | `tools/` | `validar.mjs`, `probar-motor.mjs`, `probar-zinnia.mjs`, `assets-pendientes.mjs` |
 
 ## Imágenes
 
-Ver `tools/assets-pendientes.md`. Basta con subir el archivo con el nombre exacto a `public/img/...`: el componente `Recurso` lo usa solo y, si no existe, muestra el respaldo (degradado, silueta del astronauta, logo de Zinn-IA con efectos, mapa esquemático).
+Ver `tools/assets-pendientes.md` (lo que falta) y `tools/mapa-imagenes.md` (de dónde salió cada imagen y cuánto pesa); los dos se regeneran con `npm run assets`. Las originales del equipo están en `Imagenes/` y se COPIAN a `public/img/` con nombres sin espacios ni tildes.
+
+El componente `Recurso` prueba la extensión pedida y luego `.png`, `.gif`, `.jpg` y `.webp` con el mismo nombre: basta con subir el archivo con el nombre acordado. Si no existe ninguno, se ve el respaldo dibujado (degradado, silueta, isotipo con efectos, mapa esquemático). Zinn-IA es pixel art: se escala en múltiplos enteros, y con "reducir movimiento" activado se muestra estática.
 
 ## Datos pendientes de verificar (Sefora)
 
-- `datos.json`: las fuentes que dicen "(enlace pendiente)" necesitan su URL; todos los datos tienen `verificado: false`.
+- `datos.json`: las 30 fuentes tienen URL; falta marcar `verificado: true` al revisarlas.
 - `pois.json`: coordenadas `x, y` provisionales en un lienzo de 1000×700; reemplazarlas por las medidas en Mars Trek sobre la imagen base.
 - `marte.json`: Viking 2, Perseverance, Zhurong y los destinos están `"aproximado": true`.

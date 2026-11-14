@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { IconoCerrar } from './Iconos.jsx';
 
 const ENFOCABLES = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -31,7 +32,7 @@ export function Modal({ titulo, onCerrar, children, ancho = false }) {
   return (
     <div className="velo" onClick={(e) => e.target === e.currentTarget && onCerrar?.()}>
       <div ref={ref} className={`modal ${ancho ? 'ancho' : ''}`} role="dialog" aria-modal="true" aria-label={titulo} tabIndex={-1}>
-        {onCerrar && <button className="boton-icono cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>}
+        {onCerrar && <button className="boton-icono cerrar" onClick={onCerrar} aria-label="Cerrar"><IconoCerrar /></button>}
         <h2>{titulo}</h2>
         {children}
       </div>
@@ -47,7 +48,7 @@ export function Cajon({ titulo, cabecera, onCerrar, children, className = '' }) 
       <div className="cajon-cabecera">
         {cabecera}
         <h2>{titulo}</h2>
-        <button className="boton-icono" onClick={onCerrar} aria-label="Cerrar (Esc)">✕</button>
+        <button className="boton-icono" onClick={onCerrar} aria-label="Cerrar (Esc)"><IconoCerrar /></button>
       </div>
       {children}
     </aside>

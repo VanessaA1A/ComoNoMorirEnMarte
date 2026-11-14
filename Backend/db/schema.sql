@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS saves (
 CREATE TABLE IF NOT EXISTS capas (
   id          TEXT PRIMARY KEY,
   nombre      TEXT NOT NULL,
-  tipo        TEXT CHECK (tipo IN ('optico', 'topografico', 'termico', 'minerales', 'radiacion')),
+  tipo        TEXT CONSTRAINT capas_tipo_check CHECK (tipo IN ('optico', 'topografico', 'termico', 'minerales', 'geologico', 'radiacion')),
   mision      TEXT,
   instrumento TEXT,
   imagen      TEXT,
@@ -38,6 +38,22 @@ CREATE TABLE IF NOT EXISTS capas (
   limitacion  TEXT,
   fuente      TEXT
 );
+
+-- Migración (idempotente): bases creadas antes de la capa Geología no aceptan 'geologico'.
+-- CREATE TABLE IF NOT EXISTS no cambia una tabla que ya existe, así que se reemplaza el CHECK.
+ALTER TABLE capas DROP CONSTRAINT IF EXISTS capas_tipo_check;
+DO $$
+DECLARE r record;
+BEGIN
+  -- Por si el CHECK original de "tipo" se creó con otro nombre
+  FOR r IN SELECT conname FROM pg_constraint
+           WHERE conrelid = 'capas'::regclass AND contype = 'c' AND pg_get_constraintdef(oid) ILIKE '%tipo%'
+  LOOP
+    EXECUTE format('ALTER TABLE capas DROP CONSTRAINT %I', r.conname);
+  END LOOP;
+END $$;
+ALTER TABLE capas ADD CONSTRAINT capas_tipo_check
+  CHECK (tipo IN ('optico', 'topografico', 'termico', 'minerales', 'geologico', 'radiacion'));
 
 CREATE TABLE IF NOT EXISTS pois (
   id     TEXT PRIMARY KEY,

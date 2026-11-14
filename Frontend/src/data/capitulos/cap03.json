@@ -3,7 +3,7 @@
   "titulo": "Base Aurora",
   "inicio": "c03_01",
   "dato": "Mount Sharp mide unos 5 km de alto; Curiosity la sube desde 2014 y estudió las crestas boxwork en 2025.",
-  "fuentes": ["https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-starts-unpacking-boxwork-formations/", "https://trek.nasa.gov/mars/"],
+  "fuentes": ["https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-starts-unpacking-boxwork-formations/", "https://trek.nasa.gov/mars/", "https://astrogeology-usgs.hub.arcgis.com/pages/interactive-maps-mars", "https://science.nasa.gov/resource/curiositys-proposed-path-up-mount-sharp/", "https://mars.nasa.gov/mars2020/multimedia/raw-images/"],
   "escenas": [
     {
       "id": "c03_01",
@@ -11,7 +11,8 @@
       "lineas": [
         { "quien": "Narración", "texto": "Cráter Gale, Marte. La Base Aurora te espera en las faldas de Mount Sharp." },
         { "quien": "Zinn-IA", "texto": "En el centro del cráter se levanta Mount Sharp, una montaña de unos 5 km de alto." },
-        { "quien": "Zinn-IA", "texto": "El rover Curiosity la sube desde 2014. Hoy caminarás por la zona que estudió en 2025." }
+        { "quien": "Zinn-IA", "texto": "El rover Curiosity la sube desde 2014. Hoy caminarás por la zona que estudió en 2025." },
+        { "quien": "Zinn-IA", "texto": "Lejos de aquí, en el cráter Jezero, el rover Perseverance ya tomó más de un millón de fotos. Cualquiera puede verlas en internet, recién llegadas a la Tierra." }
       ],
       "ir": "c03_02"
     },
@@ -21,10 +22,12 @@
       "abrirTablet": true, "capa": "optica",
       "lineas": [
         { "quien": "Zinn-IA", "texto": "Esta es mi tablet: el mapa de tu caminata. Tócala en la esquina y se amplía." },
+        { "quien": "Zinn-IA", "texto": "Las capas las junté en Mars Trek, el portal de mapas de Marte del JPL de NASA: ahí se superponen datos de muchas misiones.", "capa": "optica" },
         { "quien": "Zinn-IA", "texto": "Capa Óptica: fotos de la cámara HiRISE desde órbita. Se ven rocas de menos de un metro.", "capa": "optica" },
         { "quien": "Zinn-IA", "texto": "Capa Relieve: alturas medidas por el láser MOLA. Te avisa de pendientes peligrosas.", "capa": "relieve" },
         { "quien": "Zinn-IA", "texto": "Capa Terreno: datos térmicos de THEMIS. Lo que se enfría rápido de noche suele ser arena suelta.", "capa": "termico" },
         { "quien": "Zinn-IA", "texto": "Capa Minerales: CRISM detecta minerales desde órbita. Así sabemos dónde buscar huellas de agua.", "capa": "minerales" },
+        { "quien": "Zinn-IA", "texto": "Capa Geología: el mapa geológico de USGS y NASA muestra qué tipo de roca forma cada región.", "capa": "geologia" },
         { "quien": "Zinn-IA", "texto": "Capa Radiación y clima: lo que miden los instrumentos de Curiosity aquí abajo.", "capa": "radiacion" }
       ],
       "ir": "c03_03"
@@ -36,6 +39,7 @@
       "lineas": [
         { "quien": "Zinn-IA", "texto": "Objetivo: las crestas boxwork, una red de paredes de roca de 1 a 2 metros de alto. Las formó el agua subterránea hace miles de millones de años." },
         { "quien": "Zinn-IA", "texto": "Ruta: mirador, zona de transición, hondonada, crestas, fondo con carbonatos y regreso. Unos 4 km." },
+        { "quien": "Zinn-IA", "texto": "La tracé como los científicos de Curiosity cuando propusieron su camino por Mount Sharp: un mapa con las zonas que vale la pena explorar, anotadas una por una.", "capa": "optica" },
         { "quien": "Zinn-IA", "texto": "El módulo de regreso despega en 3 horas y media. Si no estás aquí, se va sin ti." }
       ],
       "ir": "c03_04"

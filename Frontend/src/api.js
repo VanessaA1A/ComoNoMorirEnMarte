@@ -1,128 +1,166 @@
-// Conexión con la API (Backend/). El juego NUNCA depende de ella:
-// - sin VITE_API_URL todo es local (localStorage) y no hay aviso de "sin conexión";
-// - si una petición falla, se guarda en una cola y se reenvía al volver la conexión.
+// Conexión con la API (Backend/). El juego NUNCA depende de ella: es 100 % jugable sin conexión.
+// - Sin VITE_API_URL todo es local (localStorage): no hay peticiones, avisos ni errores en consola.
+// - Con VITE_API_URL, cada envío (crear jugador, guardar ranura, decisión, ficha, final) entra PRIMERO
+//   en una cola en localStorage y se envía EN ORDEN cuando hay conexión.
+// - Hay conexión solo si: navigator.onLine y GET /salud responde { db: true } en menos de 4 s.
+// - Error de red o 5xx: se reintenta después, con espera creciente (2 s, 4 s, 8 s … hasta 60 s).
+// - 4xx: el dato fue rechazado; se descarta y se registra en la consola.
 import { leer, escribir } from './juego/almacen.js';
 import { BARRAS } from './engine/reglas.js';
 
-const API = (import.meta.env?.VITE_API_URL || '').replace(/\/+$/, '');
+// globalThis.CNMM_API_URL solo existe en las pruebas de Node (fuera de Vite no hay import.meta.env).
+const API = (import.meta.env?.VITE_API_URL || globalThis.CNMM_API_URL || '').replace(/\/+$/, '');
 export const apiActiva = Boolean(API);
 
+const uuid = () => globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
 // ---------- estado de la conexión ----------
-let enLinea = typeof navigator === 'undefined' ? true : navigator.onLine;
-let falloApi = false;
+let enLinea = globalThis.navigator?.onLine ?? true;
+let apiResponde = null; // null = aún no se sabe (no se muestra el aviso); true/false según el último ping
 const oyentes = new Set();
-const avisar = () => oyentes.forEach((f) => f(conectado()));
-export const conectado = () => enLinea && !falloApi;
+export const conectado = () => !apiActiva || (enLinea && apiResponde !== false);
 export function alCambiarConexion(f) { oyentes.add(f); return () => oyentes.delete(f); }
 
-if (typeof window !== 'undefined') {
-  window.addEventListener('online', () => { enLinea = true; avisar(); vaciarCola(); });
-  window.addEventListener('offline', () => { enLinea = false; avisar(); });
+function marcarApi(valor) {
+  const antes = conectado();
+  apiResponde = valor;
+  if (antes !== conectado()) oyentes.forEach((f) => f(conectado()));
 }
 
-async function pedir(ruta, { metodo = 'GET', cuerpo } = {}) {
+class ErrorHttp extends Error {
+  constructor(status, ruta) { super(`La API respondió ${status} en ${ruta}`); this.status = status; }
+}
+/** Error de red, tiempo agotado o 5xx: vale la pena reintentar. */
+const esReintentable = (err) => !err.status || err.status >= 500;
+
+async function pedir(ruta, { metodo = 'GET', cuerpo, espera = 5000 } = {}) {
   const r = await fetch(API + ruta, {
     method: metodo,
     headers: cuerpo ? { 'Content-Type': 'application/json' } : undefined,
     body: cuerpo ? JSON.stringify(cuerpo) : undefined,
-    signal: AbortSignal.timeout(5000),
+    signal: AbortSignal.timeout(espera),
   });
-  if (!r.ok) {
-    const error = new Error(`La API respondió ${r.status}`);
-    error.status = r.status;
-    throw error;
-  }
-  if (falloApi) { falloApi = false; avisar(); }
+  if (!r.ok) throw new ErrorHttp(r.status, ruta);
   return r.status === 204 ? null : r.json();
 }
 
-const marcarFallo = (err) => {
-  // Un 4xx es un dato rechazado, no un problema de conexión: no se reintenta.
-  if (err.status && err.status < 500) return false;
-  if (!falloApi) { falloApi = true; avisar(); }
-  return true;
-};
-
-// ---------- jugador ----------
-// Cada partida tiene un id local; su jugador en la API se crea una sola vez (al elegir pronombre)
-// y cada envío de la cola recuerda a qué partida pertenece: así nunca se mezclan partidas.
-const nuevoUid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-const partidaActual = () => leer('partida_uid') ?? (escribir('partida_uid', nuevoUid()), leer('partida_uid'));
-const leerJugadores = () => leer('jugadores', {});
-const creando = new Map(); // partida -> promesa en curso (evita crear dos jugadores)
-
-export const idJugador = (partida = partidaActual()) => leerJugadores()[partida]?.id ?? null;
-
-function asegurarJugador(partida) {
-  const j = leerJugadores()[partida];
-  if (j?.id) return Promise.resolve(j.id);
-  if (!j?.datos) return Promise.resolve(null);
-  if (!creando.has(partida)) {
-    creando.set(partida, pedir('/players', { metodo: 'POST', cuerpo: j.datos })
-      .then((r) => {
-        const todos = leerJugadores();
-        if (todos[partida]) { todos[partida].id = r.id; escribir('jugadores', todos); }
-        return r.id;
-      })
-      .finally(() => creando.delete(partida)));
+/** Ping a GET /salud (4 s). Devuelve true solo si responde { db: true }. */
+export async function comprobarConexion() {
+  if (!apiActiva) return true;
+  if (!enLinea) { marcarApi(false); return false; }
+  try {
+    const salud = await pedir('/salud', { espera: 4000 });
+    marcarApi(salud?.db === true);
+  } catch {
+    marcarApi(false);
   }
-  return creando.get(partida);
+  return apiResponde === true;
 }
+
+// ---------- reintentos con espera creciente ----------
+let intentos = 0;
+let temporizador = null;
+function programarReintento() {
+  if (temporizador || !apiActiva) return;
+  const ms = Math.min(60000, 2000 * 2 ** intentos);
+  intentos++;
+  temporizador = setTimeout(async () => {
+    temporizador = null;
+    if (await comprobarConexion()) vaciarCola();
+    else programarReintento();
+  }, ms);
+}
+const reiniciarEspera = () => { intentos = 0; if (temporizador) { clearTimeout(temporizador); temporizador = null; } };
+
+// ---------- partidas y jugadores ----------
+// Cada partida tiene un id local. Su jugador en la API se crea UNA sola vez (al elegir pronombre):
+// el playerId se guarda en localStorage y un reintento nunca crea un segundo jugador.
+const partidaActual = () => leer('partida_uid') ?? (escribir('partida_uid', uuid()), leer('partida_uid'));
+const leerJugadores = () => leer('jugadores', {});
+export const idJugador = (partida = partidaActual()) => leerJugadores()[partida]?.id ?? null;
 
 /** Al empezar una partida nueva. Lo pendiente de partidas anteriores se sigue enviando con su propio jugador. */
 export function olvidarJugador() {
-  escribir('partida_uid', nuevoUid());
+  escribir('partida_uid', uuid());
 }
 
-/** Tras elegir pronombre: se crea el jugador de esta partida (cuenta para las estadísticas). */
+/** Tras elegir pronombre: se encola la creación del jugador de esta partida (cuenta para las estadísticas). */
 export function nuevoJugador(nombre, pronombre) {
+  const partida = partidaActual();
   const todos = leerJugadores();
-  todos[partidaActual()] = { datos: { nombre: nombre.slice(0, 30), pronombre } };
+  if (todos[partida]?.id) return; // ya existe: no se duplica
+  const datos = { nombre: nombre.slice(0, 30), pronombre };
+  todos[partida] = { datos };
   escribir('jugadores', todos);
-  if (apiActiva) vaciarCola();
+  enviar({ tipo: 'jugador', ruta: '/players', metodo: 'POST', cuerpo: datos });
 }
 
 // ---------- cola de envíos ----------
-const leerCola = () => leer('cola', []);
+export const leerCola = () => leer('cola', []);
+const quitarDeCola = (id) => escribir('cola', leerCola().filter((i) => i.id !== id));
 
 function encolar(item) {
-  // Para el guardado de una ranura solo importa el último de la misma partida: se reemplaza el anterior.
   const partida = partidaActual();
+  // Para el guardado de una ranura solo importa el último de la misma partida: reemplaza al anterior.
   const cola = leerCola().filter((i) => !(item.clave && i.clave === item.clave && i.partida === partida));
-  escribir('cola', [...cola, { ...item, partida, uid: nuevoUid() }].slice(-300));
+  escribir('cola', [...cola, { ...item, id: uuid(), fecha: Date.now(), partida }].slice(-300));
+}
+
+/** Envía un elemento de la cola. Devuelve 'ok', 'descartado' o 'reintentar'. */
+async function enviarElemento(item) {
+  try {
+    if (item.tipo === 'jugador') {
+      if (!idJugador(item.partida)) {
+        const j = await pedir('/players', { metodo: 'POST', cuerpo: item.cuerpo });
+        const todos = leerJugadores();
+        todos[item.partida] = { ...(todos[item.partida] ?? {}), id: j.id };
+        escribir('jugadores', todos);
+      }
+    } else {
+      const id = idJugador(item.partida);
+      await pedir(item.ruta.replace(':id', id), { metodo: item.metodo, cuerpo: { ...item.cuerpo, ...(item.conId ? { playerId: id } : {}) } });
+    }
+    return 'ok';
+  } catch (err) {
+    if (esReintentable(err)) return 'reintentar';
+    console.warn(`[cola] Envío descartado: ${err.message}`, item.cuerpo);
+    return 'descartado';
+  }
 }
 
 let vaciando = false;
+let pedidoMientras = false;
+
+/** Vacía la cola EN ORDEN. Se llama al iniciar, al volver la conexión y después de cada envío nuevo. */
 export async function vaciarCola() {
-  if (!apiActiva || vaciando || !enLinea) return;
+  if (!apiActiva) return;
+  if (vaciando) { pedidoMientras = true; return; }
+  if (!enLinea || apiResponde === false) { programarReintento(); return; }
   vaciando = true;
   try {
-    if (falloApi) await pedir('/salud'); // ¿volvió la API? (si responde, se quita el aviso)
-    for (const item of leerCola()) {
-      const id = await asegurarJugador(item.partida);
-      if (!id) {
-        // Partida sin jugador todavía: espera, salvo que sea una partida vieja abandonada antes del pronombre.
-        if (item.partida !== partidaActual()) escribir('cola', leerCola().filter((i) => i.uid !== item.uid));
-        continue;
+    for (;;) {
+      const cola = leerCola();
+      if (!cola.length) break;
+      let item = cola[0];
+      if (item.tipo !== 'jugador' && !idJugador(item.partida)) {
+        // Hace falta el jugador de esa partida: primero se crea (aunque esté más atrás en la cola)
+        const jugador = cola.find((i) => i.tipo === 'jugador' && i.partida === item.partida);
+        if (jugador) item = jugador;
+        else if (item.partida !== partidaActual()) { quitarDeCola(item.id); continue; } // partida abandonada antes del pronombre
+        else break; // la partida actual aún no elige pronombre: se espera, sin saltarse el orden
       }
-      try {
-        await pedir(item.ruta.replace(':id', id), { metodo: item.metodo, cuerpo: { ...item.cuerpo, ...(item.conId ? { playerId: id } : {}) } });
-      } catch (err) {
-        if (marcarFallo(err)) return; // sin conexión: se intenta después
-      }
-      // Se quita ESTE envío (la cola pudo cambiar mientras se enviaba)
-      escribir('cola', leerCola().filter((i) => i.uid !== item.uid));
+      const resultado = await enviarElemento(item);
+      if (resultado === 'reintentar') { marcarApi(false); programarReintento(); break; }
+      quitarDeCola(item.id);
+      if (resultado === 'ok') { marcarApi(true); reiniciarEspera(); }
     }
-  } catch (err) {
-    marcarFallo(err);
   } finally {
     vaciando = false;
   }
-  // Lo que llegó mientras se enviaba
-  if (leerCola().some((i) => leerJugadores()[i.partida]?.id) && !falloApi) setTimeout(vaciarCola, 0);
+  if (pedidoMientras) { pedidoMientras = false; vaciarCola(); }
 }
 
-/** Envía sin esperar respuesta; si falla, queda en la cola. */
+/** Encola y trata de enviar (sin esperar respuesta). Sin API no hace nada. */
 function enviar(item) {
   if (!apiActiva) return;
   encolar(item);
@@ -133,26 +171,26 @@ const barrasDe = (p) => Object.fromEntries(BARRAS.map((b) => [b, p[b]]));
 
 export function guardarNube(slot, p) {
   enviar({
-    clave: `save:${slot}`, ruta: `/saves/:id/${slot}`, metodo: 'PUT',
+    tipo: 'ranura', clave: `save:${slot}`, ruta: `/saves/:id/${slot}`, metodo: 'PUT',
     cuerpo: { capitulo: p.capitulo, escena: p.escena, barras: barrasDe(p), minutos: p.minutos, muestras: p.muestras, flags: p.flags, fichas: p.fichas ?? [] },
   });
 }
 
 export function registrarDecision(p, escenaId, opcion) {
-  enviar({ ruta: '/decisiones', metodo: 'POST', conId: true, cuerpo: { capitulo: p.capitulo, escena: escenaId, opcion: opcion.slice(0, 200), barras: barrasDe(p) } });
+  enviar({ tipo: 'decision', ruta: '/decisiones', metodo: 'POST', conId: true, cuerpo: { capitulo: p.capitulo, escena: escenaId, opcion: opcion.slice(0, 200), barras: barrasDe(p) } });
 }
 
 export function registrarFinal(p) {
-  enviar({ ruta: '/finales', metodo: 'POST', conId: true, cuerpo: { final: p.final.final, causa: p.final.causa, barras: barrasDe(p), muestras: p.muestras.length } });
+  enviar({ tipo: 'final', ruta: '/finales', metodo: 'POST', conId: true, cuerpo: { final: p.final.final, causa: p.final.causa, barras: barrasDe(p), muestras: p.muestras.length } });
 }
 
 export function registrarFicha(datoId) {
-  enviar({ ruta: '/fichas/:id', metodo: 'POST', cuerpo: { datoId } });
+  enviar({ tipo: 'ficha', ruta: '/fichas/:id', metodo: 'POST', cuerpo: { datoId } });
 }
 
 /** Catálogo científico: lo de la API manda, lo local completa (y lo reemplaza si la API falla o está vacía). */
 export async function cargarCatalogo(locales) {
-  if (!apiActiva) return locales;
+  if (!apiActiva || !conectado()) return locales;
   const resultado = { ...locales };
   await Promise.all(Object.keys(locales).map(async (nombre) => {
     try {
@@ -161,13 +199,17 @@ export async function cargarCatalogo(locales) {
         const porId = new Map(remotos.map((r) => [r.id, r]));
         resultado[nombre] = locales[nombre].map((l) => ({ ...l, ...Object.fromEntries(Object.entries(porId.get(l.id) ?? {}).filter(([, v]) => v != null)) }));
       }
-    } catch (err) { marcarFallo(err); }
+    } catch { /* se queda con los datos locales */ }
   }));
   return resultado;
 }
 
+// ---------- arranque ----------
+if (apiActiva && typeof globalThis.addEventListener === 'function') {
+  globalThis.addEventListener('online', async () => { enLinea = true; reiniciarEspera(); if (await comprobarConexion()) vaciarCola(); });
+  globalThis.addEventListener('offline', () => { enLinea = false; marcarApi(false); });
+}
 if (apiActiva) {
-  vaciarCola();
-  // Si la API se cayó sin que el navegador perdiera internet, se reintenta cada 30 s.
-  if (typeof window !== 'undefined') setInterval(() => { if (falloApi || leerCola().length) vaciarCola(); }, 30000);
+  // Al iniciar el juego: comprobar la conexión y vaciar lo pendiente de la última sesión
+  comprobarConexion().then((ok) => (ok ? vaciarCola() : programarReintento()));
 }

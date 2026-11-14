@@ -3,7 +3,7 @@
   "titulo": "Las crestas",
   "inicio": "c07_01",
   "dato": "Las crestas boxwork miden 1 a 2 m de alto, con hondonadas arenosas entre ellas. Curiosity encontró arcillas en las crestas y nódulos minerales del tamaño de un guisante.",
-  "fuentes": ["https://www.space.com/space-exploration/mars-rovers/curiosity-rover-finds-clues-to-mars-watery-past-in-rocky-spiderwebs", "https://www.nasa.gov/missions/mars-science-laboratory/curiosity-rover/NASAs-curiosity-rover-sees-martian-spiderwebs-up-close/"],
+  "fuentes": ["https://www.space.com/space-exploration/mars-rovers/curiosity-rover-finds-clues-to-mars-watery-past-in-rocky-spiderwebs", "https://www.nasa.gov/missions/mars-science-laboratory/curiosity-rover/NASAs-curiosity-rover-sees-martian-spiderwebs-up-close/", "https://science.nasa.gov/resource/curiositys-proposed-path-up-mount-sharp/"],
   "escenas": [
     {
       "id": "c07_01",

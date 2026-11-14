@@ -2,8 +2,8 @@
   "capitulo": 10,
   "titulo": "Regreso",
   "inicio": "c10_01",
-  "dato": "Resumen: cada barra cambió por una decisión respaldada por una capa del mapa.",
-  "fuentes": [],
+  "dato": "Resumen: cada barra cambió por una decisión respaldada por datos de Mars Trek, USGS, Curiosity, Perseverance y Worldview.",
+  "fuentes": ["https://trek.nasa.gov/mars/", "https://astrogeology-usgs.hub.arcgis.com/pages/interactive-maps-mars", "https://science.nasa.gov/resource/curiositys-proposed-path-up-mount-sharp/", "https://worldview.earthdata.nasa.gov/", "https://mars.nasa.gov/mars2020/multimedia/raw-images/"],
   "escenas": [
     {
       "id": "c10_01",
