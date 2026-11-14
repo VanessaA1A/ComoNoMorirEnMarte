@@ -1,16 +1,16 @@
 [
-  { "id": "chiste01", "texto": "¿Por qué Marte es rojo? Porque se oxidó esperándonos. Bueno, en serio: su polvo tiene mucho óxido de hierro.", "dato": null, "verificar": true },
+  { "id": "chiste01", "texto": "¿Por qué Marte es rojo? Porque se oxidó esperándonos. Bueno, en serio: su polvo tiene mucho óxido de hierro.", "dato": "D31" },
   { "id": "chiste02", "texto": "Marte hizo una fiesta y nadie fue. Dijeron que el ambiente estaba muy… enrarecido.", "dato": "D05" },
   { "id": "chiste03", "texto": "Olympus Mons nunca acepta un no: siempre se pone en su volcán.", "dato": "D15" },
   { "id": "chiste04", "texto": "Un día en Marte dura 24 horas y 39 minutos. Esos 39 minutos extra los uso para seguir dormida.", "dato": "D08" },
   { "id": "chiste05", "texto": "En Marte la gravedad es como un 38 % de la de la Tierra. Por eso allá mis chistes caen… más despacito.", "dato": "D23" },
   { "id": "chiste06", "texto": "¿Cuál es el rover más terco? Perseverance. Lo dice el nombre.", "dato": "D30" },
   { "id": "chiste07", "texto": "¿Por qué Curiosity nunca guarda secretos? Porque es muy curiosa. ¡Jiji! …ok, ese estuvo terrible.", "dato": null },
-  { "id": "chiste08", "texto": "¿El colmo de un astronauta? Que le contesten ok veinte minutos después. Un mensaje de radio tarda entre 3 y 22 minutos entre la Tierra y Marte.", "dato": null, "verificar": true },
+  { "id": "chiste08", "texto": "¿El colmo de un astronauta? Que le contesten ok veinte minutos después. Un mensaje de radio tarda entre 3 y 22 minutos entre la Tierra y Marte.", "dato": "D32" },
   { "id": "chiste09", "texto": "¿Qué música se escucha en Marte? Rock. Muchísimo rock. Rocas por todas partes.", "dato": null },
   { "id": "chiste10", "texto": "El polvo marciano se mete en todo. Ayer encontré polvo dentro de un chiste. Por eso no se entendió.", "dato": null },
-  { "id": "chiste11", "texto": "Fobos se acerca a Marte poquito a poquito, unos 2 metros cada siglo. Igualito que yo cuando hay galletas.", "dato": null, "verificar": true },
+  { "id": "chiste11", "texto": "Fobos se acerca a Marte poquito a poquito, unos 2 metros cada siglo. Igualito que yo cuando hay galletas.", "dato": "D33" },
   { "id": "chiste12", "texto": "Soy la única flor de Marte. O sea, técnicamente soy la más bonita del planeta. Y la más fea. Y la más mediana.", "dato": null },
-  { "id": "chiste13", "texto": "¿Por qué Marte tiene dos lunas? Porque una sola le daba pena.", "dato": null, "verificar": true },
+  { "id": "chiste13", "texto": "¿Por qué Marte tiene dos lunas? Porque una sola le daba pena.", "dato": "D33" },
   { "id": "chiste14", "texto": "Le pregunté a una roca marciana cuántos años tiene. No me contestó. Es que es muy reservada… y muy roca.", "dato": null }
 ]
