@@ -1,0 +1,18 @@
+{
+  "capitulo": 10,
+  "titulo": "Regreso",
+  "inicio": "c10_01",
+  "dato": "Resumen: cada barra cambió por una decisión respaldada por una capa del mapa.",
+  "fuentes": [],
+  "escenas": [
+    {
+      "id": "c10_01",
+      "fondo": "bg_c03_base.jpg", "astro": "caminando", "zinnia": "curiosa",
+      "lineas": [
+        { "quien": "Narración", "texto": "Llegas a la escotilla de la Base Aurora." },
+        { "quien": "Zinn-IA", "texto": "Revisemos cómo quedó todo, {nombre}..." }
+      ],
+      "accion": "evaluarFinal"
+    }
+  ]
+}
