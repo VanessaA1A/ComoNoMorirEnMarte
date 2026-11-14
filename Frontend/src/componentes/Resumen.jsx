@@ -31,7 +31,7 @@ export default function Resumen() {
           <div>
             <h3>Cómo quedaron tus barras</h3>
             <div className="hud" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}><Barras estado={p} /></div>
-            <p>Reloj: {formatoReloj(p.minutos)} · Muestras: {p.muestras.length} de 3</p>
+            <p>⏱ Reloj: {formatoReloj(p.minutos)} · Muestras: {p.muestras.length} de 3</p>
             <h3>Qué capa habría cambiado el resultado</h3>
             <p>{LECCION[causa]}</p>
           </div>
