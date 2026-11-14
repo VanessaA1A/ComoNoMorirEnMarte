@@ -1,0 +1,58 @@
+{
+  "capitulo": 4,
+  "titulo": "El mirador",
+  "inicio": "c04_01",
+  "dato": "Cada capa de Mount Sharp es una época distinta del clima de Marte. Curiosity fotografió estas laderas con Mastcam en marzo de 2025.",
+  "fuentes": ["https://photojournal.jpl.nasa.gov/catalog/PIA26552", "https://science.nasa.gov/resource/radiation-measurements-on-mars"],
+  "escenas": [
+    {
+      "id": "c04_01",
+      "fondo": "bg_c04_mirador.jpg", "astro": "caminando", "zinnia": "curiosa",
+      "poi": "P1", "efecto": { "minutos": -15, "oxigeno": -10, "bateria": -5, "alimentacion": -5, "radiacion": 1 },
+      "lineas": [
+        { "quien": "Narración", "texto": "Medio kilómetro después llegas a un mirador." },
+        { "quien": "Zinn-IA", "texto": "Mira la montaña: está hecha de capas, como un pastel." },
+        { "quien": "Zinn-IA", "texto": "Cada capa se formó en una época distinta del clima de Marte. Abajo, cuando había lagos; más arriba, cuando el agua se iba secando." },
+        { "quien": "Zinn-IA", "texto": "Esta vista se parece a una panorámica que tomó Curiosity con su cámara Mastcam en marzo de 2025." }
+      ],
+      "ir": "c04_02"
+    },
+    {
+      "id": "c04_02",
+      "fondo": "bg_c04_mirador.jpg", "astro": "neutral", "zinnia": "alerta",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Antes de seguir... ¿revisamos la capa de radiación y clima? Toma unos minutos." }
+      ],
+      "opciones": [
+        { "texto": "Sí, revisar radiación y clima (−10 min)", "efecto": { "minutos": -10 }, "marca": "clima_revisado", "ir": "c04_03a" },
+        { "texto": "No, sigamos: el tiempo corre", "ir": "c04_03b" }
+      ]
+    },
+    {
+      "id": "c04_03a",
+      "fondo": "bg_c04_mirador.jpg", "astro": "neutral", "zinnia": "curiosa",
+      "abrirTablet": true, "capa": "radiacion",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Temperatura bajo cero, como casi siempre aquí. La radiación de fondo está normal: unos 0,64 mSv por día." },
+        { "quien": "Zinn-IA", "texto": "Pero veo actividad en el Sol. Si lanza partículas, te avisaré con tiempo extra." }
+      ],
+      "ir": "c04_04"
+    },
+    {
+      "id": "c04_03b",
+      "fondo": "bg_c04_mirador.jpg", "astro": "caminando", "zinnia": "triste",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Entendido. Vamos sin pronóstico... crucemos los dedos. Bueno, yo no tengo dedos." }
+      ],
+      "ir": "c04_04"
+    },
+    {
+      "id": "c04_04",
+      "fondo": "bg_c04_mirador.jpg", "astro": "caminando", "zinnia": "feliz",
+      "lineas": [
+        { "quien": "Zinn-IA", "texto": "Siguiente parada: la zona de transición, donde empieza el terreno boxwork." }
+      ],
+      "siguienteCapitulo": 5
+    }
+  ]
+}

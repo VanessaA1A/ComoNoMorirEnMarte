@@ -1,0 +1,84 @@
+{
+  "titulo": "Cómo no morir en Marte",
+  "estadoInicial": {
+    "oxigeno": 100,
+    "bateria": 100,
+    "alimentacion": 100,
+    "integridad": 100,
+    "radiacion": 0,
+    "minutos": 210
+  },
+  "capitulos": [
+    {
+      "numero": 1,
+      "titulo": "Despegue",
+      "archivo": "cap01.json",
+      "inicio": "c01_01",
+      "fondoTarjeta": "bg_c01_tierra.jpg"
+    },
+    {
+      "numero": 2,
+      "titulo": "Basura en el camino",
+      "archivo": "cap02.json",
+      "inicio": "c02_01",
+      "fondoTarjeta": "bg_c02_nave.jpg"
+    },
+    {
+      "numero": 3,
+      "titulo": "Base Aurora",
+      "archivo": "cap03.json",
+      "inicio": "c03_01",
+      "fondoTarjeta": "bg_c03_base.jpg"
+    },
+    {
+      "numero": 4,
+      "titulo": "El mirador",
+      "archivo": "cap04.json",
+      "inicio": "c04_01",
+      "fondoTarjeta": "bg_c04_mirador.jpg"
+    },
+    {
+      "numero": 5,
+      "titulo": "La transición",
+      "archivo": "cap05.json",
+      "inicio": "c05_01",
+      "fondoTarjeta": "bg_c05_transicion.jpg"
+    },
+    {
+      "numero": 6,
+      "titulo": "La hondonada",
+      "archivo": "cap06.json",
+      "inicio": "c06_01",
+      "fondoTarjeta": "bg_c06_hondonada.jpg"
+    },
+    {
+      "numero": 7,
+      "titulo": "Las crestas",
+      "archivo": "cap07.json",
+      "inicio": "c07_01",
+      "fondoTarjeta": "bg_c07_crestas.jpg"
+    },
+    {
+      "numero": 8,
+      "titulo": "Bajar la cresta",
+      "archivo": "cap08.json",
+      "inicio": "c08_01",
+      "fondoTarjeta": "bg_c08_bajada.jpg"
+    },
+    {
+      "numero": 9,
+      "titulo": "Alerta solar",
+      "archivo": "cap09.json",
+      "inicio": "c09_01",
+      "fondoTarjeta": "bg_c09_alerta.jpg"
+    },
+    {
+      "numero": 10,
+      "titulo": "Regreso",
+      "archivo": "cap10.json",
+      "inicio": "c10_01",
+      "fondoTarjeta": "bg_c03_base.jpg"
+    }
+  ],
+  "finales": "finales.json"
+}

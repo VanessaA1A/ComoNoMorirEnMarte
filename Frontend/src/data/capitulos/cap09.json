@@ -1,0 +1,290 @@
+{
+  "capitulo": 9,
+  "titulo": "Alerta solar",
+  "inicio": "c09_01",
+  "dato": "En una caminata corta la radiación de fondo es baja (~0,64 mSv/día). El riesgo real son los eventos de partículas solares, difíciles de predecir.",
+  "fuentes": [
+    "https://science.nasa.gov/resource/radiation-measurements-on-mars"
+  ],
+  "escenas": [
+    {
+      "id": "c09_01",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "asustado",
+      "zinnia": "alerta",
+      "abrirTablet": true,
+      "capa": "radiacion",
+      "lineas": [],
+      "ramas": [
+        {
+          "si": {
+            "flag": "clima_revisado"
+          },
+          "ir": "c09_02a"
+        }
+      ],
+      "ir": "c09_02b"
+    },
+    {
+      "id": "c09_02a",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "asustado",
+      "zinnia": "alerta",
+      "efecto": {
+        "minutos": 20
+      },
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Alerta! Viene un evento de partículas solares."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Como revisamos el clima en el mirador, te aviso con 20 minutos de ventaja."
+        }
+      ],
+      "ir": "c09_03"
+    },
+    {
+      "id": "c09_02b",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "asustado",
+      "zinnia": "alerta",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Alerta! Evento de partículas solares... y ya está llegando."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Si hubiéramos revisado el clima en el mirador, te habría avisado antes."
+        }
+      ],
+      "ir": "c09_03",
+      "efecto": {
+        "radiacion": 10
+      }
+    },
+    {
+      "id": "c09_03",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "neutral",
+      "zinnia": "alerta",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "En una caminata corta, la radiación de fondo de Marte es baja. El peligro real son estos eventos solares."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Opciones: volver ya o refugiarnos junto a una cresta..."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "...o subir al mirador alto. Desde allí se ve el borde del cráter Gale. Nadie lo ha visto con ojos humanos."
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Regresar a la base ya",
+          "efecto": {
+            "minutos": -50,
+            "oxigeno": -15,
+            "bateria": -15,
+            "alimentacion": -15,
+            "radiacion": 10
+          },
+          "ir": "c09_04a"
+        },
+        {
+          "texto": "Refugiarse junto a la cresta y luego regresar",
+          "efecto": {
+            "minutos": -70,
+            "oxigeno": -20,
+            "bateria": -18,
+            "alimentacion": -18,
+            "radiacion": 5
+          },
+          "ir": "c09_04b"
+        },
+        {
+          "texto": "Subir al mirador alto",
+          "efecto": {
+            "minutos": -90,
+            "oxigeno": -35,
+            "bateria": -25,
+            "alimentacion": -25,
+            "integridad": -15,
+            "radiacion": 50
+          },
+          "marca": "mirador_alto",
+          "probabilidad": {
+            "exito": 0.7,
+            "ir_fallo": "c09_caida"
+          },
+          "ir": "c09_04c"
+        }
+      ]
+    },
+    {
+      "id": "c09_04a",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "caminando",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Caminas rápido de regreso."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Te alcanzaron algunas partículas, pero tu dosis sigue en rango."
+        }
+      ],
+      "ir": "c09_05"
+    },
+    {
+      "id": "c09_04b",
+      "fondo": "bg_c09_refugio.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Te pegas a la pared de la cresta. La roca te protege por un lado."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Cuando pase lo peor, volvemos. Buena decisión."
+        }
+      ],
+      "ir": "c09_05"
+    },
+    {
+      "id": "c09_04c",
+      "fondo": "bg_c09_mirador_alto.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "poi": "P5",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "Desde lo alto ves el borde del cráter Gale, y las crestas como una telaraña bajo tus pies."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Es hermoso... y peligroso. Tu dosis subió mucho. Volvamos ya."
+        }
+      ],
+      "ir": "c09_05"
+    },
+    {
+      "id": "c09_caida",
+      "fondo": "bg_c09_mirador_alto.jpg",
+      "astro": "herido",
+      "zinnia": "alerta",
+      "efecto": {
+        "integridad": -50,
+        "oxigeno": -10
+      },
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "En la bajada empinada resbalas y ruedas varios metros."
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Integridad del traje en estado crítico!"
+        }
+      ],
+      "ir": "c09_05"
+    },
+    {
+      "id": "c09_05",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "caminando",
+      "zinnia": "curiosa",
+      "lineas": [],
+      "ramas": [
+        {
+          "si": {
+            "flag": "equipo_bateria"
+          },
+          "ir": "c09_bat"
+        },
+        {
+          "si": {
+            "flag": "equipo_raciones"
+          },
+          "ir": "c09_rac"
+        }
+      ],
+      "ir": "c09_06"
+    },
+    {
+      "id": "c09_bat",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "¿Cambiamos a la batería de repuesto?"
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Cambiar la batería (−5 min, +40 batería)",
+          "efecto": {
+            "minutos": -5,
+            "bateria": 40
+          },
+          "ir": "c09_06"
+        },
+        {
+          "texto": "No hace falta",
+          "ir": "c09_06"
+        }
+      ]
+    },
+    {
+      "id": "c09_rac",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "neutral",
+      "zinnia": "curiosa",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "¿Comes las raciones extra antes del último tramo?"
+        }
+      ],
+      "opciones": [
+        {
+          "texto": "Comer las raciones (−5 min, +30 alimentación)",
+          "efecto": {
+            "minutos": -5,
+            "alimentacion": 30
+          },
+          "ir": "c09_06"
+        },
+        {
+          "texto": "No hace falta",
+          "ir": "c09_06"
+        }
+      ]
+    },
+    {
+      "id": "c09_06",
+      "fondo": "bg_c09_alerta.jpg",
+      "astro": "caminando",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Narración",
+          "texto": "A lo lejos ves las luces de la Base Aurora."
+        }
+      ],
+      "siguienteCapitulo": 10
+    }
+  ]
+}
