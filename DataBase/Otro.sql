@@ -1,0 +1,1 @@
+/*todo lo q hagan lo haran con la syntasix de postgres*/
