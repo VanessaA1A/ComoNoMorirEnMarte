@@ -1,0 +1,16 @@
+# Blueprint de Render para la API de "Cómo no morir en Marte".
+# Render > New > Blueprint > este repo. Las variables con sync: false se escriben a mano en el panel (nunca en el repo).
+services:
+  - type: web
+    name: como-no-morir-en-marte-api
+    runtime: node
+    plan: free
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/salud
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
