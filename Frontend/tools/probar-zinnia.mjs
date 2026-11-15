@@ -71,7 +71,7 @@ ok(lineasConCapa.some(([e, c]) => e === 'c03_02' && c === 'geologia') && lineasC
 // Concordancia de género: Zinn-IA y la narración hablan según el pronombre que eligió el jugador
 const { formatear } = await import('../src/engine/texto.js');
 const textosJugables = [
-  ...[...ESCENAS.values()].flatMap((e) => [...(e.lineas || []).map((l) => l.texto), ...(e.opciones || []).map((o) => o.texto)]),
+  ...[...ESCENAS.values()].flatMap((e) => [...(e.lineas || []).flatMap((l) => [l.texto, l.respuesta]), ...(e.opciones || []).map((o) => o.texto)]),
   ...respuestas.map((r) => r.respuesta), ...Object.values(pistas).map((x) => x.texto ?? x),
   ...PASOS.map((p) => p.texto), ...leer('src/data/chistes.json').map((c) => c.texto),
 ].filter((t) => typeof t === 'string');
@@ -93,6 +93,60 @@ ok(formatear(nos, { pronombre: 'ella', escena: 'final_x' }).includes('sin nosotr
 ok(formatear('viv{o|a|e}', { pronombre: 'el', escena: 'c01_01' }) === 'vivo/a/e', 'antes de elegir pronombre se muestran las 3 formas (vivo/a/e)');
 ok(formatear('viv{o|a|e}', null) === 'vivo/a/e', 'sin partida también (vivo/a/e)');
 ok(['vivo', 'viva', 'vive'].every((v, i) => formatear('viv{o|a|e}', { pronombre: ['el', 'ella', 'elle'][i], escena: 'c03_01' }) === v), 'después de elegir: vivo / viva / vive');
+
+// Canción del tutorial (cap. 1): 8 versos con botón de UNA respuesta, luego "esperarGuia" y el cierre
+const cancion = ESCENAS.get('c01_04');
+const versos = (cancion?.lineas || []).filter((l) => l.respuesta);
+ok(versos.length === 8 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 8 versos con respuesta, sin opciones ni efecto (no multiplica rutas)');
+ok(ESCENAS.get(cancion?.ir)?.accion === 'esperarGuia' && !ESCENAS.get(cancion.ir).opciones && !ESCENAS.get(cancion.ir).efecto, 'después de la canción viene "esperarGuia" (paso directo, sin efecto)');
+const cierre = ESCENAS.get(ESCENAS.get(cancion?.ir)?.ir);
+ok(cierre?.lineas?.at(-1)?.texto === 'Ahora sí: ¡motores encendidos!' && cierre.ir === 'c01_05' && !cierre.efecto, 'cierre: "Ahora sí: ¡motores encendidos!" y sigue a c01_05');
+const listo = (pr) => formatear(versos[0]?.respuesta, { pronombre: pr, escena: 'c01_04', nombre: 'Alex' });
+ok(listo('el') === '¡Listo!' && listo('ella') === '¡Lista!' && listo('elle') === '¡Liste!', `canción con los 3 pronombres: ${['el', 'ella', 'elle'].map(listo).join(' / ')}`);
+ok(formatear(versos[0]?.texto, { pronombre: 'elle', escena: 'c01_04', nombre: 'Alex' }).startsWith('¡Alto, Alex!') && formatear(versos[0]?.texto, { pronombre: 'elle', escena: 'c01_04', nombre: 'Alex' }).endsWith('¿Liste?'), 'canción: "¡Alto, {nombre}!… ¿List{o|a|e}?" se formatea bien');
+const emoji = /\p{Extended_Pictographic}/u;
+const nuevosCancion = [...cancion.lineas, ...ESCENAS.get(cancion.ir).lineas, ...cierre.lineas].flatMap((l) => [l.texto, l.respuesta]).filter(Boolean);
+ok(nuevosCancion.every((t) => !emoji.test(t)), 'canción y esperarGuia sin emojis');
+ok(['feliz', 'curiosa'].includes(cancion.zinnia), `expresión de Zinn-IA en la canción: ${cancion.zinnia}`);
+
+// Guía de supervivencia (public/data/guia_supervivencia.json): estructura, concordancia y reglas = motor
+const guia = leer('public/data/guia_supervivencia.json');
+const { INDEX } = await import('../src/engine/guion.js');
+const { colorBarra, aplicarEfecto, finalAlVolver } = await import('../src/engine/reglas.js');
+ok(guia.titulo && guia.subtitulo && guia.secciones.length === 10 && guia.secciones.every((s) => s.id && s.titulo && s.bloques.length), 'guía: título, subtítulo y 10 secciones con bloques');
+ok(guia.secciones.every((s) => s.bloques.every((b) => ['parrafo', 'lista', 'tabla', 'nota'].includes(b.tipo))), 'guía: solo párrafos, listas, tablas y notas');
+const textosGuia = [guia.intro, ...guia.secciones.flatMap((s) => [s.titulo, ...s.bloques.flatMap((b) => [b.texto, ...(b.items || []), ...(b.encabezados || []), ...(b.filas || []).flat()])])].filter(Boolean);
+const txtGuia = textosGuia.join('\n');
+ok(textosGuia.every((t) => !emoji.test(t)), 'guía sin emojis');
+ok(textosGuia.flatMap((t) => t.match(/\{[^{}]*\|[^{}]*\}/g) || []).every((m) => m.split('|').length === 3), 'guía: marcadores de pronombre con 3 formas');
+ok(formatear('Llegas viv{o|a|e}', null) === 'Llegas vivo/a/e' && txtGuia.includes('Llegas viv{o|a|e}'), 'guía: "Llegas viv{o|a|e}" (en guia.html se lee "vivo/a/e")');
+const sinMarcadorGuia = textosGuia.map((t) => t.replace(/[\wáéíóúñ]*\{[^{}]*\}[\wáéíóúñ]*/gi, '')).filter((t) => /\b(vivo|viva|listo|lista|tranquilo|tranquila|nosotros|nosotras)\b/i.test(t));
+ok(!sinMarcadorGuia.length, `guía: ninguna palabra con género hacia el jugador queda fija${sinMarcadorGuia.length ? ': ' + sinMarcadorGuia.join(' | ').slice(0, 120) : ''}`);
+// El motor manda: las cifras de la sección 2 se comprueban con las reglas reales
+const ini = INDEX.estadoInicial;
+ok(txtGuia.includes(`${ini.minutos} minutos`) && ini.radiacion === 0 && ['oxigeno', 'bateria', 'alimentacion', 'integridad'].every((b) => ini[b] === 100), `guía = motor: empiezas en 100 (radiación 0) con ${ini.minutos} minutos`);
+const base = { ...ini, flags: {}, muestras: [] };
+ok(aplicarEfecto({ ...base, alimentacion: 29 }, { minutos: -10 }).minutos === ini.minutos - 15 && txtGuia.includes('**Menos de 30**: caminas más lento (cada tramo tarda 50 % más)'), 'guía = motor: alimentación < 30 → +50 % de tiempo');
+ok(aplicarEfecto({ ...base, integridad: 29 }, {}, true).oxigeno === 90 && txtGuia.includes('pierdes 10 de oxígeno extra en cada decisión'), 'guía = motor: integridad < 30 → −10 de oxígeno por decisión');
+ok(aplicarEfecto({ ...base, bateria: 0 }, { oxigeno: -5, alimentacion: -5 }).oxigeno === 90 && txtGuia.includes('se gastan **el doble**'), 'guía = motor: batería en 0 → oxígeno y comida al doble');
+ok(finalAlVolver({ ...base, radiacion: 70 }) === 'intermedio:radiacion' && finalAlVolver({ ...base, minutos: -1 }) === 'intermedio:tiempo' && txtGuia.includes('Con **70 o más** al volver'), 'guía = motor: radiación ≥ 70 o reloj < 0 al volver → te quedas en Marte');
+ok(colorBarra('oxigeno', 51) === 'verde' && colorBarra('oxigeno', 50) === 'amarillo' && colorBarra('oxigeno', 25) === 'amarillo' && colorBarra('oxigeno', 24) === 'rojo'
+  && colorBarra('radiacion', 39) === 'verde' && colorBarra('radiacion', 40) === 'amarillo' && colorBarra('radiacion', 70) === 'rojo'
+  && txtGuia.includes('verde por encima de 50, amarillo de 25 a 50, rojo por debajo de 25') && txtGuia.includes('verde por debajo de 40, amarillo de 40 a 69, rojo de 70 en adelante'), 'guía = motor: colores de las barras');
+ok(txtGuia.includes('Raciones o depósito de suministros'), 'guía = motor: la alimentación se recupera con raciones o en el depósito');
+
+// Solo computadora: bloqueo en celular o ventana chica (guia.html y la API no se bloquean)
+const { puedeJugar, ANCHO_MINIMO } = await import('../src/juego/dispositivo.js');
+ok(ANCHO_MINIMO === 1024, 'ancho mínimo: 1024 px');
+ok(!puedeJugar({ ancho: 800, punteroFino: true }), 'a 800 px se bloquea');
+ok(puedeJugar({ ancho: 1280, punteroFino: true }), 'a 1280 px con mouse se juega');
+ok(!puedeJugar({ ancho: 1280, punteroFino: false }), 'pantalla grande sin puntero fino (tablet) se bloquea');
+ok(!puedeJugar({ ancho: 390, punteroFino: false }), 'celular se bloquea');
+ok(puedeJugar({ ancho: 390, punteroFino: false, buscar: '?forzar=1' }) && puedeJugar({ ancho: 390, punteroFino: false, buscar: '?demo=1&forzar=1' }), '?forzar=1 salta el bloqueo (solo pruebas)');
+ok(!puedeJugar({ ancho: 390, punteroFino: false, buscar: '?demo=1' }) && !puedeJugar({ ancho: 390, punteroFino: false, buscar: '?forzar=0' }), '?demo=1 o ?forzar=0 no saltan el bloqueo');
+const bloqueo = fs.readFileSync(path.join(raiz, 'src/componentes/SoloComputadora.jsx'), 'utf8');
+ok(bloqueo.includes('¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.') && bloqueo.includes('href="/guia.html"') && !emoji.test(bloqueo), 'pantalla de bloqueo: texto de Zinn-IA, enlace a guia.html y sin emojis');
+ok(!fs.readFileSync(path.join(raiz, 'public/guia.html'), 'utf8').includes('puedeJugar'), 'guia.html no usa el bloqueo');
 
 if (fallos) { console.log(`\n❌ ${fallos} prueba(s) fallaron`); process.exit(1); }
 console.log('\n✅ Zinn-IA: textos y lógica en orden');

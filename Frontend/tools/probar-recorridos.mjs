@@ -49,10 +49,21 @@ for (const r of RECORRIDOS) {
   let s = { ...nuevaPartida(), nombre: r.jugador };
   const pasos = [];
   const problemas = [];
+  const visitadas = [];
+  let antesCancion = null;
+  let clicsCancion = 0;
   for (let i = 0; i < 300 && !s.final; i++) {
     const id = s.escena;
+    visitadas.push(id);
+    // Canción del cap. 1: un clic por verso (botón de una sola respuesta) y esperarGuia (abrir la Guía o "La abro después")
+    if (id === 'c01_04') { antesCancion = barras(s).join(); clicsCancion += escena(id).lineas.filter((l) => l.respuesta).length; }
+    if (escena(id).accion === 'esperarGuia') clicsCancion += 1;
     const ops = opcionesVisibles(escena(id), s);
-    if (!ops.length) { s = continuar(s).estado; continue; }
+    if (!ops.length) {
+      s = continuar(s).estado;
+      if (id === 'c01_04c' && barras(s).join() !== antesCancion) problemas.push(`La canción cambió las barras: ${antesCancion} → ${barras(s).join()}`);
+      continue;
+    }
     const quiero = r.decisiones[id];
     const op = quiero && ops.find((o) => o.texto.startsWith(quiero));
     if (!op) { problemas.push(`En ${id} el recorrido no dice qué elegir (opciones: ${ops.map((o) => o.texto).join(' / ')})`); break; }
@@ -67,6 +78,10 @@ for (const r of RECORRIDOS) {
     pasos.push(`${id.padEnd(8)} → ${op.texto.slice(0, 42).padEnd(42)}${tiroAzar ? ` [azar: ${forzado ?? 'sin indicar'}]` : ''}  ⇒ ${fmt(barras(s))}`);
   }
   const final = s.final ? `${s.final.final}:${s.final.causa}` : '(sin final)';
+  const iC = visitadas.indexOf('c01_05');
+  if (!['c01_04', 'c01_04b', 'c01_04c'].every((x) => visitadas.includes(x))) problemas.push('El recorrido no pasó por la canción (c01_04 → c01_04b → c01_04c)');
+  if (clicsCancion !== 9) problemas.push(`La canción debería pedir 9 clics (8 versos + esperarGuia) y pidió ${clicsCancion}`);
+  if (iC < 0) problemas.push('El recorrido no llegó a c01_05');
   const e = r.esperado;
   if (e.barras && JSON.stringify(barras(s)) !== JSON.stringify(e.barras)) problemas.push(`Barras: esperado ${fmt(e.barras)} · obtenido ${fmt(barras(s))}`);
   if (final !== e.final) problemas.push(`Final: esperado ${e.final} · obtenido ${final}`);
@@ -74,7 +89,7 @@ for (const r of RECORRIDOS) {
   if (e.oxigeno != null && s.oxigeno !== e.oxigeno) problemas.push(`O2: esperado ${e.oxigeno} · obtenido ${s.oxigeno}`);
   for (const [id] of Object.entries(r.azar)) if (!pasos.some((p) => p.startsWith(id) && p.includes('[azar'))) problemas.push(`El azar de ${id} nunca se tiró (el recorrido terminó antes o la opción no tiene riesgo)`);
 
-  console.log(`\n${problemas.length ? '✗' : '✓'} ${r.nombre}: ${final} · ${fmt(barras(s))} · muestras ${s.muestras.length} · pronombre ${s.pronombre}`);
+  console.log(`\n${problemas.length ? '✗' : '✓'} ${r.nombre}: ${final} · ${fmt(barras(s))} · muestras ${s.muestras.length} · pronombre ${s.pronombre} · canción: ${clicsCancion} clics`);
   if (problemas.length) {
     fallos++;
     problemas.forEach((p) => console.log(`   DIFERENCIA: ${p}`));

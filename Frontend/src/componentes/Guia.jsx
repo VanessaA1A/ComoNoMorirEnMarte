@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CAPITULOS, INDEX } from '../engine/guion.js';
+import { CAPITULOS } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { formatear } from '../engine/texto.js';
 import { fichasDe, esDestacada } from '../juego/fichas.js';
@@ -8,14 +8,19 @@ import { Enlace, etiquetaCapa } from './Mapas.jsx';
 import Recurso from './Recurso.jsx';
 import GLOSARIO from '../data/glosario.json';
 import RECURSOS from '../data/recursos_nasa.json';
+// Una sola fuente: el mismo JSON que lee public/guia.html (va dentro del bundle para funcionar sin conexión)
+import GUIA from '../../public/data/guia_supervivencia.json';
 
-export const PESTANAS = ['Barras y reglas', 'Capas del mapa', 'Fichas', 'Recursos NASA', 'Glosario', 'Fuentes'];
+/** Índice: las secciones de la guía y, en "Más", las fichas desbloqueadas y el detalle que ya existía. */
+const MAS = ['Fichas', 'Capas del mapa', 'Recursos NASA', 'Glosario completo', 'Fuentes'];
+export const PESTANAS = [...GUIA.secciones.map((s) => s.id), ...MAS];
 
-export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
+export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
   const j = useJuego();
-  const [pestana, setPestana] = useState(pestanaInicial);
+  const [pestana, setPestana] = useState(PESTANAS.includes(pestanaInicial) ? pestanaInicial : GUIA.secciones[0].id);
   const todas = fichasDe(j.catalogo.datos);
   const nuevas = j.fichasNuevas;
+  const seccion = GUIA.secciones.find((s) => s.id === pestana);
 
   // Al salir de la pestaña Fichas, las nuevas dejan de brillar
   useEffect(() => () => { if (pestana === 'Fichas') j.marcarFichasVistas(); }, [pestana]); // eslint-disable-line
@@ -23,15 +28,24 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
   return (
     <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay}
       cabecera={<div className="cara"><Recurso src="/img/zinnia/triste.png" alt="" className="zinnia" respaldo={null} /></div>}>
-      <div className="pestanas" role="tablist">
-        {PESTANAS.map((p) => (
-          <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)}>
-            {p === 'Fichas' ? `Fichas (${j.fichas.length}/${todas.length})${nuevas.length ? ' ✦' : ''}` : p}
-          </button>
-        ))}
-      </div>
-      <div className="cajon-cuerpo" role="tabpanel">
-        {pestana === 'Barras y reglas' && <Reglas />}
+      <nav className="guia-indice" aria-label="Índice de la guía">
+        <div className="pestanas" role="tablist" aria-label="Secciones">
+          {GUIA.secciones.map((s) => (
+            <button key={s.id} role="tab" aria-selected={s.id === pestana} onClick={() => setPestana(s.id)} title={formatear(s.titulo, j.partida)}>
+              {s.numero}. {formatear(s.titulo, j.partida)}
+            </button>
+          ))}
+        </div>
+        <div className="pestanas pestanas-mas" role="tablist" aria-label="Más información">
+          {MAS.map((p) => (
+            <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)}>
+              {p === 'Fichas' ? `Fichas (${j.fichas.length}/${todas.length})${nuevas.length ? ' ✦' : ''}` : p}
+            </button>
+          ))}
+        </div>
+      </nav>
+      <div className="cajon-cuerpo guia-cuerpo" role="tabpanel">
+        {seccion && <SeccionGuia seccion={seccion} partida={j.partida} />}
         {pestana === 'Capas del mapa' && j.catalogo.capas.map((c) => (
           <div key={c.id} className="tarjeta-dato">
             <strong>{c.etiqueta ? `${etiquetaCapa(c)}: ${c.nombre}` : c.nombre}</strong>
@@ -55,7 +69,7 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
           );
         })}
         {pestana === 'Recursos NASA' && <RecursosNasa />}
-        {pestana === 'Glosario' && <dl>{GLOSARIO.map((g) => (
+        {pestana === 'Glosario completo' && <dl>{GLOSARIO.map((g) => (
           <div key={g.termino} className="tarjeta-dato"><dt><strong>{g.termino}</strong></dt><dd style={{ margin: 0 }}>{g.definicion}</dd></div>
         ))}</dl>}
         {pestana === 'Fuentes' && (
@@ -78,6 +92,47 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
   );
 }
 
+/** Texto con **negrita**, *cursiva* y marcadores de pronombre {o|a|e} (según la partida; sin partida, "o/a/e"). */
+export function TextoGuia({ texto, partida }) {
+  const t = formatear(texto, partida);
+  return t.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((trozo, i) => {
+    if (/^\*\*[^*]+\*\*$/.test(trozo)) return <strong key={i}>{trozo.slice(2, -2)}</strong>;
+    if (/^\*[^*]+\*$/.test(trozo)) return <em key={i}>{trozo.slice(1, -1)}</em>;
+    return trozo;
+  });
+}
+
+export function SeccionGuia({ seccion, partida }) {
+  return (
+    <section className="guia-seccion" aria-labelledby={`guia-${seccion.id}`}>
+      <h3 id={`guia-${seccion.id}`}>{seccion.numero}. <TextoGuia texto={seccion.titulo} partida={partida} /></h3>
+      {seccion.bloques.map((b, i) => {
+        if (b.tipo === 'parrafo') return <p key={i}><TextoGuia texto={b.texto} partida={partida} /></p>;
+        if (b.tipo === 'nota') return <p key={i} className="guia-nota"><TextoGuia texto={b.texto} partida={partida} /></p>;
+        if (b.tipo === 'lista') {
+          const Lista = b.ordenada ? 'ol' : 'ul';
+          return <Lista key={i}>{b.items.map((it, k) => <li key={k}><TextoGuia texto={it} partida={partida} /></li>)}</Lista>;
+        }
+        if (b.tipo === 'tabla') {
+          return (
+            <div key={i} className="guia-tabla">
+              <table>
+                <thead><tr>{b.encabezados.map((e, k) => <th key={k} scope="col"><TextoGuia texto={e} partida={partida} /></th>)}</tr></thead>
+                <tbody>{b.filas.map((f, k) => (
+                  <tr key={k}>{f.map((c, m) => (m === 0
+                    ? <th key={m} scope="row"><TextoGuia texto={c} partida={partida} /></th>
+                    : <td key={m}><TextoGuia texto={c} partida={partida} /></td>))}</tr>
+                ))}</tbody>
+              </table>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </section>
+  );
+}
+
 export function RecursosNasa() {
   return (
     <div>
@@ -94,28 +149,3 @@ export function RecursosNasa() {
 }
 
 const pista = (cap) => (cap === 'Mapa' ? 'ábrela en el Mapa de Marte' : cap === 'Final' ? 'se gana al ver un final' : `se gana en el capítulo ${String(cap).split(',')[0]}`);
-
-function Reglas() {
-  const j = useJuego();
-  const e = INDEX.estadoInicial;
-  return (
-    <div>
-      <p>Tienes <strong>5 barras de vida</strong> y un <strong>reloj</strong> de {e.minutos} minutos para volver al módulo de ascenso.</p>
-      <ul>
-        <li><strong>O2</strong> (oxígeno): llega a 0 → la misión termina.</li>
-        <li><strong>Batería</strong>: en 0 Zinn-IA se apaga, el mapa pierde las capas y el oxígeno y la comida se gastan el doble.</li>
-        <li><strong>Comida</strong> (alimentación): bajo 30 caminas lento (+50 % de tiempo); en 0 te desmayas y el rover te rescata tarde.</li>
-        <li><strong>Traje</strong> (integridad): bajo 30 hay fuga (−10 de O2 en cada decisión); en 0 la misión termina.</li>
-        <li><strong>Radiación</strong>: va al revés. En 100 la misión termina; con 70 o más al volver no puedes viajar a casa.</li>
-      </ul>
-      <p>Colores: <span style={{ color: 'var(--barra-verde)' }}>verde</span> más de 50, <span style={{ color: 'var(--barra-amarillo)' }}>amarillo</span> de 25 a 50, <span style={{ color: 'var(--barra-rojo)' }}>rojo</span> menos de 25. Radiación: verde menos de 40, amarillo 40–69, rojo 70 o más.</p>
-      <h3>Los 3 finales</h3>
-      <ul>
-        <li><strong>Bueno:</strong> vuelves {formatear('viv{o|a|e}', j.partida)}, a tiempo y con radiación menor a 70.</li>
-        <li><strong>Intermedio:</strong> te quedas en Marte si se te acabó el reloj, te desmayaste o tu radiación quedó entre 70 y 99.</li>
-        <li><strong>Malo:</strong> oxígeno o traje en 0, o radiación en 100.</li>
-      </ul>
-      <p>Las muestras no cambian el final, cambian tu historia. Guarda con ☰ o Esc; Zinn-IA (tecla Z) te acompaña siempre.</p>
-    </div>
-  );
-}

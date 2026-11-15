@@ -40,8 +40,13 @@ const destinos = (e) => {
   if (e.siguienteCapitulo) d.push(inicioCap.get(e.siguienteCapitulo));
   return d;
 };
+// Acciones de escena que conoce el simulador. "esperarGuia" (canción del cap. 1) solo espera a que el
+// jugador abra la Guía en la interfaz: para las rutas es un PASO DIRECTO (sigue por "ir", sin efectos ni ramas).
+const ACCIONES = new Set(['pedirNombre', 'mostrarHUD', 'evaluarFinal', 'esperarGuia']);
 for (const e of escenas.values()) {
   if (e.esFinal) continue;
+  if (e.accion && !ACCIONES.has(e.accion)) errores.push(`${e.id}: acción desconocida "${e.accion}"`);
+  if (e.accion === 'esperarGuia' && (e.opciones || e.ramas || e.efecto || !e.ir)) errores.push(`${e.id}: "esperarGuia" debe ser un paso directo (solo "ir", sin opciones, ramas ni efecto)`);
   const d = destinos(e);
   if (d.length === 0 && e.accion !== 'evaluarFinal') errores.push(`Escena sin salida: ${e.id}`);
   for (const id of d) if (!escenas.has(id)) errores.push(`${e.id} apunta a una escena que no existe: ${id}`);

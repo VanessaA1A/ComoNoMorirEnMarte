@@ -8,6 +8,7 @@ import { Creditos, MenuJuego, PanelGuardar, Historial } from './componentes/Pant
 import { MapaRuta, MapaMarte, poiActual } from './componentes/Mapas.jsx';
 import { Modal } from './componentes/Modal.jsx';
 import { PanelZinnia, Tutorial, SinConexion, Avisos } from './componentes/Zinnia.jsx';
+import { usePuedeJugar, PantallaSoloComputadora } from './componentes/SoloComputadora.jsx';
 
 function Overlay() {
   const j = useJuego();
@@ -55,9 +56,12 @@ function Escenario() {
 }
 
 export default function App() {
+  // Solo computadora: en celular o ventana chica se muestra el aviso. El JuegoProvider sigue montado,
+  // así que al agrandar la ventana el juego vuelve sin perder la partida.
+  const puedeJugar = usePuedeJugar();
   return (
-    <JuegoProvider>
-      <Escenario />
+    <JuegoProvider bloqueado={!puedeJugar}>
+      {puedeJugar ? <Escenario /> : <PantallaSoloComputadora />}
     </JuegoProvider>
   );
 }

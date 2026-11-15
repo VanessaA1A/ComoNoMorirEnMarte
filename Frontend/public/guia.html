@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Guía de supervivencia en Marte del juego Cómo no morir en Marte: barras de vida, mapa, peligros reales y fuentes NASA." />
+  <meta name="theme-color" content="#24073F" />
+  <link rel="icon" type="image/png" href="/img/logos/isotipo.png" />
+  <title>Guía de supervivencia en Marte</title>
+  <!--
+    Página independiente: lee el MISMO JSON que el panel del juego (data/guia_supervivencia.json).
+    No usa la API ni el bundle del juego, y no se bloquea en celular. Para cambiar un texto, editar solo el JSON.
+  -->
+  <style>
+    @font-face { font-family: "Amoria"; src: url("/fonts/AMORIA.otf") format("opentype"); font-display: swap; }
+    @font-face { font-family: "Forced Square"; src: url("/fonts/FORCED_SQUARE.ttf") format("truetype"); font-display: swap; }
+    :root {
+      --aurora-1: #01EFAC; --aurora-2: #01CBAE; --aurora-3: #2082A6; --aurora-4: #524094; --aurora-5: #562A83;
+      --lima: #CAFF95; --violeta: #613395; --noche: #24073F; --texto: #F4F6FF;
+      --zinnia-petalo: #FA932E;
+      --fuente-titulo: "Amoria", Georgia, serif;
+      --fuente-texto: "Forced Square", "Courier New", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--noche); color: var(--texto); font-family: var(--fuente-texto);
+      font-size: 17px; line-height: 1.55; -webkit-text-size-adjust: 100%;
+    }
+    a { color: var(--aurora-1); }
+    .contenedor { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+    header.portada {
+      background: linear-gradient(160deg, var(--aurora-5), var(--noche) 70%);
+      border-bottom: 3px solid var(--aurora-1); padding: 32px 0 24px;
+    }
+    h1 { font-family: var(--fuente-titulo); font-weight: normal; color: var(--lima); font-size: clamp(2.1rem, 7vw, 3.6rem); line-height: 1.05; margin: 0 0 .3em; }
+    .subtitulo { opacity: .85; margin: 0 0 1em; }
+    .intro { border-left: 4px solid var(--aurora-1); padding: .5em .9em; background: rgba(1, 239, 172, .08); margin: 0 0 1.2em; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .boton {
+      font-family: inherit; font-size: 1rem; color: var(--noche); background: var(--aurora-1); border: 2px solid var(--aurora-1);
+      border-radius: .5em; padding: .55em 1em; cursor: pointer; text-decoration: none; display: inline-block;
+    }
+    .boton.secundario { background: transparent; color: var(--texto); border-color: var(--aurora-3); }
+    .boton:hover, .boton:focus-visible { background: var(--aurora-2); color: var(--noche); }
+    .pronombre { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .9rem; margin-top: 14px; }
+    .pronombre button { font-family: inherit; font-size: .9rem; color: var(--texto); background: transparent; border: 1px solid var(--aurora-4); border-radius: 1em; padding: .2em .8em; cursor: pointer; }
+    .pronombre button[aria-pressed="true"] { background: var(--aurora-4); border-color: var(--aurora-1); }
+    nav.indice { margin: 28px 0 8px; }
+    nav.indice h2 { font-family: var(--fuente-texto); font-weight: normal; color: var(--aurora-1); font-size: 1.1rem; margin: 0 0 .5em; letter-spacing: .05em; }
+    nav.indice ol { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; }
+    nav.indice li { margin: 0; }
+    nav.indice a { display: block; padding: .3em .5em; border-radius: .3em; text-decoration: none; color: var(--texto); border-left: 3px solid var(--aurora-4); }
+    nav.indice a:hover, nav.indice a:focus-visible { background: rgba(82, 64, 148, .45); border-left-color: var(--aurora-1); }
+    nav.indice .num { color: var(--aurora-1); margin-right: .4em; }
+    section.seccion { margin: 28px 0; padding: 20px; border: 1px solid var(--aurora-4); border-radius: 12px; background: rgba(86, 42, 131, .18); scroll-margin-top: 12px; }
+    section.seccion h2 { font-family: var(--fuente-texto); font-weight: normal; color: var(--lima); font-size: clamp(1.25rem, 3.6vw, 1.6rem); margin: 0 0 .6em; line-height: 1.25; }
+    section.seccion h2 .num { color: var(--aurora-1); }
+    strong { color: var(--aurora-1); font-weight: normal; }
+    p, li { margin: .5em 0; }
+    ul, ol { padding-left: 1.3em; }
+    .nota { opacity: .8; font-size: .92em; border-left: 3px solid var(--aurora-3); padding-left: .7em; }
+    .tabla { overflow-x: auto; margin: .8em 0; -webkit-overflow-scrolling: touch; }
+    table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .9em; }
+    th, td { border: 1px solid var(--aurora-4); padding: .45em .6em; text-align: left; vertical-align: top; }
+    thead th { background: var(--aurora-5); color: var(--lima); font-weight: normal; }
+    tbody th { font-weight: normal; color: var(--aurora-1); }
+    .arriba { display: inline-block; margin-top: .6em; font-size: .85em; opacity: .8; }
+    footer { padding: 24px 0 40px; opacity: .8; font-size: .9em; border-top: 1px solid var(--aurora-4); margin-top: 32px; }
+    .error { background: rgba(250, 147, 46, .15); border: 1px solid var(--zinnia-petalo); padding: 1em; border-radius: .5em; }
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      header.portada { padding: 24px 0 18px; }
+      section.seccion { padding: 14px; margin: 20px 0; }
+      .acciones .boton { flex: 1 1 auto; text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    /* Impresión / PDF: fondo blanco, texto negro, sin botones, tablas enteras */
+    @media print {
+      @page { margin: 16mm 14mm; }
+      body { background: #fff; color: #000; font-size: 11pt; line-height: 1.45; }
+      header.portada { background: none; border-bottom: 2px solid #000; padding: 0 0 10pt; }
+      h1 { color: #000; font-size: 26pt; }
+      .intro { background: none; border-left-color: #000; }
+      .acciones, .pronombre, .arriba, .no-imprimir { display: none !important; }
+      nav.indice h2, nav.indice a { color: #000; }
+      nav.indice a { border-left-color: #999; padding: .1em .5em; }
+      nav.indice .num, section.seccion h2 .num, strong, tbody th { color: #000; }
+      strong { font-weight: bold; }
+      section.seccion { background: none; border: none; padding: 0; margin: 14pt 0; break-inside: auto; }
+      section.seccion h2 { color: #000; break-after: avoid; }
+      .tabla { overflow: visible; }
+      table { min-width: 0; font-size: 9.5pt; }
+      th, td { border-color: #555; }
+      thead th { background: #eee; color: #000; }
+      tr, li { break-inside: avoid; }
+      a { color: #000; text-decoration: none; }
+      footer { border-top-color: #999; }
+    }
+  </style>
+</head>
+<body>
+  <header class="portada">
+    <div class="contenedor">
+      <h1 id="titulo">Guía de supervivencia en Marte</h1>
+      <p class="subtitulo" id="subtitulo"></p>
+      <p class="intro" id="intro" hidden></p>
+      <div class="acciones">
+        <button class="boton" type="button" onclick="window.print()">Imprimir / guardar PDF</button>
+        <a class="boton secundario" href="/">Ir al juego (en computadora)</a>
+      </div>
+      <div class="pronombre" role="group" aria-label="Leer la guía con el pronombre">
+        <span>Leer como:</span>
+        <button type="button" data-pronombre="" aria-pressed="true">todas las formas</button>
+        <button type="button" data-pronombre="el" aria-pressed="false">él</button>
+        <button type="button" data-pronombre="ella" aria-pressed="false">ella</button>
+        <button type="button" data-pronombre="elle" aria-pressed="false">elle</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <nav class="indice" aria-labelledby="indice-titulo">
+      <h2 id="indice-titulo">Índice</h2>
+      <ol id="indice"></ol>
+    </nav>
+    <div id="contenido"><p>Cargando la guía…</p></div>
+  </main>
+
+  <footer class="contenedor">
+    <p>Las fichas con la fuente completa de cada dato se desbloquean dentro del juego: ícono del libro → Fichas.</p>
+    <p>Cómo no morir en Marte · Equipo Zinnia Aurora · NASA Space Apps Challenge 2026.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var guia = null;
+      var pronombre = '';
+      var INDICE = { el: 0, ella: 1, elle: 2 };
+
+      function escapar(t) {
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      // Marcadores {o|a|e}: con pronombre elegido, su forma; si no, "o/a/e". Luego **negrita** y *cursiva*.
+      function texto(t) {
+        var i = INDICE[pronombre];
+        var s = String(t || '').replace(/\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}/g, function (_, a, b, c) {
+          return i === undefined ? a + '/' + b + '/' + c : [a, b, c][i];
+        });
+        return escapar(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      }
+      function bloque(b) {
+        if (b.tipo === 'parrafo') return '<p>' + texto(b.texto) + '</p>';
+        if (b.tipo === 'nota') return '<p class="nota">' + texto(b.texto) + '</p>';
+        if (b.tipo === 'lista') {
+          var tag = b.ordenada ? 'ol' : 'ul';
+          return '<' + tag + '>' + b.items.map(function (it) { return '<li>' + texto(it) + '</li>'; }).join('') + '</' + tag + '>';
+        }
+        if (b.tipo === 'tabla') {
+          return '<div class="tabla" role="region" tabindex="0" aria-label="Tabla (desliza para ver todo)"><table><thead><tr>' +
+            b.encabezados.map(function (e) { return '<th scope="col">' + texto(e) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+            b.filas.map(function (f) {
+              return '<tr>' + f.map(function (c, k) { return k === 0 ? '<th scope="row">' + texto(c) + '</th>' : '<td>' + texto(c) + '</td>'; }).join('') + '</tr>';
+            }).join('') + '</tbody></table></div>';
+        }
+        return '';
+      }
+      function dibujar() {
+        document.getElementById('titulo').innerHTML = texto(guia.titulo);
+        document.getElementById('subtitulo').innerHTML = texto(guia.subtitulo);
+        var intro = document.getElementById('intro');
+        if (guia.intro) { intro.hidden = false; intro.innerHTML = texto(guia.intro); }
+        document.getElementById('indice').innerHTML = guia.secciones.map(function (s) {
+          return '<li><a href="#' + s.id + '"><span class="num">' + s.numero + '.</span>' + texto(s.titulo) + '</a></li>';
+        }).join('');
+        document.getElementById('contenido').innerHTML = guia.secciones.map(function (s) {
+          return '<section class="seccion" id="' + s.id + '" aria-labelledby="t-' + s.id + '"><h2 id="t-' + s.id + '"><span class="num">' + s.numero + '.</span> ' +
+            texto(s.titulo) + '</h2>' + s.bloques.map(bloque).join('') + '<a class="arriba" href="#indice-titulo">↑ Volver al índice</a></section>';
+        }).join('');
+        if (location.hash) { var destino = document.getElementById(location.hash.slice(1)); if (destino) destino.scrollIntoView(); }
+      }
+
+      document.querySelectorAll('.pronombre button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          pronombre = b.getAttribute('data-pronombre');
+          document.querySelectorAll('.pronombre button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+          try { localStorage.setItem('cnmm_guia_pronombre', pronombre); } catch (e) { /* sin almacenamiento: no pasa nada */ }
+          if (guia) dibujar();
+        });
+      });
+      try {
+        var guardado = localStorage.getItem('cnmm_guia_pronombre');
+        if (guardado && INDICE[guardado] !== undefined) {
+          pronombre = guardado;
+          document.querySelectorAll('.pronombre button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.getAttribute('data-pronombre') === guardado)); });
+        }
+      } catch (e) { /* modo privado o almacenamiento bloqueado */ }
+
+      fetch('/data/guia_supervivencia.json')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (g) { guia = g; dibujar(); })
+        .catch(function () {
+          document.getElementById('contenido').innerHTML = '<p class="error">No se pudo cargar la guía. Revisa tu conexión y recarga la página.</p>';
+        });
+    })();
+  </script>
+</body>
+</html>

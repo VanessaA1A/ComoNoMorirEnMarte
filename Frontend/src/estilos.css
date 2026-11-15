@@ -55,6 +55,12 @@ a { color: var(--turquesa); }
   background: rgba(36, 7, 63, .8); font-size: 1em; display: grid; place-items: center; padding: 0;
 }
 .boton-icono:hover { background: var(--aurora-4); }
+/* "esperarGuia" (canción del cap. 1): el libro parpadea suave con --aurora-1 hasta que se abre la Guía */
+.boton-icono.parpadeo-guia { animation: parpadeo-guia 1.6s ease-in-out infinite; border-color: var(--aurora-1); }
+@keyframes parpadeo-guia {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(1, 239, 172, 0); }
+  50% { box-shadow: 0 0 .5em .25em rgba(1, 239, 172, .55); background: rgba(1, 239, 172, .18); }
+}
 
 /* ===== Fondos con respaldo ===== */
 .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -146,6 +152,8 @@ a { color: var(--turquesa); }
 }
 .opcion:hover, .opcion:focus-visible { background: var(--aurora-5); }
 .riesgo { font-size: .8em; color: var(--zinnia-petalo); white-space: nowrap; }
+/* Canción del cap. 1: botón de una sola respuesta que completa el verso */
+.opcion-verso { justify-content: center; text-align: center; border-color: var(--zinnia-petalo); font-style: italic; }
 
 .campo-nombre { display: flex; gap: .5em; max-width: 60ch; }
 .campo-nombre input {
@@ -215,6 +223,19 @@ a { color: var(--turquesa); }
 .tarjeta-dato { border: 1px solid var(--aurora-4); border-radius: .5em; padding: .5em .7em; margin: .4em 0; font-size: .9em; }
 .tarjeta-dato.bloqueada { opacity: .45; }
 .tarjeta-dato.nueva { border-color: var(--lima); box-shadow: 0 0 .7em var(--lima); }
+/* Guía de supervivencia (mismo JSON que public/guia.html) */
+.guia-indice .pestanas button { font-size: .78em; }
+.guia-indice .pestanas-mas { padding-top: .25em; }
+.guia-indice .pestanas-mas button { border-style: dashed; }
+.guia-seccion h3 { font-family: var(--fuente-texto); color: var(--lima); font-size: 1.15em; margin: .2em 0 .6em; }
+.guia-seccion p, .guia-seccion li { margin: .45em 0; }
+.guia-seccion strong { color: var(--aurora-1); font-weight: normal; }
+.guia-nota { opacity: .8; font-size: .9em; border-left: 3px solid var(--aurora-3); padding-left: .6em; }
+.guia-tabla { overflow-x: auto; margin: .6em 0; }
+.guia-tabla table { border-collapse: collapse; width: 100%; font-size: .85em; }
+.guia-tabla th, .guia-tabla td { border: 1px solid var(--aurora-4); padding: .4em .5em; text-align: left; vertical-align: top; }
+.guia-tabla thead th { background: var(--aurora-5); color: var(--lima); font-weight: normal; }
+.guia-tabla tbody th { font-weight: normal; color: var(--aurora-1); }
 .fuente { font-size: .78em; opacity: .85; word-break: break-word; }
 
 /* ===== Utilidades compartidas ===== */
@@ -295,6 +316,20 @@ a { color: var(--turquesa); }
   background: rgba(36, 7, 63, .72); border: 2px solid var(--aurora-2);
   backdrop-filter: blur(3px);
 }
+a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-box; display: flex; }
+
+/* ===== Solo computadora: aviso en celular o ventana de menos de 1024 px ===== */
+.solo-computadora {
+  position: fixed; inset: 0; display: grid; place-items: center; padding: 16px; overflow: auto;
+  background: radial-gradient(circle at 50% 30%, var(--aurora-5), var(--noche) 70%);
+}
+.solo-computadora-caja {
+  max-width: 30em; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1em;
+  padding: 1.4em 1.2em; border: 2px solid var(--aurora-1); border-radius: 1em; background: rgba(36, 7, 63, .85);
+}
+.solo-computadora-zinnia { width: min(40vw, 160px); height: auto; }
+.solo-computadora-texto { margin: 0; font-size: clamp(16px, 4.2vw, 20px); line-height: 1.5; }
+.solo-computadora .boton { text-decoration: none; display: inline-block; }
 .boton-grande .boton-titulo { font-family: var(--fuente-texto); font-size: 1.45em; letter-spacing: .05em; line-height: 1.1; }
 .boton-grande .boton-detalle { font-family: var(--fuente-ui); font-size: .78em; opacity: .75; }
 .boton-grande:hover:not(:disabled) { background: rgba(82, 64, 148, .9); border-color: var(--aurora-1); transform: translateX(3px); }

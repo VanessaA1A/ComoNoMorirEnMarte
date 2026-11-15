@@ -55,6 +55,25 @@ try {
   probar('HUD en juego', () => dibujar(h(HUD), enJuego('elle')));
   const Escena = (await cargar('/src/componentes/Escena.jsx')).default;
   probar('Escena en juego', () => dibujar(h(Escena), enJuego('ella')));
+
+  // Canción del cap. 1 y "esperarGuia"
+  const enEscena = (escena, pronombre) => ({ pantalla: 'juego', partida: { ...nuevaPartida(), escena, capitulo: 1, hud: true, nombre: 'Alex', pronombre } });
+  for (const pr of ['el', 'ella', 'elle']) probar(`Escena de la canción (c01_04, ${pr})`, () => dibujar(h(Escena), enEscena('c01_04', pr)));
+  probar('Escena esperarGuia (c01_04b)', () => dibujar(h(HUD), enEscena('c01_04b', 'elle')) + dibujar(h(Escena), enEscena('c01_04b', 'elle')));
+  const hudEspera = dibujar(h(HUD), enEscena('c01_04b', 'ella'));
+  ok(hudEspera.includes('parpadeo-guia'), 'en esperarGuia el libro parpadea');
+  ok(!dibujar(h(HUD), { ...enEscena('c01_04b', 'ella'), guiaAbiertaEn: 'c01_04b' }).includes('parpadeo-guia'), 'al abrir la Guía deja de parpadear');
+  ok(!dibujar(h(HUD), enEscena('c01_05', 'ella')).includes('parpadeo-guia'), 'fuera de esperarGuia el libro no parpadea');
+
+  // Guía: el JSON con el pronombre de la partida, y sin partida "o/a/e"
+  ok(dibujar(h(Guia, { pestanaInicial: 'finales' }), enJuego('ella')).includes('Llegas viva'), 'Guía en juego (ella): "Llegas viva"');
+  ok(dibujar(h(Guia, { pestanaInicial: 'finales' }), enJuego('elle')).includes('Llegas vive'), 'Guía en juego (elle): "Llegas vive"');
+  ok(dibujar(h(Guia, { pestanaInicial: 'finales' })).includes('Llegas vivo/a/e'), 'Guía sin partida: "Llegas vivo/a/e"');
+
+  // Solo computadora
+  const { PantallaSoloComputadora } = await cargar('/src/componentes/SoloComputadora.jsx');
+  const aviso = probar('Pantalla de solo computadora', () => dibujar(h(PantallaSoloComputadora)));
+  ok(aviso.includes('/guia.html') && aviso.includes('pantalla más grande'), 'el aviso enlaza a guia.html');
 } finally {
   await vite.close();
 }

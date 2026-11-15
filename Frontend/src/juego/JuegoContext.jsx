@@ -18,7 +18,7 @@ export const useJuego = () => useContext(JuegoContext);
 
 export const modoDemo = typeof location !== 'undefined' && new URLSearchParams(location.search).get('demo') === '1';
 
-export function JuegoProvider({ children }) {
+export function JuegoProvider({ children, bloqueado = false }) {
   const [pantalla, setPantalla] = useState('inicio');        // inicio | juego | creditos
   const [partida, setPartida] = useState(null);              // estado del motor
   const [linea, setLinea] = useState(0);                     // línea visible de la escena
@@ -36,6 +36,7 @@ export function JuegoProvider({ children }) {
   const [catalogo, setCatalogo] = useState({ capas: CAPAS, pois: POIS, datos: DATOS });
   const [conectado, setConectado] = useState(api.conectado());
   const [sinConexionDescartado, setSinConexionDescartado] = useState(false);
+  const [guiaAbiertaEn, setGuiaAbiertaEn] = useState(null);  // escena "esperarGuia" en la que ya se abrió la Guía
 
   const fichasRef = useRef(fichas);
   const jugadoRef = useRef(0); // segundos de juego de la partida actual (se guardan en cada ranura)
@@ -137,6 +138,13 @@ export function JuegoProvider({ children }) {
     aplicar(continuar(partida), partida);
   }, [partida, linea, aplicar]);
 
+  /** Canción del cap. 1: el jugador completa el verso con el botón de una sola respuesta (sin efecto). */
+  const responder = useCallback((texto) => {
+    if (!partida) return;
+    setHistorial((h) => [...h, { quien: partida.nombre || 'Tú', texto: formatear(texto, partida) }].slice(-50));
+    avanzar();
+  }, [partida, avanzar]);
+
   const ponerNombre = useCallback((nombre) => {
     const s = { ...partida, nombre: nombre.trim().slice(0, 30) };
     setHistorial((h) => [...h, { quien: 'Tú', texto: s.nombre }].slice(-50));
@@ -205,7 +213,9 @@ export function JuegoProvider({ children }) {
     setPanelZinnia(false);
     setOverlay({ tipo, ...extra });
     if (tipo === 'mapaMarte') desbloquear('Mapa');
-  }, [desbloquear]);
+    // "esperarGuia": la escena sigue cuando el jugador abre la Guía (avanza al cerrarla)
+    if (tipo === 'guia' && partida && escenaDe(partida.escena)?.accion === 'esperarGuia') setGuiaAbiertaEn(partida.escena);
+  }, [desbloquear, partida]);
   const cerrarOverlay = useCallback(() => setOverlay(null), []);
 
   const abrirPanelZinnia = useCallback((abierto = true) => {
@@ -228,7 +238,7 @@ export function JuegoProvider({ children }) {
   useEffect(() => {
     const alTeclear = (e) => {
       const escribiendo = /INPUT|TEXTAREA|SELECT/.test(e.target.tagName);
-      if (colaTutorial.length) return; // el tutorial tiene sus propios botones
+      if (bloqueado || colaTutorial.length) return; // pantalla de solo computadora, o el tutorial tiene sus propios botones
       if ((e.key === 'z' || e.key === 'Z') && !escribiendo && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         abrirPanelZinnia(!panelZinnia);
@@ -240,9 +250,10 @@ export function JuegoProvider({ children }) {
     };
     window.addEventListener('keydown', alTeclear);
     return () => window.removeEventListener('keydown', alTeclear);
-  }, [colaTutorial.length, panelZinnia, overlay, pantalla, resumen, abrirPanelZinnia]);
+  }, [bloqueado, colaTutorial.length, panelZinnia, overlay, pantalla, resumen, abrirPanelZinnia]);
 
-  const pausado = Boolean(overlay || panelZinnia || colaTutorial.length || tarjeta || resumen);
+  // "bloqueado": pantalla de solo computadora (celular o ventana chica); el juego queda en pausa
+  const pausado = Boolean(bloqueado || overlay || panelZinnia || colaTutorial.length || tarjeta || resumen);
 
   // Tiempo de juego: cuenta solo mientras se juega (sin menús abiertos y con la pestaña visible).
   useEffect(() => {
@@ -252,12 +263,12 @@ export function JuegoProvider({ children }) {
   }, [pantalla, pausado]);
 
   const valor = useMemo(() => ({
-    pantalla, setPantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, setCapa,
+    pantalla, setPantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, setCapa, guiaAbiertaEn, responder,
     fichas, fichasNuevas, avisos, avisoZinnia, colaTutorial, catalogo, conectado, sinConexionDescartado, pausado, modoDemo,
     empezar, avanzar, ponerNombre, elegir, opcionesEnPantalla, cerrarTarjeta, guardar, cargar, volverInicio,
     abrir, cerrarOverlay, abrirPanelZinnia, setResumen, marcarFichasVistas, disparar,
     cerrarPasoTutorial, saltarTutorial, repetirTutorial, descartarSinConexion,
-  }), [pantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, fichas, fichasNuevas, avisos,
+  }), [pantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, guiaAbiertaEn, responder, fichas, fichasNuevas, avisos,
     avisoZinnia, colaTutorial, catalogo, conectado, sinConexionDescartado, pausado,
     empezar, avanzar, ponerNombre, elegir, opcionesEnPantalla, cerrarTarjeta, guardar, cargar, volverInicio,
     abrir, cerrarOverlay, abrirPanelZinnia, marcarFichasVistas, disparar, cerrarPasoTutorial, saltarTutorial,
