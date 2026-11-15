@@ -1,9 +1,9 @@
 // Pantalla de Inicio (ZA-12): logo arriba, partida a la izquierda, tripulación al centro,
 // exploración a la derecha y franja del hackathon abajo. Navegación por estado (JuegoContext).
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { leerRanura } from '../juego/partidas.js';
-import { Modal } from './Modal.jsx';
 import Recurso from './Recurso.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
@@ -22,6 +22,14 @@ export default function Inicio() {
 
   // Empezar: si ya hay autoguardado, pedir confirmación antes de reemplazarlo.
   const alEmpezar = () => (auto ? setConfirmar(true) : j.empezar());
+
+  // Cerrar la confirmación con la tecla Escape.
+  useEffect(() => {
+    if (!confirmar) return;
+    const alTeclear = (e) => { if (e.key === 'Escape') setConfirmar(false); };
+    window.addEventListener('keydown', alTeclear);
+    return () => window.removeEventListener('keydown', alTeclear);
+  }, [confirmar]);
 
   return (
     <div className="inicio">
@@ -78,14 +86,38 @@ export default function Inicio() {
         </div>
       </footer>
 
-      {confirmar && (
-        <Modal titulo="¿De verdad quieres reiniciar?" onCerrar={() => setConfirmar(false)}>
-          <p className="texto-ui">Ya tienes una partida en el autoguardado. Si empiezas otra, el autoguardado se reemplaza (tus ranuras manuales no se tocan).</p>
-          <div className="lista-botones">
-            <button className="boton principal" onClick={() => { setConfirmar(false); j.empezar(); }}>Sí, empezar de nuevo</button>
-            <button className="boton" onClick={() => setConfirmar(false)}>Cancelar</button>
+      {confirmar && createPortal(
+        // Velo a pantalla completa (difumina todo) con el cuadro centrado. Clic afuera = cancelar.
+        // Se monta directo en <body> para que ningún estilo del inicio lo empuje hacia abajo.
+        <div
+          className="confirmar-velo"
+          onClick={() => setConfirmar(false)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1000,
+            display: 'grid', placeItems: 'center', padding: '1em',
+            background: 'rgba(10, 2, 20, .55)',
+            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+            fontSize: 'clamp(13px, 1.25vw, 18px)',
+          }}
+        >
+          <div
+            className="modal confirmar-caja"
+            style={{ width: 'min(92%, 40em)', maxHeight: '90%' }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-confirmar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="boton-icono cerrar" aria-label="Cerrar" onClick={() => setConfirmar(false)}>✕</button>
+            <h2 id="titulo-confirmar">¿De verdad quieres reiniciar?</h2>
+            <p className="texto-ui">Ya tienes una partida en el autoguardado. Si empiezas otra, el autoguardado se reemplaza (tus ranuras manuales no se tocan).</p>
+            <div className="lista-botones">
+              <button className="boton principal" onClick={() => { setConfirmar(false); j.empezar(); }} autoFocus>Sí, empezar de nuevo</button>
+              <button className="boton" onClick={() => setConfirmar(false)}>Cancelar</button>
+            </div>
           </div>
-        </Modal>
+        </div>,
+        document.body
       )}
     </div>
   );

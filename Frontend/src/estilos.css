@@ -21,6 +21,12 @@ html, body, #root { margin: 0; height: 100%; }
 body {
   font-family: var(--fuente-texto); background: var(--noche); color: var(--texto);
   display: grid; place-items: center; overflow: hidden;
+  /* Rellena las franjas laterales con el mismo fondo del inicio (fijo para que empate sin cortes) */
+  background:
+    linear-gradient(rgba(36, 7, 63, .6), rgba(36, 7, 63, .6)),
+    url("/img/FondoPantallaInicio.png") center / cover no-repeat,
+    var(--noche);
+  background-attachment: fixed;
 }
 h1, h2, .titulo-capitulo, .titulo-final { font-family: var(--fuente-titulo); font-weight: normal; margin: 0; }
 button { font-family: inherit; color: inherit; cursor: pointer; }
@@ -278,6 +284,7 @@ a { color: var(--turquesa); }
     linear-gradient(rgba(36, 7, 63, .6), rgba(36, 7, 63, .6)),
     url("/img/FondoPantallaInicio.png") center / cover no-repeat,
     var(--noche);
+  background-attachment: fixed; /* alineado con el fondo del body: sin costuras en los bordes */
 }
 .inicio-cabecera { display: flex; justify-content: center; padding: 1.2em 2em .4em; }
 .inicio .logo-nombre { width: min(46%, 30em); height: auto; filter: drop-shadow(0 .15em .5em rgba(36, 7, 63, .8)); }
@@ -429,7 +436,21 @@ a { color: var(--turquesa); }
 .astro-envoltura.astro-herido { filter: drop-shadow(0 0 .35em var(--zinnia-mejilla)) sepia(.45) saturate(2.2) hue-rotate(-25deg); }
 .astro-herramienta { position: absolute; right: 12%; bottom: 30%; width: 12%; }
 .inicio { position: relative; }
-.inicio > :not(.fondo):not(.fondo-respaldo) { position: relative; z-index: 1; }
+.inicio > :not(.fondo):not(.fondo-respaldo):not(.confirmar-velo) { position: relative; z-index: 1; }
+
+/* Confirmación de "Empezar": centrada sobre todo el inicio y con el fondo difuminado */
+.inicio > .confirmar-velo {
+  position: absolute; inset: 0; z-index: 50;
+  display: grid; place-items: center; padding: 1em;
+  background: rgba(10, 2, 20, .55);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  animation: confirmar-fondo .2s ease-out;
+}
+.confirmar-velo .confirmar-caja { width: min(92%, 40em); max-height: 90%; animation: confirmar-caja .25s ease-out; }
+.confirmar-caja h2 { padding-right: 2em; }
+.confirmar-caja .lista-botones { margin-top: 1em; }
+@keyframes confirmar-fondo { from { opacity: 0; } }
+@keyframes confirmar-caja { from { opacity: 0; transform: scale(.94); } }
 .inicio .zinnia-inicio { width: 10em; height: 14em; display: flex; align-items: flex-end; justify-content: center; }
 .inicio .logo-nombre { image-rendering: auto; }
 .cabecera-final { display: flex; align-items: center; gap: 1em; }
