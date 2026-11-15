@@ -67,6 +67,8 @@ function contorno(z) {
   const radioGrados = z.diametro_km / 2 / KM_POR_GRADO;
   return { tipo: 'ellipse', cx: xLon(z.lon), cy: yLat(z.lat), rx: (radioGrados / 360) * 1000, ry: (radioGrados / 180) * 500 };
 }
+// Etiquetas que se moverían bajo un pin: Chryse (Viking 1 y Pathfinder), Meridiani (Opportunity), Elysium (InSight y Curiosity), Gale.
+const ETIQUETA = { chryse: { pos: 'arriba' }, meridiani: { pos: 'abajo' }, elysium: { dx: 24 }, gale: { pos: 'abajo' } };
 const pulsar = (fn) => ({ onClick: fn, onKeyDown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); fn(); } } });
 
 export function MapaMarte({ fichas, enMarte, onGale, seleccion = null }) {
@@ -103,7 +105,7 @@ export function MapaMarte({ fichas, enMarte, onGale, seleccion = null }) {
               {...pulsar(() => setSel({ ...z, clase: 'zona' }))}>
               <title>{z.nombre}</title>
               <Forma {...forma} />
-              <text x={tipo === 'rect' ? xLon(z.lon) : forma.cx} y={z.id === 'gale' ? forma.cy + forma.ry + 13 : ly} textAnchor="middle">{z.nombre}</text>
+              <text x={tipo === 'rect' ? xLon(z.lon) : forma.cx + (ETIQUETA[z.id]?.dx ?? 0)} y={ETIQUETA[z.id]?.pos === 'arriba' ? forma.cy - forma.ry + 14 : ETIQUETA[z.id]?.pos === 'abajo' ? forma.cy + forma.ry + 13 : ly} textAnchor="middle">{z.nombre}</text>
             </g>
           );
         })}

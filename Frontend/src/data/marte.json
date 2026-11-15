@@ -419,8 +419,8 @@
       "que": "Módulo de aterrizaje fijo",
       "dato": "El módulo de Viking 2 trabajó siete años.",
       "guia": "[57]",
-      "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
-      "fuente_nombre": "NSSDC/NASA, Viking 2 Lander"
+      "fuente": "https://nssdc.gsfc.nasa.gov/planetary/viking.html",
+      "fuente_nombre": "NSSDC/NASA, Viking Mission to Mars (47,64° N, 134,29° E, planetocéntrico)"
     },
     {
       "id": "pathfinder",

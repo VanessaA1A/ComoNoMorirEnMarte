@@ -41,7 +41,7 @@ ok(aprox.length === 0, `marte.json: ningún punto "aproximado" visible${aprox.le
 
 // Correcciones de la Parte 0 (valores de la fuente oficial citada en cada punto)
 const punto = (id) => marte.aterrizajes.find((a) => a.id === id);
-ok(punto('viking2')?.lat === 47.64 && punto('viking2')?.lon === 134.29 && punto('viking2')?.fuente?.includes('nssdc.gsfc.nasa.gov'), 'Viking 2: 47.64 N, 134.29 E (NSSDC/NASA)');
+ok(punto('viking2')?.lat === 47.64 && punto('viking2')?.lon === 134.29 && punto('viking2')?.fuente === 'https://nssdc.gsfc.nasa.gov/planetary/viking.html', 'Viking 2: 47.64 N, 134.29 E (NSSDC/NASA, planetocéntrico)');
 ok(punto('perseverance')?.lat === 18.4447 && punto('perseverance')?.lon === 77.4508 && punto('perseverance')?.fuente?.includes('mars.nasa.gov'), 'Perseverance: 18.4447 N, 77.4508 E (NASA/JPL)');
 
 // Mapa de Marte: ningún pin ni zona sin ficha (nombre, qué es, dato) y fuente con enlace
