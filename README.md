@@ -11,7 +11,20 @@ Novela visual web de supervivencia en Marte con datos reales de NASA. Equipo **Z
 
 ## Desde cero (otra computadora)
 
-Requisitos: **Node 20.6 o más reciente** y **git**. La base de datos es opcional: el juego funciona solo.
+Requisitos: **Node 20.19 o más reciente** (recomendado Node 22 o 24 LTS, de https://nodejs.org/) y **git**. La base de datos es opcional: el juego funciona solo.
+
+**Después de cada `git pull`, corre `npm install` en `Frontend`** (y en `Backend` si usas la API): a veces el equipo agrega dependencias (por ejemplo `leaflet` y `three` para los mapas) y sin instalarlas el juego no compila.
+
+### Si no te compila
+
+`npm run dev`, `npm run build` y `npm run probar` revisan primero tu entorno (`Frontend/tools/revisar-entorno.mjs`) y te dicen qué falta:
+
+| Mensaje | Qué hacer |
+|---|---|
+| `Faltan dependencias: …` o `Rollup failed to resolve import "leaflet…"` | `cd Frontend` y `npm install` |
+| `Tu Node es … y el juego necesita 20.19.0 o más nuevo` | Instala Node 22 o 24 LTS y abre una terminal nueva (`node -v` para comprobar) |
+| `npm error … ENOENT … package.json` | Estás en la carpeta raíz: entra a `Frontend` (`cd Frontend`) |
+| Sigue fallando | Borra `Frontend/node_modules` y corre `npm install` otra vez |
 
 ```bash
 git clone https://github.com/VanessaA1A/DemoVisualNovel.git
