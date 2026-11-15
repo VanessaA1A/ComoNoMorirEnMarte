@@ -57,6 +57,27 @@ def geometria(url_vsicurl):
         return {"offset0": o0, "bytes_fila": paso, "transform": ds.transform, "ancho": ds.width, "alto": ds.height, "crs": ds.crs}
 
 
+def filas_lzw(url_http, url_vsicurl, filas, hilos=12):
+    """DEM en franjas LZW de 1 fila (sin predictor): baja SOLO los bytes comprimidos de cada fila pedida
+    (BLOCK_OFFSET/BLOCK_SIZE del TIFF) y la descomprime aquí. Devuelve {fila: numpy float32 (ancho completo)}."""
+    import imagecodecs
+    with rasterio.open(url_vsicurl) as ds:
+        assert ds.profile.get("compress") == "lzw" and ds.block_shapes[0][0] == 1 and ds.dtypes[0] == "float32"
+        assert ds.tags(ns="IMAGE_STRUCTURE").get("PREDICTOR", "1") == "1", "con predictor hay que deshacerlo"
+        ancho = ds.width
+        pos = {f: (int(ds.get_tag_item(f"BLOCK_OFFSET_0_{f}", "TIFF", bidx=1)), int(ds.get_tag_item(f"BLOCK_SIZE_0_{f}", "TIFF", bidx=1))) for f in filas}
+    salida = {}
+
+    def una(f):
+        o, n = pos[f]
+        crudo = imagecodecs.lzw_decode(_rango(url_http, o, n))
+        salida[f] = np.frombuffer(crudo, dtype="<f4", count=ancho)
+
+    with ThreadPoolExecutor(max_workers=hilos) as ex:
+        list(ex.map(una, filas))
+    return salida, sum(n for _, n in pos.values())
+
+
 def leer_ventana(url_http, geo, fila0, col0, filas, cols, paso=1, hilos=12):
     """Lee filas fila0..fila0+filas (cada `paso` filas) y columnas col0..col0+cols. Devuelve uint8 2D."""
     indices = list(range(fila0, fila0 + filas, paso))

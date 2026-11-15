@@ -1,0 +1,54 @@
+{
+ "limites": {
+  "norte": -4.779931603844927,
+  "sur": -4.830543418419272,
+  "oeste": 137.35655077444702,
+  "este": 137.40716258902137
+ },
+ "proyectado_m": {
+  "x0": 8141768,
+  "x1": 8144768.0,
+  "y0": -286329.0,
+  "y1": -283329
+ },
+ "proyeccion": "Equirectangular sobre la esfera Mars 2000 (R = 3.396.190 m), meridiano central 0° (ESRI:103885); x = R·lon, y = R·lat",
+ "lado_m": 3000.0,
+ "norte": "arriba (filas de norte a sur, columnas de oeste a este)",
+ "archivo": "relieve.png",
+ "px": [
+  1500,
+  1500
+ ],
+ "m_por_px": 2,
+ "remuestreo": "vecino más cercano: 1 de cada 2 filas y columnas del DEM de 1 m",
+ "altura_min_m": -4022.91,
+ "altura_max_m": -3323.38,
+ "escala_m": 0.02,
+ "altura_min_exacta_m": -4022.90673828125,
+ "codificacion": "PNG gris 16 bits: altura = altura_min_exacta_m + valor × 0.02 m",
+ "datum": "altura sobre el areoide de MOLA (como el DEM original)",
+ "derivadas": {
+  "sombreado.png": "sombreado del relieve (luz del noroeste a 45°)",
+  "curvas.png": "curvas de nivel cada 5 m (más marcadas cada 25 m)",
+  "pendiente.png": "pendiente en 3 clases: < 15° (verde), 15–23° (amarillo), > 23° (rojo)"
+ },
+ "pendiente_fraccion": {
+  "menos_15": 0.5961,
+  "15_a_23": 0.1976,
+  "mas_23": 0.2063
+ },
+ "fuente": {
+  "producto": "Mars MSL Gale Merged DEM 1m (v3)",
+  "autores": "Parker, T. J. y Calef, F. J. III",
+  "anio": 2016,
+  "editor": "USGS Astrogeology Science Center",
+  "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+  "archivo": "https://planetarymaps.usgs.gov/mosaic/Mars/MSL/MSL_Gale_DEM_Mosaic_1m_v3.tif",
+  "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+  "resolucion_original_m": 1.0
+ },
+ "umbrales_pendiente": {
+  "texto": "Umbrales 15° y 23°: Curiosity se desvió 150 m ante una pendiente de 23° para buscar una de menos de 15° (NASA/JPL, 2023).",
+  "url": "https://www.jpl.nasa.gov/news/nasas-curiosity-rover-faces-its-toughest-climb-yet-on-mars/"
+ }
+}

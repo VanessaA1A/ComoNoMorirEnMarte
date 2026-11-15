@@ -1,0 +1,58 @@
+{
+ "limites": {
+  "norte": -4.779931603844927,
+  "sur": -4.830543418419272,
+  "oeste": 137.35655077444702,
+  "este": 137.40716258902137
+ },
+ "proyectado_m": {
+  "x0": 8141768,
+  "x1": 8144768.0,
+  "y0": -286329.0,
+  "y1": -283329
+ },
+ "proyeccion": "Equirectangular sobre la esfera Mars 2000 (R = 3.396.190 m), meridiano central 0° (ESRI:103885); x = R·lon, y = R·lat",
+ "lado_m": 3000.0,
+ "norte": "arriba (filas de norte a sur, columnas de oeste a este)",
+ "plantilla": "ortofoto/{nivel}/{x}/{y}.jpg",
+ "lado_mosaico_px": 256,
+ "formato": "JPG calidad 75, gris",
+ "niveles": [
+  {
+   "nivel": 0,
+   "m_por_px": 8,
+   "px": 375,
+   "mosaicos_por_lado": 2
+  },
+  {
+   "nivel": 1,
+   "m_por_px": 4,
+   "px": 750,
+   "mosaicos_por_lado": 3
+  },
+  {
+   "nivel": 2,
+   "m_por_px": 2,
+   "px": 1500,
+   "mosaicos_por_lado": 6
+  },
+  {
+   "nivel": 3,
+   "m_por_px": 1,
+   "px": 3000,
+   "mosaicos_por_lado": 12
+  }
+ ],
+ "remuestreo": "zona completa a 1 m: vecino más cercano (1 de cada 4 filas y columnas de la ortofoto de 25 cm); niveles más gruesos con Lanczos",
+ "corredor_25cm": "pendiente: se agrega cuando se aprueben las posiciones de la ruta (Parte 2)",
+ "fuente": {
+  "producto": "MSL Gale Merged Orthophoto Mosaic 25cm (v3)",
+  "autores": "Calef, F. J. III y Parker, T. J.",
+  "anio": 2016,
+  "editor": "USGS Astrogeology Science Center",
+  "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_orthophoto_mosaic_25cm",
+  "archivo": "https://asc-pds-services.s3.us-west-2.amazonaws.com/mosaic/MSL_Gale_Orthophoto_Mosaic_25cm_v3.tif",
+  "instrumento": "HiRISE (Mars Reconnaissance Orbiter)",
+  "resolucion_original_m": 0.25
+ }
+}

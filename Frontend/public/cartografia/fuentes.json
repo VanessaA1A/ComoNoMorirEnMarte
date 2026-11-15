@@ -1,0 +1,236 @@
+{
+ "zona": {
+  "descripcion": "Recuadro de 3 × 3 km centrado en el promedio de las 3 perforaciones de Curiosity en el boxwork (2025)",
+  "norte": -4.779931603844927,
+  "sur": -4.830543418419272,
+  "oeste": 137.35655077444702,
+  "este": 137.40716258902137,
+  "perforaciones": [
+   {
+    "nombre": "Altadena",
+    "sitio": 116,
+    "drive": 1944,
+    "sol": 4564,
+    "lugar": "borde de la unidad boxwork",
+    "lat": -4.799847,
+    "lon": 137.383541,
+    "nota_sol": "perforación del 8 de junio de 2025 (sol 4564); el rover estuvo en ese sitio/drive de los soles 4560 a 4571",
+    "fuente": "https://science.nasa.gov/blog/curiosity-blog-sols-4568-4569-a-close-look-at-the-altadena-drill-hole-and-tailings/"
+   },
+   {
+    "nombre": "Valle de la Luna",
+    "sitio": 119,
+    "drive": 1722,
+    "sol": 4687,
+    "lugar": "hondonada Monte Grande",
+    "lat": -4.807839,
+    "lon": 137.381035,
+    "nota_sol": "sol de llegada a ese sitio/drive; la perforación terminó antes del sol 4709",
+    "fuente": "https://science.nasa.gov/blog/curiosity-blog-sols-4709-4715-drilling-high-and-low-in-the-boxwork-unit"
+   },
+   {
+    "nombre": "Nevado Sajama",
+    "sitio": 120,
+    "drive": 82,
+    "sol": 4711,
+    "lugar": "cresta junto a Monte Grande",
+    "lat": -4.808008,
+    "lon": 137.381004,
+    "nota_sol": "sol de llegada a ese sitio/drive (campaña de perforación de los soles 4709 a 4715)",
+    "fuente": "https://science.nasa.gov/blog/curiosity-blog-sols-4709-4715-drilling-high-and-low-in-the-boxwork-unit"
+   }
+  ]
+ },
+ "archivos": [
+  {
+   "archivo": "ortofoto/",
+   "producto": "MSL Gale Merged Orthophoto Mosaic 25cm (v3)",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter)",
+   "resolucion": "1 m/px (zona); 25 cm/px en el corredor de la ruta (pendiente)",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_orthophoto_mosaic_25cm",
+   "cita": "Calef y Parker (2016), USGS",
+   "bytes": 2353190
+  },
+  {
+   "archivo": "relieve.png",
+   "producto": "Mars MSL Gale Merged DEM 1m (v3)",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "2 m/px (del DEM de 1 m)",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Parker y Calef (2016), USGS",
+   "bytes": 2193443
+  },
+  {
+   "archivo": "sombreado.png",
+   "producto": "Calculado del relieve real",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "2 m/px",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Derivado de Parker y Calef (2016)",
+   "bytes": 1504361
+  },
+  {
+   "archivo": "curvas.png",
+   "producto": "Curvas de nivel cada 5 m calculadas del relieve real",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "2 m/px",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Derivado de Parker y Calef (2016)",
+   "bytes": 287875
+  },
+  {
+   "archivo": "pendiente.png",
+   "producto": "Pendiente en grados calculada del relieve real (3 clases)",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "2 m/px",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Derivado de Parker y Calef (2016); umbrales: NASA/JPL (2023)",
+   "bytes": 506622
+  },
+  {
+   "archivo": "curiosity_ruta.geojson",
+   "producto": "MSL Rover PLACES (localized_pos.csv)",
+   "instrumento": "Localización del rover Curiosity (MSL)",
+   "resolucion": "una posición por sitio/drive localizado",
+   "fecha_producto": "PLACES hasta el sol 4865 (13 abr 2026)",
+   "url": "https://planetarydata.jpl.nasa.gov/img/data/msl/msl_places/data_localizations/localized_pos.csv",
+   "cita": "NASA/JPL PDS, doi:10.17189/1520397",
+   "bytes": 120905
+  },
+  {
+   "archivo": "terreno_themis.png",
+   "producto": "THEMIS IR nocturno, mosaico controlado global 100 m (v2, 2018)",
+   "instrumento": "THEMIS (Mars Odyssey)",
+   "resolucion": "~81.4 m/px (Mars Trek, nivel 9)",
+   "fecha_producto": "2018",
+   "url": "https://trek.nasa.gov/mars/",
+   "capa_trek": "THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018",
+   "plantilla": "https://trek.nasa.gov/tiles/Mars/EQ/THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018/1.0.0/default/default028mm/{z}/{fila}/{col}.png",
+   "cita": "NASA/JPL/ASU, vía NASA Mars Trek",
+   "limites": {
+    "oeste": 137.35655077444702,
+    "este": 137.40716258902137,
+    "sur": -4.830543418419272,
+    "norte": -4.779931603844927
+   },
+   "bytes": 820
+  },
+  {
+   "archivo": "terreno_themis_region.png",
+   "producto": "THEMIS IR nocturno, mosaico controlado global 100 m (v2, 2018)",
+   "instrumento": "THEMIS (Mars Odyssey)",
+   "resolucion": "~81.4 m/px (Mars Trek, nivel 9)",
+   "fecha_producto": "2018",
+   "url": "https://trek.nasa.gov/mars/",
+   "capa_trek": "THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018",
+   "plantilla": "https://trek.nasa.gov/tiles/Mars/EQ/THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018/1.0.0/default/default028mm/{z}/{fila}/{col}.png",
+   "cita": "NASA/JPL/ASU, vía NASA Mars Trek",
+   "limites": {
+    "oeste": 137.2553271452983,
+    "este": 137.50838621817005,
+    "sur": -4.9317670475679645,
+    "norte": -4.678707974696236
+   },
+   "bytes": 17728
+  },
+  {
+   "archivo": "contexto_ctx.jpg",
+   "producto": "MRO CTX, mosaico del cráter Gale",
+   "instrumento": "CTX (Mars Reconnaissance Orbiter)",
+   "resolucion": "~10.2 m/px (Mars Trek, nivel 12)",
+   "fecha_producto": "2020 (publicación en Mars Trek)",
+   "url": "https://trek.nasa.gov/mars/",
+   "capa_trek": "Gale_CTX_BlockAdj_dd",
+   "plantilla": "https://trek.nasa.gov/tiles/Mars/EQ/Gale_CTX_BlockAdj_dd/1.0.0/default/default028mm/{z}/{fila}/{col}.png",
+   "cita": "NASA/JPL/MSSS, vía NASA Mars Trek",
+   "limites": {
+    "oeste": 137.2553271452983,
+    "este": 137.50838621817005,
+    "sur": -4.9317670475679645,
+    "norte": -4.678707974696236
+   },
+   "bytes": 357892
+  },
+  {
+   "archivo": "globo_viking.jpg",
+   "producto": "Viking MDIM 2.1, mosaico global en color (232 m)",
+   "instrumento": "Viking Orbiter",
+   "resolucion": "~10419.4 m/px (Mars Trek, nivel 2)",
+   "fecha_producto": "2020 (publicación en Mars Trek)",
+   "url": "https://trek.nasa.gov/mars/",
+   "capa_trek": "Mars_Viking_MDIM21_ClrMosaic_global_232m",
+   "plantilla": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{fila}/{col}.jpg",
+   "cita": "NASA/USGS, vía NASA Mars Trek",
+   "limites": {
+    "oeste": -180.0,
+    "este": 180.0,
+    "sur": -90.0,
+    "norte": 90.0
+   },
+   "bytes": 442949
+  },
+  {
+   "archivo": "globo_mola_sombreado.jpg",
+   "producto": "MOLA, relieve sombreado en color global (463 m)",
+   "instrumento": "MOLA (Mars Global Surveyor)",
+   "resolucion": "~10419.4 m/px (Mars Trek, nivel 2)",
+   "fecha_producto": "2020 (publicación en Mars Trek)",
+   "url": "https://trek.nasa.gov/mars/",
+   "capa_trek": "Mars_MGS_MOLA_ClrShade_merge_global_463m",
+   "plantilla": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{fila}/{col}.jpg",
+   "cita": "NASA/GSFC, vía NASA Mars Trek",
+   "limites": {
+    "oeste": -180.0,
+    "este": 180.0,
+    "sur": -90.0,
+    "norte": 90.0
+   },
+   "bytes": 534234
+  },
+  {
+   "archivo": "geologia.json",
+   "producto": "Geologic Map of Mars, SIM 3292",
+   "instrumento": "Mapa geológico global (fotogeología sobre MOLA, THEMIS y otros)",
+   "resolucion": "escala 1:20.000.000",
+   "fecha_producto": "2014",
+   "url": "https://pubs.usgs.gov/sim/3292",
+   "cita": "Tanaka et al. (2014), USGS SIM 3292, doi:10.3133/sim3292",
+   "bytes": 1369
+  },
+  {
+   "archivo": "geologia_sim3292.geojson",
+   "producto": "Polígono de la unidad Htu del SIM 3292",
+   "instrumento": "Mapa geológico global",
+   "resolucion": "escala 1:20.000.000",
+   "fecha_producto": "2014",
+   "url": "https://astrogeology.usgs.gov/pygeoapi/collections/mars/sim3292_global_geologic_map/units",
+   "cita": "Tanaka et al. (2014), USGS SIM 3292",
+   "bytes": 27548
+  },
+  {
+   "archivo": "radiacion.json",
+   "producto": "Valores medidos por RAD y REMS (Curiosity) y posición del rover",
+   "instrumento": "RAD y REMS (Curiosity)",
+   "resolucion": "un punto (el rover)",
+   "fecha_producto": "2013–2014",
+   "url": "https://doi.org/10.1126/science.1244797",
+   "cita": "Hassler et al. (2014); NASA (2013); NASA/JPL PIA16913 (2013)",
+   "bytes": 2885
+  },
+  {
+   "archivo": "radiacion_reglas.png",
+   "producto": "Zonas de refugio y exposición: REGLA DEL JUEGO calculada del relieve real (no es una medición)",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "2 m/px",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Regla del juego sobre el relieve de Parker y Calef (2016)",
+   "bytes": 319135
+  }
+ ]
+}

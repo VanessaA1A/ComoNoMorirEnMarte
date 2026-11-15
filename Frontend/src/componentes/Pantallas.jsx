@@ -8,6 +8,7 @@ import { Modal } from './Modal.jsx';
 import { ZinniaHablando } from './Personajes.jsx';
 import { ETIQUETA } from './HUD.jsx';
 import { Enlace } from './Mapas.jsx';
+import FuentesCartografia from './FuentesCartografia.jsx';
 
 export function Creditos() {
   const j = useJuego();
@@ -20,6 +21,8 @@ export function Creditos() {
       <p><strong>Zinn-IA:</strong> el guion, el tutorial, las pistas y las preguntas frecuentes están escritos por el equipo. En el chat responde con IA en vivo (Claude Haiku, de Anthropic), limitada a los datos verificados del juego con fuentes NASA/USGS; no guarda tus mensajes ni pide datos personales. Sin conexión responde con textos del equipo.</p>
       <h3>Fuentes científicas</h3>
       <ul className="fuente">{fuentes.map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
+      <h3>Cartografía</h3>
+      <FuentesCartografia />
     </Modal>
   );
 }

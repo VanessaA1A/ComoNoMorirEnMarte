@@ -1,0 +1,33 @@
+{
+ "unidad": {
+  "codigo": "Htu",
+  "nombre_oficial": "Hesperian transition undivided unit",
+  "fraccion_de_la_zona": 1.0
+ },
+ "texto": "A esta escala, toda la ruta está dentro de la unidad Htu (Hesperian transition undivided unit).",
+ "nota_nasa": {
+  "texto_original": "The whole region is part of a layer on Mount Sharp enriched in salty minerals called sulfates.",
+  "texto": "Toda la región del boxwork es parte de una capa de Mount Sharp rica en minerales salinos llamados sulfatos.",
+  "fuente": "https://www.nasa.gov/missions/mars-science-laboratory/curiosity-rover/NASAs-curiosity-rover-sees-martian-spiderwebs-up-close/",
+  "editor": "NASA",
+  "fecha": "2026-02-23"
+ },
+ "mapa_local": "No se usó un mapa geológico local: no hay uno publicado por NASA o el equipo de MSL con unidades a la escala de la ruta que se pueda incorporar.",
+ "unidades_que_tocan_el_recuadro": [
+  "Htu",
+  "AHi",
+  "mNh"
+ ],
+ "muestreo": "malla de 21 × 21 puntos sobre la zona",
+ "fuente": {
+  "producto": "Geologic Map of Mars, SIM 3292",
+  "autores": "Tanaka, K. L. et al.",
+  "anio": 2014,
+  "editor": "USGS",
+  "doi": "10.3133/sim3292",
+  "url": "https://pubs.usgs.gov/sim/3292",
+  "servicio": "https://astrogeology.usgs.gov/pygeoapi/collections/mars/sim3292_global_geologic_map/units",
+  "escala": "1:20.000.000"
+ },
+ "transferido_mb": 0.07
+}

@@ -1,0 +1,161 @@
+{
+ "limites_zona": {
+  "norte": -4.779931603844927,
+  "sur": -4.830543418419272,
+  "oeste": 137.35655077444702,
+  "este": 137.40716258902137
+ },
+ "capas": [
+  {
+   "id": "optica",
+   "estado": "ok",
+   "archivos": [
+    "ortofoto/tiles.json"
+   ],
+   "instrumento": "HiRISE (MRO)",
+   "resolucion": "1 m/px en la zona; 25 cm/px en el corredor de la ruta (pendiente de la Parte 2)",
+   "atribucion": "HiRISE · 1 m/px · USGS/NASA/JPL",
+   "fuente": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_orthophoto_mosaic_25cm",
+   "limitacion": "Mosaico de imágenes de fechas distintas."
+  },
+  {
+   "id": "relieve",
+   "estado": "ok",
+   "archivos": [
+    "relieve.png",
+    "sombreado.png",
+    "curvas.png",
+    "pendiente.png"
+   ],
+   "instrumento": "HiRISE estéreo (MRO)",
+   "resolucion": "2 m/px",
+   "atribucion": "DEM HiRISE · 2 m/px · USGS (Parker y Calef, 2016)",
+   "fuente": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "limitacion": "Remuestreado de 1 m a 2 m: no muestra rocas sueltas.",
+   "umbrales_pendiente": {
+    "texto": "Umbrales 15° y 23°: Curiosity se desvió 150 m ante una pendiente de 23° para buscar una de menos de 15° (NASA/JPL, 2023).",
+    "url": "https://www.jpl.nasa.gov/news/nasas-curiosity-rover-faces-its-toughest-climb-yet-on-mars/"
+   }
+  },
+  {
+   "id": "termico",
+   "estado": "ok",
+   "archivos": [
+    "terreno_themis.png",
+    "terreno_themis_region.png"
+   ],
+   "instrumento": "THEMIS IR nocturno (Mars Odyssey)",
+   "resolucion": "~81.4 m/px",
+   "atribucion": "THEMIS IR noche · ~81 m/px · NASA/JPL/ASU (Mars Trek)",
+   "fuente": "https://trek.nasa.gov/mars/",
+   "limitacion": "Un píxel mide unos 80 m: distingue zonas grandes de arena o roca, no crestas ni rocas sueltas. Su posición no se ajustó a HiRISE (a 80 m/px no hay detalle para alinearla)."
+  },
+  {
+   "id": "minerales",
+   "estado": "sin_datos",
+   "archivos": [],
+   "instrumento": "CRISM (MRO)",
+   "texto": "Sin datos de CRISM a esta escala",
+   "detalle": "Ningún producto de CRISM de Mars Trek tiene mosaicos sobre esta zona.",
+   "productos_revisados": [
+    "Hydrous_Mineral_Detections_CRISM_clon0",
+    "Aqueous_Mineral_Distribution_Options_clon0",
+    "frt_07_brhysj_mtr3_ll",
+    "frt_07_brpfmj_mtr3_ll"
+   ],
+   "fuente": "https://trek.nasa.gov/mars/"
+  },
+  {
+   "id": "geologia",
+   "estado": "ok",
+   "archivos": [
+    "geologia.json",
+    "geologia_sim3292.geojson"
+   ],
+   "instrumento": "Mapa geológico global",
+   "resolucion": "escala 1:20.000.000",
+   "texto": "A esta escala, toda la ruta está dentro de la unidad Htu (Hesperian transition undivided unit).",
+   "nota_nasa": {
+    "texto_original": "The whole region is part of a layer on Mount Sharp enriched in salty minerals called sulfates.",
+    "texto": "Toda la región del boxwork es parte de una capa de Mount Sharp rica en minerales salinos llamados sulfatos.",
+    "fuente": "https://www.nasa.gov/missions/mars-science-laboratory/curiosity-rover/NASAs-curiosity-rover-sees-martian-spiderwebs-up-close/",
+    "editor": "NASA",
+    "fecha": "2026-02-23"
+   },
+   "atribucion": "Geología Htu · 1:20 M · USGS SIM 3292 (Tanaka et al., 2014)",
+   "fuente": "https://pubs.usgs.gov/sim/3292",
+   "limitacion": "Escala global: a la escala de la caminata toda la zona es una sola unidad."
+  },
+  {
+   "id": "radiacion",
+   "estado": "ok",
+   "archivos": [
+    "radiacion.json",
+    "radiacion_reglas.png"
+   ],
+   "instrumento": "RAD y REMS (Curiosity)",
+   "resolucion": "un punto (el rover)",
+   "texto": "RAD y REMS miden en UN solo punto (el rover). Esto NO es un mapa de radiación ni de temperatura.",
+   "regla_del_juego": "Regla del juego (no es una medición): a menos de 10 m del pie de una pared de más de 23° (según el relieve real) el terreno cuenta como refugio; el resto, como exposición.",
+   "atribucion": "RAD/REMS · un punto · NASA/JPL",
+   "fuente": "https://doi.org/10.1126/science.1244797",
+   "limitacion": "Medido en un solo punto; los eventos solares son difíciles de predecir."
+  },
+  {
+   "id": "contexto",
+   "estado": "ok",
+   "archivos": [
+    "contexto_ctx.jpg"
+   ],
+   "instrumento": "CTX (MRO)",
+   "resolucion": "~10.2 m/px",
+   "limites": {
+    "oeste": 137.2553271452983,
+    "este": 137.50838621817005,
+    "sur": -4.9317670475679645,
+    "norte": -4.678707974696236
+   },
+   "atribucion": "CTX · ~10 m/px · NASA/JPL/MSSS (Mars Trek)",
+   "fuente": "https://trek.nasa.gov/mars/",
+   "limitacion": "Contexto de 15 × 15 km alrededor de la zona. Alineado a la ortofoto HiRISE (el mosaico de Mars Trek estaba corrido 834 m al este).",
+   "corregistro": {
+    "metodo": "correlación normalizada con la ortofoto HiRISE de USGS (zona de 3 × 3 km)",
+    "corrimiento_original_m": {
+     "este": 834,
+     "sur": 61
+    },
+    "correlacion": 0.686,
+    "residuo_m": {
+     "este": 0,
+     "sur": 0
+    },
+    "correlacion_final": 0.686,
+    "nota": "Se recortó el CTX en la caja corrida para que coincida con la ortofoto y el relieve."
+   }
+  },
+  {
+   "id": "globo",
+   "estado": "ok",
+   "archivos": [
+    "globo_viking.jpg",
+    "globo_mola_sombreado.jpg"
+   ],
+   "instrumento": "Viking Orbiter y MOLA (MGS)",
+   "resolucion": "~10.4 km/px",
+   "atribucion": "Viking MDIM 2.1 y MOLA · NASA/USGS (Mars Trek)",
+   "fuente": "https://trek.nasa.gov/mars/",
+   "limitacion": "Mosaicos globales para el globo 3D; columna 0 = 180° O, longitud Este hacia la derecha."
+  },
+  {
+   "id": "ruta_curiosity",
+   "estado": "ok",
+   "archivos": [
+    "curiosity_ruta.geojson"
+   ],
+   "instrumento": "Localización del rover (PLACES)",
+   "resolucion": "una posición por sitio/drive",
+   "atribucion": "Ruta de Curiosity · PDS PLACES · NASA/JPL",
+   "fuente": "https://planetarydata.jpl.nasa.gov/img/data/msl/msl_places/data_localizations/localized_pos.csv"
+  }
+ ]
+}

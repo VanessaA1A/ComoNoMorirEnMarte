@@ -1,0 +1,69 @@
+{
+ "aviso": "RAD y REMS miden en UN solo punto (el rover). Esto NO es un mapa de radiación ni de temperatura.",
+ "curiosity_en_la_zona": {
+  "lat": -4.808008,
+  "lon": 137.381004,
+  "sol": 4711,
+  "sitio": 120,
+  "drive": 82,
+  "lugar": "Nevado Sajama (cresta junto a Monte Grande)",
+  "fuente": "https://planetarydata.jpl.nasa.gov/img/data/msl/msl_places/data_localizations/localized_pos.csv"
+ },
+ "valores": [
+  {
+   "magnitud": "Dosis equivalente en la superficie (rayos cósmicos galácticos)",
+   "valor": 0.64,
+   "unidad": "mSv/día",
+   "periodo": "300 soles desde agosto de 2012, cerca del lugar de aterrizaje",
+   "instrumento": "RAD (Curiosity)",
+   "cita": "Hassler, D. M. et al. (2014), Science 343(6169)",
+   "fuente": "https://doi.org/10.1126/science.1244797",
+   "verificado_en_texto": false,
+   "nota": "No se pudo abrir el texto completo del artículo para confirmarlo; algunas notas de prensa sobre los mismos datos dan 0,67 mSv/día."
+  },
+  {
+   "magnitud": "Dosis absorbida (rayos cósmicos galácticos)",
+   "valor": 210,
+   "unidad": "µGy/día",
+   "aproximado": true,
+   "periodo": "primeros meses de la misión (2012–2013)",
+   "instrumento": "RAD (Curiosity)",
+   "cita": "NASA, Radiation Measurements on Mars (9 dic 2013)",
+   "fuente": "https://science.nasa.gov/resource/radiation-measurements-on-mars",
+   "verificado_en_texto": true
+  },
+  {
+   "magnitud": "Temperatura del aire, máximas diarias",
+   "valor": 0,
+   "unidad": "°C",
+   "aproximado": true,
+   "periodo": "agosto de 2012 a principios de 2013",
+   "instrumento": "REMS (Curiosity)",
+   "cita": "NASA/JPL-Caltech, PIA16913 'Steady Temperatures at Mars' Gale Crater' (2013)",
+   "fuente": "https://science.nasa.gov/photojournal/steady-temperatures-at-mars-gale-crater",
+   "verificado_en_texto": true
+  },
+  {
+   "magnitud": "Temperatura del aire, mínimas diarias",
+   "valor": -70,
+   "unidad": "°C",
+   "aproximado": true,
+   "periodo": "agosto de 2012 a principios de 2013",
+   "instrumento": "REMS (Curiosity)",
+   "cita": "NASA/JPL-Caltech, PIA16913 'Steady Temperatures at Mars' Gale Crater' (2013)",
+   "fuente": "https://science.nasa.gov/photojournal/steady-temperatures-at-mars-gale-crater",
+   "verificado_en_texto": true
+  }
+ ],
+ "donde_se_midieron": "Los valores citados se midieron en el rover entre 2012 y 2013, cerca de Bradbury Landing (−4,5895°, 137,4416° E), a 13.3 km del centro de esta zona (al norte).",
+ "reglas_del_juego": {
+  "texto": "Regla del juego (no es una medición): a menos de 10 m del pie de una pared de más de 23° (según el relieve real) el terreno cuenta como refugio; el resto, como exposición.",
+  "archivo": "radiacion_reglas.png",
+  "colores": {
+   "refugio": "#2082A6",
+   "exposicion": "#FA932E"
+  },
+  "fraccion_refugio": 0.3578,
+  "fraccion_exposicion": 0.436
+ }
+}

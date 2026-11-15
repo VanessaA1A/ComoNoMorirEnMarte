@@ -6,6 +6,7 @@ import { fichasDe, esDestacada } from '../juego/fichas.js';
 import { Cajon } from './Modal.jsx';
 import { Enlace, etiquetaCapa } from './Mapas.jsx';
 import Recurso from './Recurso.jsx';
+import FuentesCartografia from './FuentesCartografia.jsx';
 import GLOSARIO from '../data/glosario.json';
 import RECURSOS from '../data/recursos_nasa.json';
 // Una sola fuente: el mismo JSON que lee public/guia.html (va dentro del bundle para funcionar sin conexión)
@@ -85,6 +86,10 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
             <div className="tarjeta-dato">
               <strong>Banco de datos (fichas y pantallas de carga)</strong>
               <ul className="fuente">{[...new Set(j.catalogo.datos.map((d) => d.fuente))].map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
+            </div>
+            <div className="tarjeta-dato">
+              <strong>Cartografía (mapas)</strong>
+              <FuentesCartografia />
             </div>
           </>
         )}
