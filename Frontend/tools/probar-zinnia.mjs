@@ -122,7 +122,14 @@ ok(JSON.stringify(convertir(md)) === JSON.stringify(guia), 'guía: el JSON está
 ok(guia.titulo && guia.subtitulo && guia.intro && guia.secciones.length === 8 && guia.secciones.every((s) => s.id && s.titulo && s.corto && s.bloques.length), 'guía: título, subtítulo, intro y 8 secciones (cómo leer, Partes 1 a 6, referencias)');
 ok(guia.secciones.map((s) => s.numero).filter(Boolean).join() === '1,2,3,4,5,6', 'guía: Partes 1 a 6 numeradas');
 ok(guia.secciones.every((s) => s.bloques.every((b) => ['parrafo', 'lista', 'tabla', 'nota', 'subtitulo'].includes(b.tipo))), 'guía: solo párrafos, subtítulos, listas, tablas y notas');
-ok(Object.keys(guia.referencias).length === 59 && Object.values(guia.referencias).every((r) => /^https?:\/\//.test(r.url)), 'guía: 59 referencias, todas con URL');
+const nRefs = Object.keys(guia.referencias).length;
+ok(nRefs >= 63 && Object.keys(guia.referencias).every((k) => Number(k) >= 1 && Number(k) <= nRefs) && Object.values(guia.referencias).every((r) => /^https?:\/\//.test(r.url)),
+  `guía: ${nRefs} referencias numeradas de 1 a ${nRefs}, todas con URL`);
+// Nombres de la Tierra en Marte (cuadrante Uyuni): en la memoria de Zinn-IA, con fuente oficial NASA/JPL y un chiste malo
+const nombres = JSON.stringify(guia.secciones);
+ok(['Uyuni', 'Nevado Sajama', 'Valle de la Luna', 'Altadena', 'Eaton Canyon', 'Chiste malo'].every((t) => nombres.includes(t))
+  && [60, 61, 62, 63].every((n) => /^https:\/\/(science\.nasa\.gov|www\.jpl\.nasa\.gov)\//.test(guia.referencias[n]?.url ?? '')),
+  'guía: por qué los lugares de Curiosity tienen nombres de la Tierra, con fuentes NASA/JPL [60]-[63] y chiste malo');
 ok(!citasSinReferencia(guia).length, `guía: toda cita [n] tiene su referencia${citasSinReferencia(guia).length ? ' (faltan ' + citasSinReferencia(guia).join(', ') + ')' : ''}`);
 const capitulosGuia = guia.secciones.find((s) => s.id === 'situaciones').bloques.filter((b) => b.tipo === 'subtitulo').map((b) => b.texto);
 ok(capitulosGuia.length === 10 && capitulosGuia.every((t, i) => t.startsWith(`Capítulo ${i + 1}:`)), 'guía: Parte 3 con los 10 capítulos en orden');

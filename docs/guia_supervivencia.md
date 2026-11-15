@@ -268,6 +268,17 @@ Para cada capítulo: qué pasa, cuál es el peligro real y qué preguntas hacert
 | 2021 | Perseverance (NASA) | Cráter Jezero | Estudia rocas de hasta 3.600 millones de años y encontró Cheyava Falls | [8][57][36] |
 | 2021 | Zhurong (China) | Utopia Planitia | El primer rover chino en Marte, en la misma gran llanura donde bajó Viking 2 | [58] |
 
+### Por qué los lugares de Curiosity tienen nombres de la Tierra
+
+El equipo de Curiosity divide su mapa de Marte en **cuadrantes**. Cada cuadrante lleva el nombre de un pueblo de la Tierra de menos de 100.000 habitantes, y las rocas y los lugares que el rover estudia ahí reciben nombres informales de formaciones geológicas y lugares de esa región [60]. Son apodos de trabajo del equipo, no nombres oficiales. En el cuadrante anterior los nombres venían del sur de California [63].
+
+- **Cuadrante Uyuni:** la zona del boxwork está en el cuadrante "Uyuni", por el pueblo de Bolivia que es la puerta al salar más grande del mundo. Por eso los nombres vienen de los Andes de Bolivia y Chile, incluido el desierto de Atacama, que tiene muchos lugares parecidos a Marte [60][63].
+- **Nevado Sajama:** un volcán apagado y el pico más alto de Bolivia. En Marte es una cresta del boxwork... con apenas unos 2 m de diferencia entre el fondo de la hondonada y la cima [61].
+- **Valle de la Luna:** un área de valles en el desierto de Atacama, en Chile. En Marte es la hondonada junto a la cresta, donde Curiosity también perforó [61].
+- **Altadena:** el equipo guardaba ese nombre para un objetivo especial. En la Tierra es un vecindario junto al JPL, devastado por el incendio de Eaton Canyon en enero de 2025. Así se llamó la primera perforación de Curiosity en el boxwork (8 de junio de 2025), justo antes de entrar al cuadrante Uyuni [62][63].
+
+**Chiste malo de Zinn-IA:** le pusieron "Nevado Sajama", como el pico más alto de Bolivia, a una cresta de unos 2 metros. Es como si a mí, una florcita, me llamaran "Secuoya gigante". ¡Jiji! (La cresta es pequeña, pero el nombre sí viene de ese volcán [61].)
+
 ---
 
 ## Parte 5. Para mentes científicas: qué buscar
@@ -373,5 +384,11 @@ Para cada capítulo: qué pasa, cuál es el peligro real y qué preguntas hacert
 - [57] Europlanet: *Exploring Mars* (Viking, Perseverance). https://europlanet-society.org/msr-exploring-mars
 - [58] Nature (2021): aterrizaje de Zhurong en Utopia Planitia. https://media.nature.com/original/magazine-assets/d41586-021-01301-7/d41586-021-01301-7.pdf
 - [59] NASA Science: *'Mount Sharp' Inside Gale Crater, Mars*. https://science.nasa.gov/photojournal/mount-sharp-inside-gale-crater-mars
+
+**Nombres de los lugares de Curiosity**
+- [60] NASA Science, blog de Curiosity: *Sols 4573-4574: Welcome to the Uyuni Quad* (L. Edgar, USGS, 18 de junio de 2025). https://science.nasa.gov/blog/curiosity-blog-sols-4573-4574-welcome-to-the-uyuni-quad/
+- [61] NASA Science, blog de Curiosity: *Sols 4709-4715: Drilling High and Low in the Boxwork Unit* (C. O'Connell-Cooper, noviembre de 2025). https://science.nasa.gov/blog/curiosity-blog-sols-4709-4715-drilling-high-and-low-in-the-boxwork-unit/
+- [62] NASA Science, blog de Curiosity: *Sols 4561-4562: Prepping to Drill at Altadena* (C. Hayes, 6 de junio de 2025). https://science.nasa.gov/blog/sols-4561-4562-prepping-to-drill-at-altadena/
+- [63] NASA/JPL: *NASA's Curiosity Mars Rover Starts Unpacking Boxwork Formations* (23 de junio de 2025). https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-starts-unpacking-boxwork-formations/
 
 *Las reglas de la Parte 1 salen del motor del juego (src/engine/reglas.js y motor.js) y fueron verificadas con un simulador que recorre las 154.197 rutas posibles.*
