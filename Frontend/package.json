@@ -1,12 +1,18 @@
 {
   "name": "como-no-morir-en-marte",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node tools/revisar-entorno.mjs",
     "dev": "vite",
+    "prebuild": "node tools/revisar-entorno.mjs",
     "build": "vite build",
     "preview": "vite preview",
+    "preprobar": "node tools/revisar-entorno.mjs --todo",
     "probar": "node tools/probar-motor.mjs && node tools/probar-fuentes.mjs && node tools/probar-cartografia.mjs && node tools/probar-imagenes.mjs && node tools/probar-pendientes.mjs && node tools/probar-menos-movimiento.mjs && node tools/probar-zinnia.mjs && node tools/probar-chat.mjs && node tools/probar-guardado.mjs && node tools/probar-sincronizacion.mjs && node tools/probar-recorridos.mjs && node tools/probar-render.mjs && node tools/probar-ventana-zinnia.mjs && node tools/probar-foco.mjs",
     "assets": "node tools/assets-pendientes.mjs",
     "preparar-hooks": "git config core.hooksPath .githooks && echo Hook pre-push instalado: cada push corre npm run probar"
@@ -19,7 +25,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.4.1",
-    "jsdom": "30.1.3",
+    "jsdom": "26.1.0",
     "vite": "6.3.5"
   }
 }
