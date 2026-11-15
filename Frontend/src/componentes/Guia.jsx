@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CAPITULOS, INDEX } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
+import { formatear } from '../engine/texto.js';
 import { fichasDe, esDestacada } from '../juego/fichas.js';
 import { Cajon } from './Modal.jsx';
 import { Enlace, etiquetaCapa } from './Mapas.jsx';
@@ -109,7 +110,7 @@ function Reglas() {
       <p>Colores: <span style={{ color: 'var(--barra-verde)' }}>verde</span> más de 50, <span style={{ color: 'var(--barra-amarillo)' }}>amarillo</span> de 25 a 50, <span style={{ color: 'var(--barra-rojo)' }}>rojo</span> menos de 25. Radiación: verde menos de 40, amarillo 40–69, rojo 70 o más.</p>
       <h3>Los 3 finales</h3>
       <ul>
-        <li><strong>Bueno:</strong> vuelves viv{'o/a/e'}, a tiempo y con radiación menor a 70.</li>
+        <li><strong>Bueno:</strong> vuelves {formatear('viv{o|a|e}', j.partida)}, a tiempo y con radiación menor a 70.</li>
         <li><strong>Intermedio:</strong> te quedas en Marte si se te acabó el reloj, te desmayaste o tu radiación quedó entre 70 y 99.</li>
         <li><strong>Malo:</strong> oxígeno o traje en 0, o radiación en 100.</li>
       </ul>

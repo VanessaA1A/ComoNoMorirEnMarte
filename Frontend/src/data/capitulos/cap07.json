@@ -34,7 +34,7 @@
       "id": "c07_03a",
       "fondo": "bg_c07_deposito.jpg", "astro": "neutral", "zinnia": "feliz",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "Cartucho de oxígeno, batería cargada, comida y un parche para el traje. ¡Quedaste como nuev{o|a|e}!" }
+        { "quien": "Zinn-IA", "texto": "Cartucho de oxígeno, batería cargada, comida y un parche para el traje. ¡Quedaste list{o|a|e} para seguir!" }
       ],
       "ir": "c07_04"
     },

@@ -79,7 +79,7 @@ export default function Inicio() {
       </footer>
 
       {confirmar && (
-        <Modal titulo="¿Seguro que quieres reiniciar?" onCerrar={() => setConfirmar(false)}>
+        <Modal titulo="¿De verdad quieres reiniciar?" onCerrar={() => setConfirmar(false)}>
           <p className="texto-ui">Ya tienes una partida en el autoguardado. Si empiezas otra, el autoguardado se reemplaza (tus ranuras manuales no se tocan).</p>
           <div className="lista-botones">
             <button className="boton principal" onClick={() => { setConfirmar(false); j.empezar(); }}>Sí, empezar de nuevo</button>

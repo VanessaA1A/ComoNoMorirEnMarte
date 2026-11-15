@@ -22,7 +22,7 @@
       "fondo": "final_intermedio.jpg", "astro": "neutral", "zinnia": "triste",
       "lineas": [
         { "quien": "Narración", "texto": "Llegas a la base justo para ver la estela del módulo de ascenso en el cielo." },
-        { "quien": "Zinn-IA", "texto": "Se fue sin nosotros, {nombre}. La próxima oportunidad de volver a la Tierra tardará muchísimo." },
+        { "quien": "Zinn-IA", "texto": "Se fue sin {nosotros|nosotras|nosotres}, {nombre}. La próxima oportunidad de volver a la Tierra tardará muchísimo." },
         { "quien": "Zinn-IA", "texto": "Pero la Base Aurora tiene todo para vivir. Desde hoy eres {el|la|le} {primer|primera|primere} habitante permanente de Marte." },
         { "quien": "Zinn-IA", "texto": "Lección: el reloj también es una barra de vida. Los desvíos y las muestras cuestan minutos." },
         { "quien": "Narración", "texto": "FIN: Te quedas en Marte." }

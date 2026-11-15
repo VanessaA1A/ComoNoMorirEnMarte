@@ -68,5 +68,31 @@ const lineasConCapa = [...ESCENAS.values()].flatMap((e) => (e.lineas || []).filt
 ok(lineasConCapa.every(([, c]) => capas.some((x) => x.id === c)), 'toda línea con "capa" usa una capa que existe');
 ok(lineasConCapa.some(([e, c]) => e === 'c03_02' && c === 'geologia') && lineasConCapa.some(([e, c]) => e === 'c05_01' && c === 'geologia'), 'c03_02 y c05_01 tienen línea con capa geología');
 
+// Concordancia de género: Zinn-IA y la narración hablan según el pronombre que eligió el jugador
+const { formatear } = await import('../src/engine/texto.js');
+const textosJugables = [
+  ...[...ESCENAS.values()].flatMap((e) => [...(e.lineas || []).map((l) => l.texto), ...(e.opciones || []).map((o) => o.texto)]),
+  ...respuestas.map((r) => r.respuesta), ...Object.values(pistas).map((x) => x.texto ?? x),
+  ...PASOS.map((p) => p.texto), ...leer('src/data/chistes.json').map((c) => c.texto),
+].filter((t) => typeof t === 'string');
+const marcadores = textosJugables.flatMap((t) => t.match(/\{[^{}]*\|[^{}]*\}/g) || []);
+ok(marcadores.every((m) => m.split('|').length === 3), `todo marcador de pronombre tiene 3 formas (${marcadores.length})`);
+for (const pr of ['el', 'ella', 'elle']) {
+  const s = { pronombre: pr, escena: 'c05_01', nombre: 'Alex', muestras: [] };
+  ok(textosJugables.every((t) => !/\{[^{}]*\|/.test(formatear(t, s))), `con "${pr}" no queda ningún marcador sin reemplazar`);
+}
+// Palabras que se refieren al jugador y SIEMPRE deben ir con marcador {o|a|e}
+const conGenero = /\b(nosotr[oa]s|tranquil[oa]|list[oa]|viv[oa]|cansad[oa]|preparad[oa]|bienvenid[oa]|desmayad[oa]|nuev[oa])\b/i;
+// Excepciones: "Vivo en la tablet" (verbo, habla Zinn-IA) y "haberte desmayado" (participio con haber: no cambia)
+const sinMarcador = textosJugables
+  .map((t) => t.replace(/[\wáéíóúñ]*\{[^{}]*\}[\wáéíóúñ]*/gi, '').replace(/Vivo en la tablet|haberte desmayado/g, ''))
+  .filter((t) => conGenero.test(t));
+ok(!sinMarcador.length, `ninguna palabra con género hacia el jugador queda fija${sinMarcador.length ? ': ' + sinMarcador.map((t) => t.match(conGenero)[0]).join(', ') : ''}`);
+const nos = textosJugables.find((t) => t.includes('Se fue sin'));
+ok(formatear(nos, { pronombre: 'ella', escena: 'final_x' }).includes('sin nosotras') && formatear(nos, { pronombre: 'elle', escena: 'final_x' }).includes('sin nosotres'), 'final de tiempo: "nosotros / nosotras / nosotres"');
+ok(formatear('viv{o|a|e}', { pronombre: 'el', escena: 'c01_01' }) === 'vivo/a/e', 'antes de elegir pronombre se muestran las 3 formas (vivo/a/e)');
+ok(formatear('viv{o|a|e}', null) === 'vivo/a/e', 'sin partida también (vivo/a/e)');
+ok(['vivo', 'viva', 'vive'].every((v, i) => formatear('viv{o|a|e}', { pronombre: ['el', 'ella', 'elle'][i], escena: 'c03_01' }) === v), 'después de elegir: vivo / viva / vive');
+
 if (fallos) { console.log(`\n❌ ${fallos} prueba(s) fallaron`); process.exit(1); }
 console.log('\n✅ Zinn-IA: textos y lógica en orden');
