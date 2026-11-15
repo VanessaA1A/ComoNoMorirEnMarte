@@ -1,43 +1,40 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { infoCapitulo } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import Recurso from './Recurso.jsx';
-import ZinniaAvatar from './ZinniaAvatar.jsx';
+import ZinniaAvatar, { ZinniaAnimada } from './ZinniaAvatar.jsx';
 
-/** Pantalla de carga del capítulo: número + título sobre el fondo "cargando", Zinn-IA con efecto de onda
- *  y un dato de pantalla de carga (uso C). Se cierra sola a los 2,5 s o con clic. */
+/** Pantalla de carga del capítulo: número + título sobre el fondo "cargando" y un dato de pantalla de carga (uso C).
+ *  No se cierra sola: el jugador decide.
+ *  - Capítulo 1: solo "Continuar" (todavía no hay nada que guardar) y Zinn-IA con efecto de estática.
+ *  - Capítulo 2 en adelante: "Continuar" y "Guardar y cerrar" (autoguardado en localStorage y vuelta al Inicio). */
 export default function TarjetaCapitulo({ numero }) {
   const j = useJuego();
   const info = infoCapitulo(numero);
+  const primero = numero === 1;
   const dato = useMemo(() => {
     const deCarga = j.catalogo.datos.filter((d) => /C/.test(d.uso));
     return deCarga[Math.floor(Math.random() * deCarga.length)];
   }, [numero]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // El tutorial espera a que se cierre la tarjeta (no al revés)
-  const enEspera = j.panelZinnia || j.overlay;
-  useEffect(() => {
-    if (enEspera) return;
-    const t = setTimeout(j.cerrarTarjeta, 2500);
-    return () => clearTimeout(t);
-  }, [enEspera, j.cerrarTarjeta]);
-
   return (
-    <div className="tarjeta-capitulo" onClick={j.cerrarTarjeta} role="button" tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); j.cerrarTarjeta(); } }}
-      aria-label={`Capítulo ${numero}: ${info.titulo}. Pulsa para continuar.`}>
+    <div className="tarjeta-capitulo" role="dialog" aria-modal="true" aria-labelledby="titulo-tarjeta">
       <img src="/img/fondos/cargando.jpg" alt="" className="fondo" draggable={false} />
       <div className="contenido">
         <div className="numero">CAPÍTULO {numero} DE 10</div>
-        <h1 className="titulo-capitulo">{info.titulo}</h1>
+        <h1 id="titulo-tarjeta" className="titulo-capitulo">{info.titulo}</h1>
         {dato && <p className="dato-carga">¿Sabías que...? {dato.texto}</p>}
+        <div className={`tarjeta-botones ${primero ? 'solo' : ''}`}>
+          <button className="boton principal tarjeta-continuar" onClick={j.cerrarTarjeta} autoFocus>Continuar</button>
+          {!primero && <button className="boton tarjeta-guardar" onClick={j.guardarYCerrar}>Guardar y cerrar</button>}
+        </div>
       </div>
       <div className="carga-pie" aria-hidden="true">
         <div className="carga-zinnia">
-          <ZinniaAvatar className="zinnia-onda" alt="" />
-          <span>{numero === 1 ? 'Te damos la bienvenida a bordo · Cargando…' : 'Cargando…'}</span>
+          {primero
+            ? <ZinniaAnimada animacion="estatica" className="zinnia-estatica" />
+            : <ZinniaAvatar className="zinnia-onda" alt="" />}
+          <span>{primero ? 'Te damos la bienvenida a bordo' : 'Capítulo listo'}</span>
         </div>
-        <Recurso src="/img/logos/logotipo_zinnia_aurora.webp" alt="" className="logo-carga" respaldo={null} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-// Pantalla de Inicio (ZA-12): logo arriba, partida a la izquierda, tripulación al centro,
+// Pantalla de Inicio (ZA-12): título arriba, partida a la izquierda, tripulación al centro (astronauta grande, Zinn-IA pequeña),
 // exploración a la derecha y franja del hackathon abajo. Navegación por estado (JuegoContext).
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -6,7 +6,8 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { leerRanura } from '../juego/partidas.js';
 import Recurso from './Recurso.jsx';
 import { Astronauta } from './Personajes.jsx';
-import ZinniaAvatar from './ZinniaAvatar.jsx';
+import ZinniaAvatar, { ZinniaAnimada } from './ZinniaAvatar.jsx';
+import Icono from './Iconos.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
   return (
@@ -20,6 +21,8 @@ function BotonGrande({ titulo, detalle, className = '', ...resto }) {
 export default function Inicio() {
   const j = useJuego();
   const [confirmar, setConfirmar] = useState(false);
+  const [salir, setSalir] = useState(false);       // confirmación de "Salir"
+  const [despedida, setDespedida] = useState(false); // pantalla de despedida si el navegador no deja cerrar la pestaña
   const auto = leerRanura(0);
 
   // Empezar: si ya hay autoguardado, pedir confirmación antes de reemplazarlo.
@@ -27,14 +30,26 @@ export default function Inicio() {
 
   // Cerrar la confirmación con la tecla Escape.
   useEffect(() => {
-    if (!confirmar) return;
-    const alTeclear = (e) => { if (e.key === 'Escape') setConfirmar(false); };
+    if (!confirmar && !salir) return;
+    const alTeclear = (e) => { if (e.key === 'Escape') { setConfirmar(false); setSalir(false); } };
     window.addEventListener('keydown', alTeclear);
     return () => window.removeEventListener('keydown', alTeclear);
-  }, [confirmar]);
+  }, [confirmar, salir]);
+
+  // Salir: los navegadores solo dejan cerrar pestañas abiertas por el propio juego.
+  // Se intenta cerrar; si no se puede, se muestra una despedida con la indicación de cerrar la pestaña.
+  const alSalir = () => {
+    setSalir(false);
+    window.close();
+    setTimeout(() => { if (!window.closed) setDespedida(true); }, 150);
+  };
 
   return (
     <div className="inicio">
+      <button className="inicio-salir" onClick={() => setSalir(true)} title="Salir del juego">
+        <Icono nombre="salir" /> Salir
+      </button>
+
       <header className="inicio-cabecera">
         <Recurso
           src="/img/NombrePaginaTitulo.png"
@@ -62,8 +77,13 @@ export default function Inicio() {
             <span className="luz" /><span className="luz" /><span className="luz" />
             <span className="consola-etiqueta">Tripulación · Aurora-1</span>
           </div>
+          {/* El astronauta es el protagonista; Zinn-IA, pequeña, es el botón que abre su chat
+              (en el Inicio reemplaza al ícono flotante de la esquina inferior derecha). */}
           <div className="consola-escena">
-            <ZinniaAvatar className="zinnia-principal" alt="Zinn-IA, tu guía de supervivencia" />
+            <button type="button" className="zinnia-inicio" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
+              aria-label="Hablar con Zinn-IA (tecla Z)" aria-expanded={j.panelZinnia} aria-controls="panel-zinnia" title="Zinn-IA (tecla Z)">
+              <ZinniaAnimada animacion="multiexpresion" className="pixel zinnia-principal" />
+            </button>
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">
@@ -83,7 +103,7 @@ export default function Inicio() {
 
       <footer className="inicio-pie">
         <div className="estado-sistema" role="status">
-          {/* Luz de estado (verde = en línea, naranja = modo local). Zinn-IA ya está en la consola y en el botón flotante. */}
+          {/* Luz de estado (verde = en línea, naranja = modo local). Zinn-IA ya está en la consola (es el botón de su chat). */}
           <span className={`led-estado${j.conectado ? '' : ' apagado'}`} aria-hidden="true" />
           <span>{j.conectado ? 'Sistema en línea' : 'Sin señal con la Tierra · modo local'}</span>
         </div>
@@ -123,6 +143,33 @@ export default function Inicio() {
               <button className="boton" onClick={() => setConfirmar(false)}>Cancelar</button>
             </div>
           </div>
+        </div>,
+        document.body
+      )}
+
+      {salir && createPortal(
+        <div className="confirmar-velo" onClick={() => setSalir(false)}
+          style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'grid', placeItems: 'center', padding: '1em',
+            background: 'rgba(10, 2, 20, .55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', fontSize: 'clamp(13px, 1.25vw, 18px)' }}>
+          <div className="modal confirmar-caja salir-caja" style={{ width: 'min(92%, 30em)' }} role="dialog" aria-modal="true"
+            aria-labelledby="titulo-salir" onClick={(e) => e.stopPropagation()}>
+            <h2 id="titulo-salir">¿Salir del juego?</h2>
+            <p className="texto-ui">Tu partida queda guardada. La próxima vez puedes seguir con <strong>Continuar</strong>.</p>
+            <div className="salir-botones">
+              <button className="boton" onClick={() => setSalir(false)} autoFocus>No, quedarme</button>
+              <button className="boton principal" onClick={alSalir}>Sí, salir</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {despedida && createPortal(
+        <div className="despedida" role="dialog" aria-modal="true" aria-labelledby="titulo-despedida">
+          <div className="despedida-zinnia"><ZinniaAvatar expresion="normal" alt="" /></div>
+          <h2 id="titulo-despedida">¡Hasta pronto!</h2>
+          <p className="texto-ui">Gracias por jugar. Ya puedes cerrar esta pestaña.</p>
+          <button className="boton" onClick={() => setDespedida(false)} autoFocus>Volver al juego</button>
         </div>,
         document.body
       )}

@@ -29,6 +29,17 @@ export function precargarZinnia() {
   }
 }
 
+// Animaciones de cuerpo completo (inicio y tarjeta del capítulo 1). Con "menos movimiento", o si el archivo no
+// carga, se ve Zinn-IA quieta (normal.png), nunca el logotipo.
+const ANIMACIONES = { multiexpresion: '/img/zinnia_multiexpresion.webp', estatica: '/img/zinnia_estatica.gif' };
+export function ZinniaAnimada({ animacion, className = '', alt = '' }) {
+  const menos = useMenosMovimiento();
+  const [fallo, setFallo] = useState(false);
+  const src = ANIMACIONES[animacion];
+  if (menos || fallo || !src) return <ZinniaAvatar className={className} parpadeo={false} alt={alt} />;
+  return <img src={src} alt={alt} className={className} draggable={false} onError={() => setFallo(true)} />;
+}
+
 /**
  * @param expresion  una de EXPRESIONES (otra cosa → normal)
  * @param apagada    modo semilla (batería en 0): ojos cerrados y en gris

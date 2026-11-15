@@ -39,6 +39,11 @@ export const SUSTITUTO = {
 };
 const sinExtension = (archivo) => archivo.replace(/.[a-z0-9]+$/i, '');
 
+// Fondos ilustrados que YA traen al astronauta dibujado (o, en el final bueno, va dentro del módulo que despega):
+// en esas escenas no se dibuja el sprite encima, para que no salgan dos astronautas.
+const CON_ASTRONAUTA = new Set(['bg_c09_alerta', 'bg_c09_refugio', 'final_bueno', 'final_intermedio', 'final_malo']);
+export const fondoTraeAstronauta = (archivo) => Boolean(archivo) && CON_ASTRONAUTA.has(sinExtension(archivo));
+
 const SUPLENTE = {
   1: 'bg_c01_tierra.jpg', 2: 'bg_c02_nave.jpg', 3: 'bg_c03_base.jpg', 4: 'bg_c04_mirador.jpg', 5: 'bg_c05_transicion.jpg',
   6: 'bg_c05_transicion.jpg', 7: 'bg_c05_transicion.jpg', 8: 'bg_c05_transicion.jpg', 9: 'bg_c04_mirador.jpg', 10: 'bg_c03_base.jpg',
@@ -77,6 +82,7 @@ function FondoImagen({ archivo, capitulo, alternativas }) {
 const SPRITE_ASTRO = {
   neutral: 'frente', asustado: 'frente', herido: 'frente',
   caminando: 'espalda_derecha', muestra: 'espalda_izquierda', saludando: 'saludando',
+  espalda: 'espalda_izquierda', // cap. 1: de espaldas, mirando hacia la ventanilla (a la izquierda)
 };
 
 export function Astronauta({ pose = 'neutral', className = '' }) {

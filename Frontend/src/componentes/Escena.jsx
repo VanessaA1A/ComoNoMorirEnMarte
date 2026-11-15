@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { escena as escenaDe, lineasVisibles, opcionesVisibles } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import { Fondo, Astronauta } from './Personajes.jsx';
+import { Fondo, Astronauta, fondoTraeAstronauta } from './Personajes.jsx';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
 import { MapaRuta, poiActual } from './Mapas.jsx';
 import HUD from './HUD.jsx';
@@ -103,17 +103,26 @@ export default function Escena() {
   const quien = actual ? formatear(actual.quien, partida) : '';
   const esZinnia = actual?.quien === 'Zinn-IA';
   const esNarracion = actual?.quien === 'Narración';
+  const esJugador = actual?.quien === '{nombre}';
+  // Fondo del cuadro (public/img/ui/dialogo_*.png): Zinn-IA y el jugador traen su pestaña con el nombre dibujada;
+  // la narración y los demás (Control de misión) usan el cuadro de narración.
+  const tipoDialogo = esZinnia ? 'zinnia-habla' : esJugador ? 'jugador-habla' : esNarracion ? 'narracion' : 'otro-habla';
+  const nombreEnImagen = esZinnia || esJugador;
   // Expresión: la de la línea de Zinn-IA, una reacción breve, o la de la escena y los recursos (src/juego/expresiones.js)
   const reaccion = useReaccion(partida);
   const { expresion, apagada } = expresionEscena({ partida, escena: esc, linea: actual, reaccion });
   const apagado = partida.bateria <= 0;
   const conTablet = Boolean(esc.abrirTablet);
   const verMinimapa = partida.capitulo >= 3 && !conTablet && !esc.esFinal;
+  // Cap. 1: el astronauta de espaldas, a la derecha, mirando por la ventanilla. La escala de cada lugar está en estilos.css.
+  const cap = esc.esFinal ? 10 : partida.capitulo;
+  const lugar = cap === 1 ? 'lugar-cabina' : cap === 2 ? 'lugar-nave' : 'lugar-marte';
+  const pose = cap === 1 ? 'espalda' : (esc.astro ?? 'neutral');
 
   return (
-    <div className={`escena capa-llena ${conTablet ? 'con-tablet' : ''}`}>
-      <Fondo archivo={esc.fondo} capitulo={esc.esFinal ? 10 : partida.capitulo} />
-      <div className="personaje-astro"><Astronauta pose={esc.astro ?? 'neutral'} /></div>
+    <div className={`escena capa-llena ${lugar} ${conTablet ? 'con-tablet' : ''}`}>
+      <Fondo archivo={esc.fondo} capitulo={cap} />
+      {!fondoTraeAstronauta(esc.fondo) && <div className="personaje-astro"><Astronauta pose={pose} /></div>}
 
       {!esc.esFinal && <HUD />}
 
@@ -165,9 +174,9 @@ export default function Escena() {
           </div>
         )}
         {actual && (
-          <div className={`dialogo ${esZinnia ? 'zinnia-habla' : ''} ${esNarracion ? 'narracion' : ''}`}
+          <div className={`dialogo dialogo-imagen ${tipoDialogo}`}
             onClick={pulsar} data-tutorial="dialogo" aria-live="polite">
-            {!esNarracion && <span className="quien">{quien}</span>}
+            {!esNarracion && <span className={nombreEnImagen ? 'oculto-lector' : 'quien'}>{quien}</span>}
             <span aria-hidden={!completo}>{texto.slice(0, letras)}</span>
             {!completo && <span className="oculto-lector">{texto}</span>}
             {completo && !opciones.length && !pidiendoNombre && !verso && !bloqueadoPorGuia && <span className="seguir" aria-hidden="true">▼</span>}
