@@ -89,7 +89,7 @@ for (const q of ['¿Cómo funciona la fotosíntesis?', '¿Cuánto es 15 × 12?',
 }
 const quien = chat.respaldo('¿Quién eres?', partida());
 ok(/Zinn-IA/.test(quien.texto) && /flor/.test(quien.texto), `"¿Quién eres?" sin IA → se presenta: "${quien.texto.slice(0, 50)}…"`);
-const granos = chat.respaldo('¿cuántos granos de arena hay en Gale?', partida());
+const granos = chat.respaldo('¿cuántas piedras hay en Gale?', partida()); // (la arena ya tiene dato: Parte 4, color de la arena en Gale)
 ok(granos.sinDato && /no está en mis datos verificados/.test(granos.texto) && /Guía de supervivencia/.test(granos.texto) && /«Parte \d/.test(granos.texto) && !/\d{2,}/.test(granos.texto),`sin dato → lo dice y sugiere una parte de la Guía: "${granos.texto.slice(0, 70)}…"`);
 const tarea = chat.respaldo('hazme la tarea de quimica organica avanzada', partida());
 ok(tarea.fueraDeTema && /paso a paso/.test(tarea.texto) && /conexión/.test(tarea.texto), 'tarea escolar sin IA → con conexión la explica paso a paso; sin ella, lo dice con amabilidad');

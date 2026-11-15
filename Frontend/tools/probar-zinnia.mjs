@@ -168,6 +168,11 @@ const bloqueo = fs.readFileSync(path.join(raiz, 'src/componentes/SoloComputadora
 ok(bloqueo.includes('¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.') && bloqueo.includes('href="/guia.html"') && !emoji.test(bloqueo), 'pantalla de bloqueo: texto de Zinn-IA, enlace a guia.html y sin emojis');
 ok(!fs.readFileSync(path.join(raiz, 'public/guia.html'), 'utf8').includes('puedeJugar'), 'guia.html no usa el bloqueo');
 
+// Color de la arena en Gale: dunas Bagnold oscuras (basalto) y el marrón rojizo solo en falso color infrarrojo (CRISM)
+ok(nombres.includes('Color de la arena en Gale') && nombres.includes('falso color infrarrojo') && nombres.includes('olivino')
+  && (guia.referencias[64]?.url ?? '').includes('jpl.nasa.gov') && (guia.referencias[65]?.url ?? '').includes('science.nasa.gov') && (guia.referencias[66]?.url ?? '').includes('10.1029/2022JE007436'),
+  'guía: color de la arena en Gale con fuentes NASA/JPL y el artículo de JGR Planets [64]-[66]');
+
 // Guion 1.0: escenas narrativas "La tormenta de polvo" (c06_01) y "La nevada que no llega" (c07_01).
 // Solo texto: sin efecto en barras ni reloj, con una línea distinta según se revisó el clima en el mirador (clima_revisado).
 {

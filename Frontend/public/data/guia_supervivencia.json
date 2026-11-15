@@ -648,6 +648,11 @@
               "[47]"
             ],
             [
+              "Color de la arena en Gale",
+              "No toda es roja. Las **dunas Bagnold**, un mar de arena activa al pie de Mount Sharp, son **oscuras**: están hechas de minerales basálticos como el olivino y el piroxeno. Desde órbita, en una imagen de falso color infrarrojo del espectrómetro CRISM, las dunas lineales de Mount Desert Island se ven marrón rojizo y las de Sands of Forvie, a 2,5 km, más oscuras: tienen granos de distinto tamaño y otra mezcla de minerales. Ese marrón rojizo es de la imagen infrarroja, no el color que verías con tus ojos",
+              "[64][65][66]"
+            ],
+            [
               "Suelo",
               "Percloratos de 0,5 a 1 %, tóxicos para la tiroides",
               "[34]"
@@ -934,6 +939,19 @@
           ]
         },
         {
+          "tipo": "subtitulo",
+          "texto": "Color de la arena en Gale"
+        },
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "[64] NASA/JPL: *NASA's Curiosity Mars Rover Heads Toward Active Dunes* (16 de noviembre de 2015). https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-heads-toward-active-dunes/",
+            "[65] NASA Science: *Curiosity Rover Report (Dec. 15, 2015): First Visit to Martian Dunes*. https://science.nasa.gov/resource/curiosity-rover-report-dec-15-2015-first-visit-to-martian-dunes/",
+            "[66] Moreland y otros, *Journal of Geophysical Research: Planets* (2022): *Orbital and In Situ Investigation of the Bagnold Dunes and Sands of Forvie, Gale Crater, Mars*. https://doi.org/10.1029/2022JE007436"
+          ]
+        },
+        {
           "tipo": "nota",
           "texto": "Las reglas de la Parte 1 salen del motor del juego (src/engine/reglas.js y motor.js) y fueron verificadas con un simulador que recorre las 154.197 rutas posibles."
         }
@@ -1192,6 +1210,18 @@
     "63": {
       "texto": "NASA/JPL: NASA's Curiosity Mars Rover Starts Unpacking Boxwork Formations (23 de junio de 2025).",
       "url": "https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-starts-unpacking-boxwork-formations/"
+    },
+    "64": {
+      "texto": "NASA/JPL: NASA's Curiosity Mars Rover Heads Toward Active Dunes (16 de noviembre de 2015).",
+      "url": "https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-heads-toward-active-dunes/"
+    },
+    "65": {
+      "texto": "NASA Science: Curiosity Rover Report (Dec. 15, 2015): First Visit to Martian Dunes.",
+      "url": "https://science.nasa.gov/resource/curiosity-rover-report-dec-15-2015-first-visit-to-martian-dunes/"
+    },
+    "66": {
+      "texto": "Moreland y otros, Journal of Geophysical Research: Planets (2022): Orbital and In Situ Investigation of the Bagnold Dunes and Sands of Forvie, Gale Crater, Mars.",
+      "url": "https://doi.org/10.1029/2022JE007436"
     }
   }
 }
