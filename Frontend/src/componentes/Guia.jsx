@@ -32,7 +32,7 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
         <div className="pestanas" role="tablist" aria-label="Secciones">
           {GUIA.secciones.map((s) => (
             <button key={s.id} role="tab" aria-selected={s.id === pestana} onClick={() => setPestana(s.id)} title={formatear(s.titulo, j.partida)}>
-              {s.numero}. {formatear(s.titulo, j.partida)}
+              {s.numero ? `${s.numero}. ` : ''}{formatear(s.corto ?? s.titulo, j.partida)}
             </button>
           ))}
         </div>
@@ -45,6 +45,7 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
         </div>
       </nav>
       <div className="cajon-cuerpo guia-cuerpo" role="tabpanel">
+        {seccion === GUIA.secciones[0] && GUIA.intro && <p className="guia-nota"><TextoGuia texto={GUIA.intro} partida={j.partida} /></p>}
         {seccion && <SeccionGuia seccion={seccion} partida={j.partida} />}
         {pestana === 'Capas del mapa' && j.catalogo.capas.map((c) => (
           <div key={c.id} className="tarjeta-dato">
@@ -92,21 +93,39 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
   );
 }
 
-/** Texto con **negrita**, *cursiva* y marcadores de pronombre {o|a|e} (según la partida; sin partida, "o/a/e"). */
+/** Cita [n]: enlace a su fuente (lista de Referencias de la guía). */
+function Cita({ n }) {
+  const r = GUIA.referencias?.[n];
+  if (!r?.url) return `[${n}]`;
+  return <a className="cita" href={r.url} target="_blank" rel="noreferrer" title={r.texto} aria-label={`Fuente ${n}: ${r.texto}`}>[{n}]</a>;
+}
+
+/** Texto plano con citas [n] y direcciones https:// convertidas en enlaces. */
+function Enlazado({ texto }) {
+  return String(texto).split(/(\[\d+\]|https?:\/\/[^\s)]+)/g).map((t, i) => {
+    const cita = t.match(/^\[(\d+)\]$/);
+    if (cita) return <Cita key={i} n={cita[1]} />;
+    if (/^https?:\/\//.test(t)) return <a key={i} href={t} target="_blank" rel="noreferrer">{t}</a>;
+    return t;
+  });
+}
+
+/** Texto con **negrita**, *cursiva*, citas [n] y marcadores de pronombre {o|a|e} (según la partida; sin partida, "o/a/e"). */
 export function TextoGuia({ texto, partida }) {
   const t = formatear(texto, partida);
   return t.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((trozo, i) => {
-    if (/^\*\*[^*]+\*\*$/.test(trozo)) return <strong key={i}>{trozo.slice(2, -2)}</strong>;
-    if (/^\*[^*]+\*$/.test(trozo)) return <em key={i}>{trozo.slice(1, -1)}</em>;
-    return trozo;
+    if (/^\*\*[^*]+\*\*$/.test(trozo)) return <strong key={i}><Enlazado texto={trozo.slice(2, -2)} /></strong>;
+    if (/^\*[^*]+\*$/.test(trozo)) return <em key={i}><Enlazado texto={trozo.slice(1, -1)} /></em>;
+    return <Enlazado key={i} texto={trozo} />;
   });
 }
 
 export function SeccionGuia({ seccion, partida }) {
   return (
     <section className="guia-seccion" aria-labelledby={`guia-${seccion.id}`}>
-      <h3 id={`guia-${seccion.id}`}>{seccion.numero}. <TextoGuia texto={seccion.titulo} partida={partida} /></h3>
+      <h3 id={`guia-${seccion.id}`}>{seccion.numero ? `Parte ${seccion.numero}. ` : ''}<TextoGuia texto={seccion.titulo} partida={partida} /></h3>
       {seccion.bloques.map((b, i) => {
+        if (b.tipo === 'subtitulo') return <h4 key={i}><TextoGuia texto={b.texto} partida={partida} /></h4>;
         if (b.tipo === 'parrafo') return <p key={i}><TextoGuia texto={b.texto} partida={partida} /></p>;
         if (b.tipo === 'nota') return <p key={i} className="guia-nota"><TextoGuia texto={b.texto} partida={partida} /></p>;
         if (b.tipo === 'lista') {

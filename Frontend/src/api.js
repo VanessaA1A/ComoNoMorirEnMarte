@@ -213,3 +213,26 @@ if (apiActiva) {
   // Al iniciar el juego: comprobar la conexión y vaciar lo pendiente de la última sesión
   comprobarConexion().then((ok) => (ok ? vaciarCola() : programarReintento()));
 }
+
+// ---------- Zinn-IA (chat con IA) ----------
+// No pasa por la cola: si no hay conexión, la API dice 503/429 o algo falla, el chat usa el RESPALDO local.
+// Devuelve { modo: 'ia', texto, acciones } o { modo: 'respaldo', motivo: 'sin_api' | 'sin_conexion' | 'sin_ia' | 'limite' | 'error', error? }.
+export async function chatZinnia({ mensajes, contexto }) {
+  if (!apiActiva) return { modo: 'respaldo', motivo: 'sin_api' };
+  if (!enLinea || globalThis.navigator?.onLine === false) return { modo: 'respaldo', motivo: 'sin_conexion' };
+  try {
+    const r = await fetch(`${API}/zinnia/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerId: idJugador() ?? undefined, mensajes: mensajes.slice(-12), contexto }),
+      signal: AbortSignal.timeout(20000), // la API corta a los 15 s; esto es por si la red se cuelga
+    });
+    const cuerpo = await r.json().catch(() => ({}));
+    if (r.status === 429) return { modo: 'respaldo', motivo: 'limite', error: cuerpo.error };
+    if (r.status === 503) return { modo: 'respaldo', motivo: 'sin_ia' };
+    if (!r.ok || !cuerpo.texto) return { modo: 'respaldo', motivo: 'error' };
+    return { modo: cuerpo.modo === 'semilla' ? 'semilla' : 'ia', texto: cuerpo.texto, acciones: Array.isArray(cuerpo.acciones) ? cuerpo.acciones : [] };
+  } catch {
+    return { modo: 'respaldo', motivo: 'sin_conexion' };
+  }
+}

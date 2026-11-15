@@ -113,27 +113,38 @@ ok(['feliz', 'curiosa'].includes(cancion.zinnia), `expresión de Zinn-IA en la c
 const guia = leer('public/data/guia_supervivencia.json');
 const { INDEX } = await import('../src/engine/guion.js');
 const { colorBarra, aplicarEfecto, finalAlVolver } = await import('../src/engine/reglas.js');
-ok(guia.titulo && guia.subtitulo && guia.secciones.length === 10 && guia.secciones.every((s) => s.id && s.titulo && s.bloques.length), 'guía: título, subtítulo y 10 secciones con bloques');
-ok(guia.secciones.every((s) => s.bloques.every((b) => ['parrafo', 'lista', 'tabla', 'nota'].includes(b.tipo))), 'guía: solo párrafos, listas, tablas y notas');
+// La guía sale de docs/guia_supervivencia.md (tools/guia-md-a-json.mjs): 7 partes + referencias, citas [n] con fuente
+const { convertir, citasSinReferencia } = await import('./guia-md-a-json.mjs');
+const md = fs.readFileSync(path.join(raiz, '..', 'docs', 'guia_supervivencia.md'), 'utf8');
+ok(JSON.stringify(convertir(md)) === JSON.stringify(guia), 'guía: el JSON está al día con docs/guia_supervivencia.md');
+ok(guia.titulo && guia.subtitulo && guia.intro && guia.secciones.length === 8 && guia.secciones.every((s) => s.id && s.titulo && s.corto && s.bloques.length), 'guía: título, subtítulo, intro y 8 secciones (cómo leer, Partes 1 a 6, referencias)');
+ok(guia.secciones.map((s) => s.numero).filter(Boolean).join() === '1,2,3,4,5,6', 'guía: Partes 1 a 6 numeradas');
+ok(guia.secciones.every((s) => s.bloques.every((b) => ['parrafo', 'lista', 'tabla', 'nota', 'subtitulo'].includes(b.tipo))), 'guía: solo párrafos, subtítulos, listas, tablas y notas');
+ok(Object.keys(guia.referencias).length === 59 && Object.values(guia.referencias).every((r) => /^https?:\/\//.test(r.url)), 'guía: 59 referencias, todas con URL');
+ok(!citasSinReferencia(guia).length, `guía: toda cita [n] tiene su referencia${citasSinReferencia(guia).length ? ' (faltan ' + citasSinReferencia(guia).join(', ') + ')' : ''}`);
+const capitulosGuia = guia.secciones.find((s) => s.id === 'situaciones').bloques.filter((b) => b.tipo === 'subtitulo').map((b) => b.texto);
+ok(capitulosGuia.length === 10 && capitulosGuia.every((t, i) => t.startsWith(`Capítulo ${i + 1}:`)), 'guía: Parte 3 con los 10 capítulos en orden');
 const textosGuia = [guia.intro, ...guia.secciones.flatMap((s) => [s.titulo, ...s.bloques.flatMap((b) => [b.texto, ...(b.items || []), ...(b.encabezados || []), ...(b.filas || []).flat()])])].filter(Boolean);
 const txtGuia = textosGuia.join('\n');
 ok(textosGuia.every((t) => !emoji.test(t)), 'guía sin emojis');
 ok(textosGuia.flatMap((t) => t.match(/\{[^{}]*\|[^{}]*\}/g) || []).every((m) => m.split('|').length === 3), 'guía: marcadores de pronombre con 3 formas');
-ok(formatear('Llegas viv{o|a|e}', null) === 'Llegas vivo/a/e' && txtGuia.includes('Llegas viv{o|a|e}'), 'guía: "Llegas viv{o|a|e}" (en guia.html se lee "vivo/a/e")');
+ok(txtGuia.includes('llegas con vida'), 'guía: "llegas con vida" (sin género hacia el jugador)');
+ok(/tecla \*\*Z\*\*/.test(txtGuia) && /\*\*Esc\*\*/.test(txtGuia), 'guía: documenta el atajo de Zinn-IA (tecla Z, Esc para cerrar)');
 const sinMarcadorGuia = textosGuia.map((t) => t.replace(/[\wáéíóúñ]*\{[^{}]*\}[\wáéíóúñ]*/gi, '')).filter((t) => /\b(vivo|viva|listo|lista|tranquilo|tranquila|nosotros|nosotras)\b/i.test(t));
 ok(!sinMarcadorGuia.length, `guía: ninguna palabra con género hacia el jugador queda fija${sinMarcadorGuia.length ? ': ' + sinMarcadorGuia.join(' | ').slice(0, 120) : ''}`);
 // El motor manda: las cifras de la sección 2 se comprueban con las reglas reales
 const ini = INDEX.estadoInicial;
 ok(txtGuia.includes(`${ini.minutos} minutos`) && ini.radiacion === 0 && ['oxigeno', 'bateria', 'alimentacion', 'integridad'].every((b) => ini[b] === 100), `guía = motor: empiezas en 100 (radiación 0) con ${ini.minutos} minutos`);
 const base = { ...ini, flags: {}, muestras: [] };
-ok(aplicarEfecto({ ...base, alimentacion: 29 }, { minutos: -10 }).minutos === ini.minutos - 15 && txtGuia.includes('**Menos de 30**: caminas más lento (cada tramo tarda 50 % más)'), 'guía = motor: alimentación < 30 → +50 % de tiempo');
+ok(aplicarEfecto({ ...base, alimentacion: 29 }, { minutos: -10 }).minutos === ini.minutos - 15 && txtGuia.includes('**Menos de 30:** caminas más lento (cada tramo tarda 50 % más)'), 'guía = motor: alimentación < 30 → +50 % de tiempo');
 ok(aplicarEfecto({ ...base, integridad: 29 }, {}, true).oxigeno === 90 && txtGuia.includes('pierdes 10 de oxígeno extra en cada decisión'), 'guía = motor: integridad < 30 → −10 de oxígeno por decisión');
 ok(aplicarEfecto({ ...base, bateria: 0 }, { oxigeno: -5, alimentacion: -5 }).oxigeno === 90 && txtGuia.includes('se gastan **el doble**'), 'guía = motor: batería en 0 → oxígeno y comida al doble');
 ok(finalAlVolver({ ...base, radiacion: 70 }) === 'intermedio:radiacion' && finalAlVolver({ ...base, minutos: -1 }) === 'intermedio:tiempo' && txtGuia.includes('Con **70 o más** al volver'), 'guía = motor: radiación ≥ 70 o reloj < 0 al volver → te quedas en Marte');
 ok(colorBarra('oxigeno', 51) === 'verde' && colorBarra('oxigeno', 50) === 'amarillo' && colorBarra('oxigeno', 25) === 'amarillo' && colorBarra('oxigeno', 24) === 'rojo'
   && colorBarra('radiacion', 39) === 'verde' && colorBarra('radiacion', 40) === 'amarillo' && colorBarra('radiacion', 70) === 'rojo'
-  && txtGuia.includes('verde por encima de 50, amarillo de 25 a 50, rojo por debajo de 25') && txtGuia.includes('verde por debajo de 40, amarillo de 40 a 69, rojo de 70 en adelante'), 'guía = motor: colores de las barras');
-ok(txtGuia.includes('Raciones o depósito de suministros'), 'guía = motor: la alimentación se recupera con raciones o en el depósito');
+  && txtGuia.includes('verde por encima de 50, amarillo de 25 a 50 y rojo por debajo de 25') && txtGuia.includes('verde por debajo de 40, amarillo de 40 a 69 y rojo de 70 en adelante'), 'guía = motor: colores de las barras');
+ok(txtGuia.includes('Raciones o el depósito'), 'guía = motor: la alimentación se recupera con raciones o en el depósito');
+ok(aplicarEfecto({ ...base, integridad: 1 }, { integridad: -5 }).integridad === 0 && txtGuia.includes('**Menos de 30:** fuga en el traje'), 'guía = motor: integridad en 0 y fuga bajo 30');
 
 // Solo computadora: bloqueo en celular o ventana chica (guia.html y la API no se bloquean)
 const { puedeJugar, ANCHO_MINIMO } = await import('../src/juego/dispositivo.js');

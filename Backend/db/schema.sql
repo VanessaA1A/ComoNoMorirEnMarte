@@ -107,3 +107,14 @@ CREATE TABLE IF NOT EXISTS finales (
 
 CREATE INDEX IF NOT EXISTS decisiones_capitulo_idx ON decisiones (capitulo);
 CREATE INDEX IF NOT EXISTS finales_final_idx ON finales (final);
+
+-- Zinn-IA (agente): SOLO conteos de uso. Por privacidad (13+) nunca se guarda el texto de los mensajes.
+-- La API también la crea sola al arrancar (CREATE TABLE IF NOT EXISTS), así que es idempotente.
+CREATE TABLE IF NOT EXISTS zinnia_uso (
+  id                  SERIAL PRIMARY KEY,
+  player_id           UUID,
+  fecha               TIMESTAMPTZ NOT NULL DEFAULT now(),
+  herramientas_usadas TEXT[] NOT NULL DEFAULT '{}',
+  tokens_entrada      INT NOT NULL DEFAULT 0,
+  tokens_salida       INT NOT NULL DEFAULT 0
+);

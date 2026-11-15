@@ -236,6 +236,10 @@ a { color: var(--turquesa); }
 .guia-seccion h3 { font-family: var(--fuente-texto); color: var(--lima); font-size: 1.15em; margin: .2em 0 .6em; }
 .guia-seccion p, .guia-seccion li { margin: .45em 0; }
 .guia-seccion strong { color: var(--aurora-1); font-weight: normal; }
+.cajon-cabecera .cara { width: 3.2em; height: 3.2em; flex: none; overflow: hidden; }
+.guia-seccion h4 { font-family: var(--fuente-texto); font-weight: normal; color: var(--zinnia-petalo); font-size: 1.02em; margin: 1.1em 0 .3em; border-bottom: 1px solid var(--aurora-4); padding-bottom: .15em; }
+.guia-seccion a { color: var(--aurora-2); word-break: break-word; }
+.guia-seccion a.cita { font-size: .78em; vertical-align: super; line-height: 0; text-decoration: none; margin-left: .1em; }
 .guia-nota { opacity: .8; font-size: .9em; border-left: 3px solid var(--aurora-3); padding-left: .6em; }
 .guia-tabla { overflow-x: auto; margin: .6em 0; }
 .guia-tabla table { border-collapse: collapse; width: 100%; font-size: .85em; }
@@ -439,6 +443,24 @@ a.boton.boton-grande { color: var(--texto); text-decoration: none; box-sizing: b
 .pregunta { display: block; width: 100%; text-align: left; background: transparent; border: 1px solid var(--aurora-4); border-radius: .4em; padding: .4em .6em; margin: .25em 0; font-size: .9em; }
 .pregunta[aria-expanded="true"] { border-color: var(--zinnia-petalo); }
 .emergencia { color: var(--zinnia-mejilla); font-weight: bold; }
+/* Chat con Zinn-IA */
+.chat-historial { max-height: 18em; overflow-y: auto; display: flex; flex-direction: column; gap: .1em; padding-right: .2em; }
+.chat-yo { align-self: flex-end; max-width: 85%; background: var(--aurora-5); border: 1px solid var(--aurora-3); border-radius: .7em .7em .2em .7em; padding: .45em .7em; margin: .3em 0; font-size: .92em; }
+.chat-zinnia-msg { align-self: flex-start; max-width: 92%; border-radius: .7em .7em .7em .2em; }
+.chat-zinnia-msg .fuente { font-size: .78em; margin-top: .3em; }
+.chat-zinnia-msg .fuente a { color: var(--zinnia-contorno); }
+.chat-chip { font-size: .78em; padding: .25em .6em; margin-top: .4em; }
+.chat-acciones { display: flex; flex-wrap: wrap; gap: .3em; }
+.chat-pensando { display: flex; align-items: center; gap: .5em; align-self: flex-start; }
+.chat-pensando-cara { width: 1.8em; height: 1.8em; }
+.puntitos i { font-style: normal; font-weight: bold; animation: pulso 1s infinite; display: inline-block; }
+.puntitos i:nth-child(2) { animation-delay: .2s; } .puntitos i:nth-child(3) { animation-delay: .4s; }
+.chat-sugerencias { display: flex; flex-wrap: wrap; gap: .3em; margin: .5em 0; }
+.chat-sugerencias .chat-sugerencia { width: auto; display: inline-block; margin: 0; font-size: .8em; }
+.chat-sugerencias .chat-sugerencia:last-child { border-color: var(--zinnia-petalo); }
+.chat-campo { display: flex; gap: .4em; }
+.chat-campo input { flex: 1; min-width: 0; font: inherit; font-size: .9em; padding: .45em .6em; border-radius: .4em; border: 1px solid var(--aurora-3); background: rgba(36, 7, 63, .9); color: var(--texto); }
+.chat-campo .boton { font-size: .85em; padding: .45em .8em; }
 .accesos { display: grid; grid-template-columns: 1fr 1fr; gap: .4em; }
 .accesos .boton { font-size: .85em; padding: .5em; }
 

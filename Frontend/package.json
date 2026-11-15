@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "probar": "node tools/probar-motor.mjs && node tools/probar-zinnia.mjs && node tools/probar-guardado.mjs && node tools/probar-sincronizacion.mjs && node tools/probar-recorridos.mjs && node tools/probar-render.mjs",
+    "probar": "node tools/probar-motor.mjs && node tools/probar-zinnia.mjs && node tools/probar-chat.mjs && node tools/probar-guardado.mjs && node tools/probar-sincronizacion.mjs && node tools/probar-recorridos.mjs && node tools/probar-render.mjs",
     "assets": "node tools/assets-pendientes.mjs",
     "preparar-hooks": "git config core.hooksPath .githooks && echo Hook pre-push instalado: cada push corre npm run probar"
   },
@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.4.1",
+    "jsdom": "30.1.3",
     "vite": "6.3.5"
   }
 }

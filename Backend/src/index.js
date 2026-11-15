@@ -7,8 +7,12 @@ import { saves } from './rutas/saves.js';
 import { catalogo } from './rutas/catalogo.js';
 import { juego } from './rutas/juego.js';
 import { stats } from './rutas/stats.js';
+import { zinnia, asegurarTablaUso } from './rutas/zinnia.js';
+import { hayIA, MODELO } from './zinnia/agente.js';
+import { ENTRADAS } from './zinnia/conocimiento.js';
 
 const app = express();
+app.set('trust proxy', 1); // Render pone un proxy delante: req.ip = IP real (para el límite de Zinn-IA)
 
 // Solo los orígenes listados en CORS_ORIGIN (separados por coma)
 const origenes = (process.env.CORS_ORIGIN ?? 'http://localhost:5173')
@@ -20,11 +24,14 @@ app.get('/api/salud', async (_req, res) => {
   let db = false;
   try { await pool.query('SELECT 1'); db = true; } catch { /* la API responde aunque la base no */ }
   // commit = el que desplegó Render (RENDER_GIT_COMMIT lo pone Render solo); sirve para confirmar cada deploy
-  res.json({ ok: true, db, commit: (process.env.RENDER_GIT_COMMIT || 'local').slice(0, 7) });
+  res.json({
+    ok: true, db, commit: (process.env.RENDER_GIT_COMMIT || 'local').slice(0, 7),
+    zinnia: { ia: hayIA(), modelo: MODELO, conocimiento: ENTRADAS.length }, // ia = hay key configurada (no dice cuál)
+  });
 });
 
 // Express 5 manda los errores de las rutas async al manejador central
-app.use('/api', players, saves, catalogo, juego, stats);
+app.use('/api', players, saves, catalogo, juego, stats, zinnia);
 
 app.use((_req, res) => res.status(404).json({ error: 'Ruta no encontrada' }));
 
@@ -41,6 +48,9 @@ app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: 'Error interno del servidor' });
 });
+
+// Migración idempotente de la tabla de uso de Zinn-IA (si la base no responde, se reintenta en el primer chat)
+asegurarTablaUso().catch((err) => console.warn('[zinnia] tabla zinnia_uso pendiente:', err.code ?? err.message));
 
 const puerto = Number(process.env.PORT) || 3001;
 app.listen(puerto, () => console.log(`API escuchando en http://localhost:${puerto} (CORS: ${origenes.join(', ')})`));

@@ -17,7 +17,7 @@ export function Creditos() {
       <p><strong>Equipo Zinnia Aurora:</strong> Vanessa, Valeria, Sefora, Ulisis, Kelly y Moises.</p>
       <p><strong>Tipografías:</strong> AMORIA de gunastudio (versión demo, solo para uso personal y no comercial) y FORCED SQUARE de Paul IJsendoorn (Drawperfect).</p>
       <p><strong>Imágenes:</strong> NASA/JPL-Caltech (y NASA/JPL-Caltech/MSSS en las fotos de Curiosity).</p>
-      <p><strong>Zinn-IA:</strong> todos sus diálogos están escritos por el equipo; no usa IA generativa en vivo.</p>
+      <p><strong>Zinn-IA:</strong> el guion, el tutorial, las pistas y las preguntas frecuentes están escritos por el equipo. En el chat responde con IA en vivo (Claude Haiku, de Anthropic), limitada a los datos verificados del juego con fuentes NASA/USGS; no guarda tus mensajes ni pide datos personales. Sin conexión responde con textos del equipo.</p>
       <h3>Fuentes científicas</h3>
       <ul className="fuente">{fuentes.map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
     </Modal>

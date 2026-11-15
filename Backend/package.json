@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20.6" },
+  "engines": {
+    "node": ">=20.6"
+  },
   "scripts": {
     "dev": "node --watch --env-file=.env src/index.js",
     "start": "node src/index.js",
     "db:schema": "node --env-file=.env db/aplicar-schema.js",
-    "db:seed": "node --env-file=.env db/seed.js"
+    "db:seed": "node --env-file=.env db/seed.js",
+    "probar:zinnia": "node --env-file=.env tools/probar-zinnia.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "pg": "^8.13.0",

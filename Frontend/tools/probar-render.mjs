@@ -65,10 +65,20 @@ try {
   ok(!dibujar(h(HUD), { ...enEscena('c01_04b', 'ella'), guiaAbiertaEn: 'c01_04b' }).includes('parpadeo-guia'), 'al abrir la Guía deja de parpadear');
   ok(!dibujar(h(HUD), enEscena('c01_05', 'ella')).includes('parpadeo-guia'), 'fuera de esperarGuia el libro no parpadea');
 
-  // Guía: el JSON con el pronombre de la partida, y sin partida "o/a/e"
-  ok(dibujar(h(Guia, { pestanaInicial: 'finales' }), enJuego('ella')).includes('Llegas viva'), 'Guía en juego (ella): "Llegas viva"');
-  ok(dibujar(h(Guia, { pestanaInicial: 'finales' }), enJuego('elle')).includes('Llegas vive'), 'Guía en juego (elle): "Llegas vive"');
-  ok(dibujar(h(Guia, { pestanaInicial: 'finales' })).includes('Llegas vivo/a/e'), 'Guía sin partida: "Llegas vivo/a/e"');
+  // Guía (docs/guia_supervivencia.md): partes, subtítulos, citas [n] como enlace a su fuente y sin marcas sueltas
+  const reglas = dibujar(h(Guia, { pestanaInicial: 'reglas' }), enJuego('ella'));
+  ok(reglas.includes('Parte 1. ') && reglas.includes('<h4') && reglas.includes('llegas con vida'), 'Guía · Parte 1: título, subtítulos y "llegas con vida"');
+  const mapa = dibujar(h(Guia, { pestanaInicial: 'mapa' }));
+  ok(/<a class="cita" href="https:\/\/www\.uahirise\.org\/ESP_039384_1085"[^>]*>\[<!-- -->16<!-- -->\]<\/a>/.test(mapa) || /class="cita" href="https:\/\/www\.uahirise\.org\/ESP_039384_1085"/.test(mapa), 'Guía · Parte 2: la cita [16] enlaza a HiRISE');
+  const inicioGuia = dibujar(h(Guia));
+  ok(inicioGuia.includes('tecla <strong>Z</strong>') && inicioGuia.includes('memoria de Zinn-IA'), 'Guía abre en "Cómo leer esta guía" con el atajo Z de Zinn-IA');
+  const refs = dibujar(h(Guia, { pestanaInicial: 'referencias' }));
+  ok((refs.match(/href="https?:/g) || []).length >= 59, 'Guía · Referencias: las 59 fuentes con enlace');
+  for (const pr of [null, 'el', 'ella', 'elle']) {
+    const todo = PESTANAS.filter((p) => !['Fichas', 'Capas del mapa', 'Recursos NASA', 'Glosario completo', 'Fuentes'].includes(p))
+      .map((p) => dibujar(h(Guia, { pestanaInicial: p }), pr ? enJuego(pr) : {})).join('');
+    ok(!/\{[^{}<]*\|/.test(todo) && !/\*\*/.test(todo), `Guía completa${pr ? ` (${pr})` : ' sin partida'}: sin marcas {o|a|e} ni ** sueltas`);
+  }
 
   // Solo computadora
   const { PantallaSoloComputadora } = await cargar('/src/componentes/SoloComputadora.jsx');

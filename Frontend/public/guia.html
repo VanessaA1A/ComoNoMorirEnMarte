@@ -9,7 +9,8 @@
   <title>Guía de supervivencia en Marte</title>
   <!--
     Página independiente: lee el MISMO JSON que el panel del juego (data/guia_supervivencia.json).
-    No usa la API ni el bundle del juego, y no se bloquea en celular. Para cambiar un texto, editar solo el JSON.
+    No usa la API ni el bundle del juego, y no se bloquea en celular. Para cambiar un texto: editar docs/guia_supervivencia.md
+    y correr "node tools/guia-md-a-json.mjs" en Frontend (npm run probar avisa si el JSON quedó desactualizado).
   -->
   <style>
     @font-face { font-family: "Amoria"; src: url("/fonts/AMORIA.otf") format("opentype"); font-display: swap; }
@@ -59,6 +60,10 @@
     strong { color: var(--aurora-1); font-weight: normal; }
     p, li { margin: .5em 0; }
     ul, ol { padding-left: 1.3em; }
+    section.seccion h3 { font-family: var(--fuente-texto); font-weight: normal; color: var(--zinnia-petalo); font-size: 1.1em; margin: 1.2em 0 .3em; border-bottom: 1px solid var(--aurora-4); padding-bottom: .15em; }
+    a.cita { font-size: .75em; vertical-align: super; line-height: 0; text-decoration: none; margin-left: .1em; }
+    li[id^="ref-"] { word-break: break-word; scroll-margin-top: 12px; }
+    li[id^="ref-"]:target { background: rgba(1, 239, 172, .15); }
     .nota { opacity: .8; font-size: .92em; border-left: 3px solid var(--aurora-3); padding-left: .7em; }
     .tabla { overflow-x: auto; margin: .8em 0; -webkit-overflow-scrolling: touch; }
     table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .9em; }
@@ -86,7 +91,7 @@
       .acciones, .pronombre, .arriba, .no-imprimir { display: none !important; }
       nav.indice h2, nav.indice a { color: #000; }
       nav.indice a { border-left-color: #999; padding: .1em .5em; }
-      nav.indice .num, section.seccion h2 .num, strong, tbody th { color: #000; }
+      nav.indice .num, section.seccion h2 .num, section.seccion h3, strong, tbody th { color: #000; }
       strong { font-weight: bold; }
       section.seccion { background: none; border: none; padding: 0; margin: 14pt 0; break-inside: auto; }
       section.seccion h2 { color: #000; break-after: avoid; }
@@ -148,14 +153,21 @@
         var s = String(t || '').replace(/\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}/g, function (_, a, b, c) {
           return i === undefined ? a + '/' + b + '/' + c : [a, b, c][i];
         });
-        return escapar(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        return escapar(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>')
+          // direcciones como enlace, y cada cita [n] salta a su referencia al final de la página
+          .replace(/https?:\/\/[^\s<)]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noreferrer">' + u + '</a>'; })
+          .replace(/\[(\d+)\]/g, function (m, n) { return guia && guia.referencias && guia.referencias[n] ? '<a class="cita" href="#ref-' + n + '" title="' + escapar(guia.referencias[n].texto) + '">[' + n + ']</a>' : m; });
       }
       function bloque(b) {
+        if (b.tipo === 'subtitulo') return '<h3>' + texto(b.texto) + '</h3>';
         if (b.tipo === 'parrafo') return '<p>' + texto(b.texto) + '</p>';
         if (b.tipo === 'nota') return '<p class="nota">' + texto(b.texto) + '</p>';
         if (b.tipo === 'lista') {
           var tag = b.ordenada ? 'ol' : 'ul';
-          return '<' + tag + '>' + b.items.map(function (it) { return '<li>' + texto(it) + '</li>'; }).join('') + '</' + tag + '>';
+          return '<' + tag + '>' + b.items.map(function (it) {
+            var ref = /^\[(\d+)\]\s/.exec(it); // en Referencias, cada fuente tiene su ancla #ref-n
+            return '<li' + (ref ? ' id="ref-' + ref[1] + '"' : '') + '>' + texto(it) + '</li>';
+          }).join('') + '</' + tag + '>';
         }
         if (b.tipo === 'tabla') {
           return '<div class="tabla" role="region" tabindex="0" aria-label="Tabla (desliza para ver todo)"><table><thead><tr>' +
@@ -171,11 +183,14 @@
         document.getElementById('subtitulo').innerHTML = texto(guia.subtitulo);
         var intro = document.getElementById('intro');
         if (guia.intro) { intro.hidden = false; intro.innerHTML = texto(guia.intro); }
+        // El selector de pronombre solo aparece si la guía tiene marcas {o|a|e}
+        document.querySelector('.pronombre').style.display = /\{[^{}|]*\|[^{}|]*\|[^{}|]*\}/.test(JSON.stringify(guia)) ? '' : 'none';
+        var num = function (s) { return s.numero ? '<span class="num">Parte ' + s.numero + '.</span> ' : ''; };
         document.getElementById('indice').innerHTML = guia.secciones.map(function (s) {
-          return '<li><a href="#' + s.id + '"><span class="num">' + s.numero + '.</span>' + texto(s.titulo) + '</a></li>';
+          return '<li><a href="#' + s.id + '">' + num(s) + texto(s.titulo) + '</a></li>';
         }).join('');
         document.getElementById('contenido').innerHTML = guia.secciones.map(function (s) {
-          return '<section class="seccion" id="' + s.id + '" aria-labelledby="t-' + s.id + '"><h2 id="t-' + s.id + '"><span class="num">' + s.numero + '.</span> ' +
+          return '<section class="seccion" id="' + s.id + '" aria-labelledby="t-' + s.id + '"><h2 id="t-' + s.id + '">' + num(s) +
             texto(s.titulo) + '</h2>' + s.bloques.map(bloque).join('') + '<a class="arriba" href="#indice-titulo">↑ Volver al índice</a></section>';
         }).join('');
         if (location.hash) { var destino = document.getElementById(location.hash.slice(1)); if (destino) destino.scrollIntoView(); }

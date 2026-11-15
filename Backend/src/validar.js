@@ -76,4 +76,27 @@ export const final = z.object({
 });
 
 export const nuevaFicha = z.object({ datoId: texto(20) });
+
+// Chat con Zinn-IA: se usan solo los últimos 12 mensajes; el texto NO se guarda
+export const chatZinnia = z.object({
+  playerId: playerId.optional(),
+  mensajes: z.array(z.object({
+    rol: z.enum(['usuario', 'zinnia']),
+    texto: texto(500),
+  })).min(1).max(12),
+  contexto: z.object({
+    capitulo: z.number().int().min(1).max(10).nullable(),
+    escenaId: z.string().trim().max(60).nullable(),
+    nombre: z.string().trim().max(30).nullable(),
+    pronombre: z.enum(['el', 'ella', 'elle']).nullable(),
+    oxigeno: barra.nullable(),
+    alimentacion: barra.nullable(),
+    bateria: barra.nullable(),
+    integridad: barra.nullable(),
+    radiacion: barra.nullable(),
+    minutos: z.number().int().min(-1000).max(1000).nullable(),
+    muestras: z.number().int().min(0).max(10).nullable(),
+    fichasDesbloqueadas: z.array(texto(20)).max(100),
+  }).partial().default({}),
+}).refine((c) => c.mensajes.at(-1).rol === 'usuario', { path: ['mensajes'], message: 'el último mensaje debe ser del usuario' });
 export const filtroDatos = z.object({ uso: z.enum(['Z', 'C', 'F']).optional() });

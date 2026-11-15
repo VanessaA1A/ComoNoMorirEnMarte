@@ -1,6 +1,9 @@
 // Zinn-IA 24/7: ícono flotante + panel lateral, tutorial con spotlight y aviso de sin conexión.
-// Todo el texto es PREESCRITO (src/data). Nada de esto cambia el estado ni las reglas del juego.
-import { useLayoutEffect, useState } from 'react';
+// El tutorial, las pistas y "Pregúntale a Zinn-IA" son texto PREESCRITO (src/data). El chat usa IA (Claude Haiku)
+// limitada a datos verificados, con respaldo preescrito sin conexión. Nada de esto cambia el estado ni las reglas del juego.
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { enviar, suscribir, leerChat, MAX_TEXTO, PEDIR_CHISTE } from '../juego/zinniaChat.js';
+import MARTE from '../data/marte.json';
 import { escena as escenaDe, lineasVisibles, opcionesVisibles } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
@@ -30,6 +33,80 @@ export function sugeridas(p) {
   const delCap = cap ? RESPUESTAS.filter((r) => r.capitulos.includes(cap)) : [];
   const generales = ['guardar', 'ganar', 'capas'].map((id) => RESPUESTAS.find((r) => r.id === id));
   return [...new Set([...delCap, ...generales])].slice(0, 3);
+}
+
+// ---------- Chat con Zinn-IA ----------
+const LUGARES_MARTE = new Set([...MARTE.destinos, ...MARTE.aterrizajes].map((x) => x.id));
+const ETIQUETA_ACCION = { abrir_capa: 'Ver capa', marcar_poi: 'Ver en el mapa', mostrar_ficha: 'Ver ficha' };
+
+/** Ejecuta una acción del agente con lo que ya existe en el juego. Ids desconocidos: se ignoran. */
+export function ejecutarAccion(j, a) {
+  if (a?.tipo === 'abrir_capa' && j.catalogo.capas.some((c) => c.id === a.id)) { j.setCapa(a.id); j.abrir('mapaRuta'); return true; }
+  if (a?.tipo === 'marcar_poi' && j.catalogo.pois.some((x) => x.id === a.id)) { j.abrir('mapaRuta'); return true; }
+  if (a?.tipo === 'marcar_poi' && LUGARES_MARTE.has(a.id)) { j.abrir('mapaMarte'); return true; }
+  if (a?.tipo === 'mostrar_ficha' && j.catalogo.datos.some((d) => d.id === a.id)) { j.abrir('guia', { pestana: 'Fichas' }); return true; }
+  return false;
+}
+const accionValida = (j, a) => ['abrir_capa', 'marcar_poi', 'mostrar_ficha'].includes(a?.tipo) && (
+  j.catalogo.capas.some((c) => c.id === a.id) || j.catalogo.pois.some((x) => x.id === a.id) || LUGARES_MARTE.has(a.id) || j.catalogo.datos.some((d) => d.id === a.id));
+
+function ChatZinnia({ p }) {
+  const j = useJuego();
+  const { mensajes, pensando } = useSyncExternalStore(suscribir, leerChat, leerChat);
+  const [texto, setTexto] = useState('');
+  const lista = useRef(null);
+  useEffect(() => { lista.current?.scrollTo?.({ top: lista.current.scrollHeight }); }, [mensajes.length, pensando]);
+
+  const mandar = async (t) => {
+    const r = await enviar(t, { partida: p, fichas: j.fichas });
+    if (!r) return;
+    setTexto('');
+    // La primera acción válida se ejecuta sola (después de un momento para leer la respuesta); las demás quedan como botones
+    const primera = (r.acciones ?? []).find((a) => accionValida(j, a));
+    if (primera) setTimeout(() => ejecutarAccion(j, primera), 1500);
+  };
+  const sugerencias = [...sugeridas(p).map((r) => r.pregunta), PEDIR_CHISTE];
+
+  return (
+    <section aria-labelledby="chat-zinnia" className="chat-zinnia">
+      <h3 id="chat-zinnia">Pregúntame lo que quieras</h3>
+      <div className="chat-historial" ref={lista} aria-live="polite">
+        {!mensajes.length && <div className="burbuja">¡Hola! Sé de Marte, del mapa y de tus barras. Pregúntame, o pídeme un chiste malo.</div>}
+        {mensajes.map((m) => (
+          <div key={m.id} className={m.rol === 'usuario' ? 'chat-yo' : 'burbuja chat-zinnia-msg'}>
+            {m.rol === 'usuario' && <span className="oculto-lector">Tú: </span>}
+            {m.texto}
+            {m.fuente && /^https?:/.test(m.fuente) && <div className="fuente">Fuente: <Enlace url={m.fuente} /></div>}
+            {m.chiste?.ficha && (
+              <div><button className="boton secundario chat-chip" onClick={() => j.abrir('guia', { pestana: 'Fichas' })}>¿Es verdad?</button></div>
+            )}
+            {m.acciones?.some((a) => accionValida(j, a)) && (
+              <div className="chat-acciones">
+                {m.acciones.filter((a) => accionValida(j, a)).map((a) => (
+                  <button key={`${a.tipo}-${a.id}`} className="boton secundario chat-chip" onClick={() => ejecutarAccion(j, a)}>{ETIQUETA_ACCION[a.tipo]}: {a.id}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+        {pensando && (
+          <div className="burbuja chat-pensando" role="status">
+            <Recurso src={['/img/zinnia/pensando.gif', '/img/zinnia/pensando.png']} alt="" className="pixel chat-pensando-cara" respaldo={<img src="/img/zinnia_rostro.png" alt="" className="pixel chat-pensando-cara" />} />
+            <span className="oculto-lector">Zinn-IA está pensando</span><span className="puntitos" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
+          </div>
+        )}
+      </div>
+      <div className="chat-sugerencias">
+        {sugerencias.map((s) => <button key={s} className="pregunta chat-sugerencia" disabled={pensando} onClick={() => mandar(s)}>{s}</button>)}
+      </div>
+      <form className="chat-campo" onSubmit={(e) => { e.preventDefault(); mandar(texto); }}>
+        <label className="oculto-lector" htmlFor="chat-texto">Mensaje para Zinn-IA</label>
+        <input id="chat-texto" value={texto} maxLength={MAX_TEXTO} onChange={(e) => setTexto(e.target.value)} placeholder="Escribe tu pregunta" autoComplete="off" />
+        <button className="boton principal" disabled={pensando || !texto.trim()}>Enviar</button>
+      </form>
+      {texto.length > MAX_TEXTO - 50 && <p className="provisional">{texto.length}/{MAX_TEXTO}</p>}
+    </section>
+  );
 }
 
 function Pregunta({ r, p }) {
@@ -77,6 +154,8 @@ export function PanelZinnia() {
         cabecera={<div className="cara">{expresion === 'apagada' ? <ZinnIA expresion="apagada" /> : <ZinniaHablando />}</div>}>
         <div className="cajon-cuerpo">
           {emergencia && <p className="emergencia">Batería en 0: casi no me queda energía. Solo puedo decirte cómo vas y cómo recuperarla.</p>}
+
+          {!emergencia && <ChatZinnia p={p} />}
 
           <section aria-labelledby="como-voy">
             <h3 id="como-voy">¿Cómo voy?</h3>
