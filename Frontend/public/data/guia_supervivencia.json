@@ -1,0 +1,340 @@
+{
+  "titulo": "Guía de supervivencia en Marte",
+  "subtitulo": "Cómo no morir en Marte · Equipo Zinnia Aurora · NASA Space Apps Challenge 2026",
+  "intro": "Esta guía se puede leer en cualquier momento: desde el menú de inicio, en pausa o desde el ícono del libro durante la caminata. No hace falta empezar una partida para leerla.",
+  "secciones": [
+    {
+      "id": "mision",
+      "numero": 1,
+      "titulo": "Tu misión en una frase",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Bajas en el cráter Gale, caminas hasta las crestas boxwork de Mount Sharp, tomas muestras de roca y **vuelves a la Base Aurora antes de que despegue el módulo**. Tienes 3 horas y media (210 minutos) y un traje que tienes que cuidar."
+        }
+      ]
+    },
+    {
+      "id": "barras",
+      "numero": 2,
+      "titulo": "Tus 5 barras de vida y el reloj",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Todas empiezan en 100, menos la radiación, que empieza en 0. Cada decisión las mueve."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Barra",
+            "Qué la gasta",
+            "Qué la recupera",
+            "Si llega al límite"
+          ],
+          "filas": [
+            [
+              "**Oxígeno**",
+              "Caminar, la arena, las caídas, tomar muestras",
+              "Cartucho del depósito de suministros",
+              "**En 0 mueres** (asfixia)"
+            ],
+            [
+              "**Batería del traje**",
+              "El tiempo, el frío, usar instrumentos",
+              "Depósito o batería de repuesto",
+              "En 0 **Zinn-IA se apaga** y el oxígeno y la comida se gastan **el doble**"
+            ],
+            [
+              "**Alimentación**",
+              "El esfuerzo y el tiempo",
+              "Raciones o depósito de suministros",
+              "**Menos de 30**: caminas más lento (cada tramo tarda 50 % más). **En 0** te desmayas y el rover de apoyo te rescata, pero tarde"
+            ],
+            [
+              "**Integridad del traje**",
+              "Arena, rocas filosas, caídas",
+              "Depósito o kit de reparación",
+              "**Menos de 30**: el traje tiene una fuga y pierdes 10 de oxígeno extra en cada decisión. **En 0 mueres** (despresurización)"
+            ],
+            [
+              "**Radiación**",
+              "El viaje, las tormentas solares, los lugares altos y expuestos",
+              "**Nada la baja**",
+              "**En 100 mueres**. Con **70 o más** al volver, no puedes viajar a casa"
+            ],
+            [
+              "**Reloj**",
+              "Cada tramo, cada muestra, cada desvío",
+              "Algunas decisiones te dan ventaja de tiempo",
+              "**Si llega a menos de 0**, el módulo despega sin ti"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Colores de las barras:** verde por encima de 50, amarillo de 25 a 50, rojo por debajo de 25. La radiación va al revés: verde por debajo de 40, amarillo de 40 a 69, rojo de 70 en adelante."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando una barra se pone en rojo, Zinn-IA te avisa. Hazle caso."
+        }
+      ]
+    },
+    {
+      "id": "finales",
+      "numero": 3,
+      "titulo": "Cómo termina tu historia",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Hay tres destinos y siete maneras de llegar a ellos."
+        },
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "**Vuelves a casa.** Llegas viv{o|a|e}, a tiempo y con radiación menor a 70.",
+            "**Te quedas en Marte para siempre.** Llegas tarde y el módulo ya se fue, o te desmayaste de hambre y el rescate llegó tarde, o acumulaste demasiada radiación para el viaje de regreso.",
+            "**No sobrevives.** Te quedaste sin oxígeno, se rompió el traje o la radiación llegó a 100. Esto puede pasar **en cualquier momento** de la caminata, no solo al final."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las muestras que tomes no cambian tu destino, pero sí cuánto aporta tu misión a la ciencia."
+        }
+      ]
+    },
+    {
+      "id": "reglas-de-oro",
+      "numero": 4,
+      "titulo": "Reglas de oro",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "ordenada": true,
+          "items": [
+            "**Mira el mapa antes de decidir.** Cada capa te dice algo que tus ojos no ven.",
+            "**Lo que revisas o guardas al principio te puede salvar al final.** Las decisiones tempranas vuelven más adelante.",
+            "**El camino corto no siempre es el más barato.** La arena y las pendientes cobran en oxígeno y en traje.",
+            "**El reloj también es una barra de vida.** Cada muestra cuesta tiempo.",
+            "**La radiación no perdona.** Lo que acumulas no se va: cuídala desde el viaje.",
+            "**Zinn-IA siempre te dice el riesgo antes de elegir.** No te dice qué elegir: eso es cosa tuya."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mapa",
+      "numero": 5,
+      "titulo": "Cómo leer el mapa de la tablet",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El mapa de Zinn-IA tiene capas que se encienden y se apagan. Cada una viene de una misión real de la NASA o de USGS."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Capa",
+            "Misión / instrumento",
+            "Qué te dice",
+            "Para qué te sirve"
+          ],
+          "filas": [
+            [
+              "**Óptica**",
+              "Mars Reconnaissance Orbiter — HiRISE (25 a 32 cm por píxel)",
+              "Cómo se ve el terreno desde arriba, con detalle de rocas",
+              "Ver crestas, hondonadas y rocas grandes"
+            ],
+            [
+              "**Relieve**",
+              "Mars Global Surveyor — MOLA (altímetro láser, precisión vertical de alrededor de 1 m) y modelos de elevación de HiRISE (1 m)",
+              "Qué tan alto o bajo es cada punto",
+              "Evitar pendientes peligrosas"
+            ],
+            [
+              "**Terreno**",
+              "Mars Odyssey — THEMIS (inercia térmica, unos 100 m por píxel)",
+              "Qué tan rápido se enfría el suelo de noche",
+              "La arena suelta se enfría rápido; la roca firme guarda el calor. Así distingues dónde te vas a hundir"
+            ],
+            [
+              "**Minerales**",
+              "MRO — CRISM + resultados del rover Curiosity",
+              "Qué minerales hay en la superficie",
+              "Elegir dónde tomar muestras valiosas"
+            ],
+            [
+              "**Geología**",
+              "Mapa geológico USGS-NASA",
+              "Qué tipo de roca forma cada zona",
+              "Entender la historia de cada parada"
+            ],
+            [
+              "**Radiación y clima**",
+              "Curiosity — RAD y REMS",
+              "Dosis de radiación, temperatura y alertas",
+              "Saber cuándo refugiarte"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**¿Desde dónde se miden las alturas en Marte?** Marte no tiene mar, así que el \"nivel cero\" es el **areoide**, una superficie calculada a partir de la gravedad del planeta. Y el meridiano cero pasa por un cráter pequeño llamado **Airy-0**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Dato de ruta:** hasta Curiosity se desvía. En 2023, ante una pendiente de 23° con arena y rocas, buscó un camino más suave 150 metros más allá."
+        }
+      ]
+    },
+    {
+      "id": "peligros",
+      "numero": 6,
+      "titulo": "Los peligros reales de Marte",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**El aire.** La atmósfera es 95 % dióxido de carbono y solo 0,13 % oxígeno. La presión es menos del 1 % de la que hay al nivel del mar en la Tierra, y en el cráter Gale sube y baja cada día, de unos 685 a unos 780 pascales. Sin traje, no hay forma de respirar."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**La radiación.** Marte no tiene un campo magnético global ni una atmósfera gruesa que lo proteja. El instrumento RAD de Curiosity midió unos **0,64 milisieverts por día en la superficie** y unos **1,84 en el viaje** entre planetas, casi el triple. En una caminata de pocas horas, la radiación de fondo es baja. El peligro real son las **tormentas de partículas solares**, que disparan la dosis de golpe."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**El polvo.** En 2018 una tormenta de polvo cubrió el planeta. Sobre el rover Opportunity, el polvo alcanzó una opacidad (tau) de 10,8, el rover se quedó sin energía solar y su último contacto fue el 10 de junio de 2018. En el cráter Gale, la radiación ultravioleta que llegaba al suelo bajó un 90 %."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**El frío.** Las noches pueden bajar hasta unos −100 °C. El traje gasta batería en calefacción."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**El suelo.** El suelo marciano tiene **percloratos**, sales que son tóxicas para las personas, en una proporción de entre 0,5 y 1 %. Nada de tocarlo sin guantes."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**La distancia.** Un mensaje de radio tarda entre unos 3 y 22 minutos en llegar de Marte a la Tierra, según dónde estén los planetas. Si algo sale mal, nadie te puede ayudar en tiempo real: decides tú."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Otros datos para sobrevivir:**"
+        },
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "Un día marciano (sol) dura 24 horas y 39 minutos.",
+            "La gravedad es más o menos el 38 % de la de la Tierra.",
+            "Marte tiene dos lunas, Fobos y Deimos. Fobos se acerca a Marte unos 1,8 metros cada siglo."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lugares",
+      "numero": 7,
+      "titulo": "Dónde estás: los lugares de la misión",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**Cráter Gale y Mount Sharp.** Es el lugar donde trabaja Curiosity. Las capas de la montaña son como páginas de un libro: cada una guarda una época distinta del clima de Marte."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Las crestas boxwork.** Son una red de paredes de roca de 1 a 2 metros de alto, como un panal gigante. Curiosity encontró **arcillas en las crestas** y **carbonatos en las hondonadas** entre ellas. Las dos cosas se forman con agua: hace mucho tiempo, aquí hubo agua subterránea."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Otros lugares que vas a ver en el mapa:**"
+        },
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "**Cráter Jezero**, donde Perseverance busca señales de vida antigua.",
+            "**Olympus Mons**, el volcán más alto del sistema solar: unos 21,2 km sobre el areoide.",
+            "**El fondo de la cuenca Hellas**, a unos 8,2 km por debajo del areoide, uno de los puntos más bajos del planeta.",
+            "**El casquete polar sur**: su hielo alcanzaría para cubrir todo Marte con un océano de unos 11 metros de profundidad."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ciencia",
+      "numero": 8,
+      "titulo": "Si eres científica (o científico, o científique): qué buscar",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "**Posibles señales de vida antigua.** En la roca Cheyava Falls, Perseverance encontró \"manchas de leopardo\" que podrían ser una biofirma: una posible señal de vida antigua, todavía no confirmada.",
+            "**Moléculas orgánicas.** En el cráter Gale, Curiosity encontró las moléculas orgánicas más grandes halladas en Marte, de hasta 12 átomos de carbono.",
+            "**Azufre puro.** En 2024 Curiosity rompió una roca en Gediz Vallis y encontró cristales de azufre puro, algo que nunca se había visto en Marte.",
+            "**Minerales que necesitan agua:** arcillas, carbonatos y sulfatos. Si los encuentras, encontraste un lugar donde hubo agua."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glosario",
+      "numero": 9,
+      "titulo": "Glosario rápido",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "**Areoide:** el \"nivel del mar\" de Marte, calculado a partir de su gravedad.",
+            "**Biofirma:** una señal que podría haber dejado la vida.",
+            "**Boxwork:** red de crestas de roca formadas por agua subterránea.",
+            "**Carbonatos:** minerales que se forman en agua.",
+            "**Inercia térmica:** qué tan rápido un suelo se calienta o se enfría. La arena cambia rápido; la roca, lento.",
+            "**mSv (milisievert):** unidad para medir cuánta radiación recibe tu cuerpo.",
+            "**Percloratos:** sales tóxicas presentes en el suelo marciano.",
+            "**Sol:** un día en Marte (24 h 39 min).",
+            "**Sulfatos:** sales que deja el agua al evaporarse.",
+            "**Tau:** medida de qué tan opaco está el cielo por el polvo."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fuentes",
+      "numero": 10,
+      "titulo": "De dónde salen estos datos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Recursos oficiales del reto *Interplanetary Survival Guide: Martian Map*:"
+        },
+        {
+          "tipo": "lista",
+          "ordenada": false,
+          "items": [
+            "JPL Mars Trek — trek.nasa.gov/mars",
+            "Mapas geológicos interactivos USGS-NASA de Marte",
+            "Ruta propuesta de Curiosity en Mount Sharp — NASA Science",
+            "NASA Worldview — worldview.earthdata.nasa.gov",
+            "Imágenes crudas de Perseverance — mars.nasa.gov"
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Misiones e instrumentos: Mars Reconnaissance Orbiter (HiRISE, CRISM, SHARAD), Mars Global Surveyor (MOLA), Mars Odyssey (THEMIS), Curiosity (RAD, REMS, CheMin, ChemCam, Mastcam), Perseverance."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Cada dato del juego tiene su ficha con la fuente completa en la sección \"Fichas\" de esta guía."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Los números de las barras (cuánto gasta cada decisión) son valores de juego. Los datos de esta guía son reales."
+        }
+      ]
+    }
+  ]
+}

@@ -1,43 +1,100 @@
-// Fondos, Zinn-IA y astronauta, con respaldos mientras no existan las imágenes finales por pose/expresión.
-import Recurso from './Recurso.jsx';
+// Fondos, Zinn-IA y astronauta. Rutas (public/img/):
+//   fondos/<archivo del guion>   zinnia/<expresion>   astronauta/<pose> → sprite definitivo   logos/   ui/
+// Cualquier extensión sirve (.png, .gif, .jpg, .webp): Recurso las prueba todas.
+import { useEffect, useState } from 'react';
+import Recurso, { variantes } from './Recurso.jsx';
 
+export const IMG = '/img';
 const esViaje = (capitulo) => capitulo <= 2;
 
-export function Fondo({ archivo, capitulo = 3 }) {
-  const respaldo = (
-    <div className={`fondo-respaldo ${esViaje(capitulo) ? 'viaje' : 'marte'}`} aria-hidden="true">
-      {archivo && <span className="etiqueta-pendiente">Fondo pendiente: {archivo}</span>}
-    </div>
-  );
-  return <Recurso src={archivo ? `/img/fondos/${archivo}` : null} className="fondo" respaldo={respaldo} />;
+/** true si el sistema pide menos movimiento (prefers-reduced-motion). */
+export function useMenosMovimiento() {
+  const consulta = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  const [menos, setMenos] = useState(Boolean(consulta?.matches));
+  useEffect(() => {
+    if (!consulta) return;
+    const f = (e) => setMenos(e.matches);
+    consulta.addEventListener?.('change', f);
+    return () => consulta.removeEventListener?.('change', f);
+  }, []); // eslint-disable-line
+  return menos;
 }
 
-export const NOMBRE_EXPRESION = { feliz: 'feliz', curiosa: 'curiosa', alerta: 'alerta', triste: 'triste', apagada: 'apagada' };
+// Mientras falte el fondo exacto de una escena se usa el más cercano de la misma zona de la historia
+// (con la etiqueta "Fondo pendiente"), nunca un color sólido.
+const SUPLENTE = {
+  1: 'bg_c01_tierra.jpg', 2: 'bg_c02_nave.jpg', 3: 'bg_c03_base.jpg', 4: 'bg_c04_mirador.jpg', 5: 'bg_c05_transicion.jpg',
+  6: 'bg_c05_transicion.jpg', 7: 'bg_c05_transicion.jpg', 8: 'bg_c05_transicion.jpg', 9: 'bg_c04_mirador.jpg', 10: 'bg_c03_base.jpg',
+};
 
+/**
+ * Fondo de escena: el archivo del guion (en cualquier extensión), luego las "alternativas" y luego el
+ * suplente del capítulo. Solo si no carga ninguno (p. ej. sin conexión) se dibuja el respaldo CSS.
+ */
+export function Fondo({ archivo, capitulo = 3, alternativas = [] }) {
+  // key: al cambiar de escena se vuelve a empezar por el archivo exacto
+  return <FondoImagen key={`${archivo}|${capitulo}|${alternativas.join()}`} archivo={archivo} capitulo={capitulo} alternativas={alternativas} />;
+}
+
+function FondoImagen({ archivo, capitulo, alternativas }) {
+  const propios = archivo ? variantes(archivo) : [];
+  const candidatos = [...new Set([...propios, ...[...alternativas, SUPLENTE[capitulo] ?? SUPLENTE[10]].flatMap(variantes)])];
+  const [i, setI] = useState(0);
+  const actual = candidatos[i];
+  const pendiente = archivo && i >= propios.length && <span className="etiqueta-pendiente">Fondo pendiente: {archivo}</span>;
+  if (!actual) {
+    return <div className={`fondo-respaldo ${esViaje(capitulo) ? 'viaje' : 'marte'}`} aria-hidden="true">{pendiente}</div>;
+  }
+  return (
+    <>
+      <img src={`${IMG}/fondos/${actual}`} alt="" className="fondo" draggable={false} onError={() => setI((n) => n + 1)} />
+      {pendiente}
+    </>
+  );
+}
+
+const NOMBRE = { feliz: 'feliz', curiosa: 'curiosa', alerta: 'en alerta', triste: 'triste', apagada: 'apagada (modo semilla)', peligro: 'en peligro', inicio: 'saludando' };
+
+/**
+ * Zinn-IA. Expresiones del guion: feliz, curiosa, alerta, triste; el motor usa "apagada" (batería 0).
+ * La interfaz agrega "peligro" (barra en rojo) e "inicio" (pantalla de inicio y celebración).
+ * Con prefers-reduced-motion se muestra estática (logos/isotipo).
+ */
 export function ZinnIA({ expresion = 'feliz', className = '' }) {
-  const alt = `Zinn-IA ${NOMBRE_EXPRESION[expresion] ?? ''}`;
+  const menos = useMenosMovimiento();
+  const alt = `Zinn-IA ${NOMBRE[expresion] ?? ''}`;
+  const respaldo = <img src={`${IMG}/logos/isotipo.png`} alt={alt} className={`zinnia zinnia-respaldo zinnia-${expresion} ${className}`} draggable={false} />;
+  // triste.png es el cuerpo entero sin animación: se le aplica el filtro de tristeza
+  const filtro = expresion === 'triste' ? 'zinnia-filtro-triste' : '';
+  if (menos && expresion !== 'triste' && expresion !== 'apagada') return respaldo;
   return (
-    <Recurso
-      src={`/img/personajes/zinnia_${expresion}.png`}
-      alt={alt}
-      className={`zinnia ${className}`}
-      respaldo={<img src="/img/logo_zinnia.png" alt={alt} className={`zinnia zinnia-respaldo zinnia-${expresion} ${className}`} draggable={false} />}
-    />
+    <Recurso src={`${IMG}/zinnia/${expresion}.gif`} alt={alt} escalaEntera
+      className={`zinnia zinnia-real ${filtro} ${className}`} respaldo={respaldo} />
   );
 }
 
-/** Zinn-IA de cuerpo completo parpadeando: se usa cuando te habla en menús y tutoriales. */
+/** Zinn-IA de cuerpo completo parpadeando: se usa cuando te habla en escenas, menús y tutoriales. */
 export function ZinniaHablando({ className = '' }) {
-  return <img src="/img/zinnia_parpadeando.gif" alt="Zinn-IA" className={`zinnia zinnia-hablando ${className}`} draggable={false} />;
+  return <img src={`${IMG}/zinnia_parpadeando.gif`} alt="Zinn-IA" className={`zinnia zinnia-hablando ${className}`} draggable={false} />;
 }
 
-export function Astronauta({ pose = 'neutral' }) {
+// Sprites definitivos del astronauta. Si Valeria sube astronauta/<pose>.png, ese gana;
+// si no, cada pose usa el sprite más cercano y se distingue con efectos CSS (temblor, brillo rojo).
+const SPRITE_ASTRO = {
+  neutral: 'frente', asustado: 'frente', herido: 'frente',
+  caminando: 'espalda_derecha', muestra: 'espalda_izquierda', saludando: 'saludando',
+};
+
+export function Astronauta({ pose = 'neutral', className = '' }) {
   return (
-    <Recurso
-      src={`/img/personajes/astro_${pose}.png`}
-      alt={`Astronauta (${pose})`}
-      className={`astro astro-${pose}`}
-      respaldo={<img src="/img/astronauta_prototipo.png" alt={`Astronauta (${pose})`} className={`astro astro-${pose}`} draggable={false} />}
-    />
+    <div className={`astro-envoltura astro-${pose} ${className}`}>
+      <Recurso src={[`${IMG}/astronauta/${pose}.png`, `${IMG}/astronauta/${SPRITE_ASTRO[pose] ?? 'frente'}.png`]}
+        alt={`Astronauta (${pose})`} className="astro" escalaEntera />
+      {pose === 'muestra' && (
+        <svg className="astro-herramienta" viewBox="0 0 20 40" aria-hidden="true">
+          <line x1="4" y1="2" x2="14" y2="34" stroke="#8b8fa8" strokeWidth="4" /><circle cx="14" cy="35" r="5" fill="#FA932E" />
+        </svg>
+      )}
+    </div>
   );
 }

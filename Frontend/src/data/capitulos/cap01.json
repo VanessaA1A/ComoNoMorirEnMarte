@@ -87,24 +87,79 @@
       "id": "c01_04",
       "fondo": "bg_c01_cabina.jpg",
       "astro": "neutral",
-      "zinnia": "curiosa",
+      "zinnia": "feliz",
       "accion": "mostrarHUD",
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "Mira arriba: son tus 5 barras de vida. Oxígeno, batería del traje, alimentación, integridad del traje y radiación."
+          "texto": "¡Alto, {nombre}! Antes de despegar, una canción para no olvidar. Yo empiezo el verso y tú lo terminas. ¿List{o|a|e}?",
+          "respuesta": "¡List{o|a|e}!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Si el oxígeno o la integridad llegan a cero, o la radiación llega al máximo... mejor no averiguarlo."
+          "texto": "Si el oxígeno se va…",
+          "respuesta": "…¡la caminata acabará!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "El reloj marca cuánto falta para que despegue el módulo de regreso desde Marte."
+          "texto": "¡Eso! En cero no hay segunda vuelta. Siguiente: si la batería se apaga…",
+          "respuesta": "…¡Zinn-IA se calla y todo se gasta!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Y la Guía de supervivencia está siempre en el botón del libro: reglas, mapa y fuentes de NASA."
+          "texto": "¡Y nadie quiere eso! Sin mí, el oxígeno y la comida se gastan el doble. Y yo me pierdo la vista. Si la comida se acaba…",
+          "respuesta": "…¡mis piernas se traban!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Bajo 30 caminas lento, y en cero te desmayas. Si el traje se rasga…",
+          "respuesta": "…¡el aire se escapa!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Bajo 30 el traje tiene fuga y cada decisión te quita oxígeno. Ahora la difícil: la radiación sube y nunca baja…",
+          "respuesta": "…¡cada punto que evito es ventaja!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Bravo! Con 70 o más no te dejan volver a casa. Y el reloj hace tic, tac…",
+          "respuesta": "…¡si llego tarde, el módulo se va!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Tres horas y media, ni un minuto más. Último verso: ¿y si un verso se te olvida?",
+          "respuesta": "…¡la Guía me salva la vida!"
+        }
+      ],
+      "ir": "c01_04b"
+    },
+    {
+      "id": "c01_04b",
+      "fondo": "bg_c01_cabina.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "accion": "esperarGuia",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "¡Exacto! Mira el ícono del libro. Tócalo ahora, que te espero."
+        }
+      ],
+      "ir": "c01_04c"
+    },
+    {
+      "id": "c01_04c",
+      "fondo": "bg_c01_cabina.jpg",
+      "astro": "neutral",
+      "zinnia": "feliz",
+      "lineas": [
+        {
+          "quien": "Zinn-IA",
+          "texto": "Ahí está todo: las barras, el mapa, los peligros y de dónde sale cada dato. Ábrela cuando quieras, hasta en pausa. Yo me la sé de memoria… casi toda. ¡Jiji!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Ahora sí: ¡motores encendidos!"
         }
       ],
       "ir": "c01_05"

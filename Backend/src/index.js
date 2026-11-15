@@ -19,7 +19,8 @@ app.use(express.json({ limit: '100kb' }));
 app.get('/api/salud', async (_req, res) => {
   let db = false;
   try { await pool.query('SELECT 1'); db = true; } catch { /* la API responde aunque la base no */ }
-  res.json({ ok: true, db });
+  // commit = el que desplegó Render (RENDER_GIT_COMMIT lo pone Render solo); sirve para confirmar cada deploy
+  res.json({ ok: true, db, commit: (process.env.RENDER_GIT_COMMIT || 'local').slice(0, 7) });
 });
 
 // Express 5 manda los errores de las rutas async al manejador central

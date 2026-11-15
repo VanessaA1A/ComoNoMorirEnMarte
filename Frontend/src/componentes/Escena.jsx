@@ -8,6 +8,7 @@ import HUD from './HUD.jsx';
 import { barrasEnRojo } from '../juego/comoVoy.js';
 
 const VELOCIDAD_MS = 22; // por letra
+const ESPERA_GUIA_MS = 15000; // "esperarGuia": a los 15 s aparece "La abro después"
 
 export default function Escena() {
   const j = useJuego();
@@ -32,6 +33,18 @@ export default function Escena() {
   const finLineas = lineas.length === 0 || (linea >= lineas.length - 1 && completo);
   const opciones = finLineas ? opcionesVisibles(esc, partida) : [];
   const pidiendoNombre = finLineas && esc.accion === 'pedirNombre';
+  // Canción del cap. 1: la línea termina con un botón de UNA respuesta (sin efecto) que completa el verso
+  const verso = completo && actual?.respuesta ? formatear(actual.respuesta, partida) : null;
+  // "esperarGuia": no se avanza hasta que se abra la Guía (o se elija "La abro después")
+  const [despues, setDespues] = useState(null);
+  const [verDespues, setVerDespues] = useState(null);
+  const esperandoGuia = finLineas && esc.accion === 'esperarGuia' && j.guiaAbiertaEn !== partida.escena;
+  useEffect(() => {
+    if (!esperandoGuia || pausado) return;
+    const t = setTimeout(() => setVerDespues(partida.escena), ESPERA_GUIA_MS);
+    return () => clearTimeout(t);
+  }, [esperandoGuia, pausado, partida.escena]);
+  const bloqueadoPorGuia = esperandoGuia && despues !== partida.escena;
 
   // Una sola vez por escena: autoguardado antes de decidir y avisos de Zinn-IA
   const avisada = useRef(null);
@@ -46,7 +59,7 @@ export default function Escena() {
   const pulsar = () => {
     if (pausado) return;
     if (!completo) setLetras(texto.length);
-    else if (!opciones.length && !pidiendoNombre) j.avanzar();
+    else if (!opciones.length && !pidiendoNombre && !verso && !bloqueadoPorGuia) j.avanzar();
   };
 
   // Clic, Espacio o Enter
@@ -112,13 +125,27 @@ export default function Escena() {
           </div>
         )}
         {pidiendoNombre && <CampoNombre onListo={j.ponerNombre} />}
+        {verso && (
+          <div className="opciones" role="group" aria-label="Completa el verso">
+            <button className="opcion opcion-verso" onClick={() => j.responder(actual.respuesta)} autoFocus>
+              <span>{verso}</span>
+            </button>
+          </div>
+        )}
+        {bloqueadoPorGuia && verDespues === partida.escena && (
+          <div className="opciones" role="group" aria-label="Guía de supervivencia">
+            <button className="opcion opcion-verso" onClick={() => { setDespues(partida.escena); j.avanzar(); }} autoFocus>
+              <span>La abro después</span>
+            </button>
+          </div>
+        )}
         {actual && (
           <div className={`dialogo ${esZinnia ? 'zinnia-habla' : ''} ${esNarracion ? 'narracion' : ''}`}
             onClick={pulsar} data-tutorial="dialogo" aria-live="polite">
             {!esNarracion && <span className="quien">{quien}</span>}
             <span aria-hidden={!completo}>{texto.slice(0, letras)}</span>
             {!completo && <span className="oculto-lector">{texto}</span>}
-            {completo && !opciones.length && !pidiendoNombre && <span className="seguir" aria-hidden="true">▼</span>}
+            {completo && !opciones.length && !pidiendoNombre && !verso && !bloqueadoPorGuia && <span className="seguir" aria-hidden="true">▼</span>}
           </div>
         )}
       </div>

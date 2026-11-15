@@ -176,7 +176,7 @@ export function SinConexion() {
   return (
     <div className="sin-conexion">
       <Modal titulo="Sin señal con la Tierra">
-        <Recurso src="/img/zinnia_sin_conexion.gif" alt="Zinn-IA sin conexión"
+        <Recurso src="/img/zinnia/sin_conexion.gif" alt="Zinn-IA sin conexión"
           respaldo={<ZinniaHablando />} />
         <p>{formatear('Perdimos la señal con la Tierra. Tranquil{o|a|e}: tu partida se guarda aquí y la mando cuando vuelva la conexión.', j.partida ?? {})}</p>
         <button className="boton principal" onClick={j.descartarSinConexion} autoFocus>Seguir sin conexión</button>

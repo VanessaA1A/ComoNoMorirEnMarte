@@ -1,4 +1,5 @@
 import { BARRAS, colorBarra } from '../engine/reglas.js';
+import { escena as escenaDe } from '../engine/motor.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 
 // "O2" sin subíndice: FORCED SQUARE no tiene el carácter ₂.
@@ -27,11 +28,13 @@ export function Barras({ estado }) {
 export default function HUD() {
   const j = useJuego();
   const p = j.partida;
+  // Canción del cap. 1 ("esperarGuia"): el libro parpadea suave hasta que se abre la Guía
+  const esperaGuia = escenaDe(p.escena)?.accion === 'esperarGuia' && j.guiaAbiertaEn !== p.escena;
   return (
     <div className="barra-superior">
       <div className="botones-juego">
         <button className="boton-icono" onClick={() => j.abrir('menu')} aria-label="Menú (Esc)" title="Menú (Esc)" data-tutorial="menu">☰</button>
-        <button className="boton-icono" onClick={() => j.abrir('guia')} aria-label="Guía de supervivencia" title="Guía de supervivencia" data-tutorial="guia">📖</button>
+        <button className={`boton-icono ${esperaGuia ? 'parpadeo-guia' : ''}`} onClick={() => j.abrir('guia')} aria-label="Guía de supervivencia" title="Guía de supervivencia" data-tutorial="guia">📖</button>
         <button className="boton-icono" onClick={() => j.abrir('mapaMarte')} aria-label="Mapa de Marte" title="Mapa de Marte" data-tutorial="mapa-marte">🌍</button>
       </div>
       {p.hud && (
