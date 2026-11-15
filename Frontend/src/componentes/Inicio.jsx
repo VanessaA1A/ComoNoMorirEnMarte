@@ -5,6 +5,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { leerRanura } from '../juego/partidas.js';
 import { Modal } from './Modal.jsx';
 import Recurso from './Recurso.jsx';
+import { Astronauta } from './Personajes.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
   return (
@@ -53,7 +54,7 @@ export default function Inicio() {
           </div>
           <div className="consola-escena">
             <img src="/img/zinnia_multiexpresion.gif" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
-            <img src="/img/astronauta_prototipo.png" alt="El astronauta" className="pixel astronauta-inicio" draggable={false} />
+            <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">
             {Array.from({ length: 12 }, (_, i) => <span key={i} />)}

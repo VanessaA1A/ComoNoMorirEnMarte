@@ -63,7 +63,7 @@ a { color: var(--turquesa); }
 }
 
 /* ===== Fondos con respaldo ===== */
-.fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; } /* = background-size: cover; background-position: center */
 .fondo-respaldo { position: absolute; inset: 0; }
 /* Viaje (caps. 1-2, dentro de la nave): panel de control en vez de un degradado morado sólido */
 .fondo-respaldo.viaje {
@@ -297,7 +297,7 @@ a { color: var(--turquesa); }
   /* Overlay #24073F al 60% sobre el fondo aurora, para que la interfaz resalte. */
   background:
     linear-gradient(rgba(36, 7, 63, .6), rgba(36, 7, 63, .6)),
-    url("/img/FondoPantallaInicio.png") center / cover no-repeat,
+    url("/img/fondos/inicio.png") center / cover no-repeat,
     var(--noche);
 }
 .inicio-cabecera { display: flex; justify-content: center; padding: 1.2em 2em .4em; }
@@ -361,7 +361,7 @@ a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-
 .consola-escena { flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: .2em; padding: .6em .8em 0; }
 .consola-escena img { height: auto; object-fit: contain; filter: drop-shadow(0 .3em .4em rgba(36, 7, 63, .9)); }
 .consola .zinnia-principal { max-height: 100%; width: 62%; }
-.consola .astronauta-inicio { max-height: 70%; width: 34%; }
+.consola .astronauta-inicio { width: 34%; height: 70%; }
 .consola-teclas { display: grid; grid-template-columns: repeat(12, 1fr); gap: .3em; padding: .5em .7em .6em; border-top: 1px solid rgba(1, 203, 174, .35); background: rgba(36, 7, 63, .6); }
 .consola-teclas span { height: .5em; border-radius: .15em; background: rgba(82, 64, 148, .8); }
 .consola-teclas span:nth-child(3n) { background: rgba(1, 203, 174, .45); }
@@ -374,10 +374,10 @@ a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-
   border-top: 1px solid rgba(1, 203, 174, .5);
   background:
     linear-gradient(90deg, rgba(36, 7, 63, .75), rgba(36, 7, 63, .45)),
-    url("/img/fondo_inicio_cargando.png") center / cover no-repeat;
+    url("/img/fondos/cargando.png") center / cover no-repeat;
 }
 .estado-sistema { display: flex; align-items: center; gap: .5em; font-size: .95em; color: var(--aurora-1); }
-.estado-sistema .zinnia-estatica { height: 4.6em; margin: -.6em 0; width: auto; mix-blend-mode: lighten; /* el GIF trae fondo negro */ }
+.estado-sistema .zinnia-estatica { height: 4.6em; margin: -.6em 0; width: auto; }
 .pie-textos { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
 .pie-evento { font-size: .85em; letter-spacing: .04em; }
 .pie-leyenda { font-family: var(--fuente-ui); font-size: .72em; font-style: italic; opacity: .75; }
@@ -394,7 +394,7 @@ a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-
 
 /* ===== Tarjeta de capítulo ===== */
 .tarjeta-capitulo { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; cursor: pointer; }
-.tarjeta-capitulo .contenido { position: relative; text-align: center; background: rgba(36, 7, 63, .78); padding: 1.5em 2.5em; border-radius: 1em; max-width: 70%; }
+.tarjeta-capitulo .contenido { position: relative; text-align: center; background: rgba(36, 7, 63, .5); backdrop-filter: blur(4px); border: 1px solid rgba(1, 203, 174, .45); padding: 1.5em 2.5em; border-radius: 1em; max-width: 70%; }
 .tarjeta-capitulo .numero { color: var(--aurora-1); letter-spacing: .2em; }
 .tarjeta-capitulo .titulo-capitulo { font-size: 3.5em; margin: .1em 0 .4em; }
 .tarjeta-capitulo .dato-carga { font-size: .95em; color: var(--lima); max-width: 40em; }
@@ -463,15 +463,15 @@ a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-
 .astro-envoltura .astro { image-rendering: pixelated; }
 .astro-envoltura.astro-herido { filter: drop-shadow(0 0 .35em var(--zinnia-mejilla)) sepia(.45) saturate(2.2) hue-rotate(-25deg); }
 .astro-herramienta { position: absolute; right: 12%; bottom: 30%; width: 12%; }
-.inicio { position: relative; }
-.inicio > :not(.fondo):not(.fondo-respaldo) { position: relative; z-index: 1; }
 .inicio .zinnia-inicio { width: 10em; height: 14em; display: flex; align-items: flex-end; justify-content: center; }
 .inicio .logo-nombre { image-rendering: auto; }
 .cabecera-final { display: flex; align-items: center; gap: 1em; }
 .zinnia-celebra { width: 6em; height: 8em; flex: none; display: flex; align-items: flex-end; justify-content: center; }
 .zinnia-sin-conexion { width: 5em; height: 7em; flex: none; margin: 0; display: flex; align-items: flex-end; justify-content: center; }
 .carga-pie { position: absolute; left: 1em; right: 1em; bottom: 1em; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
-.semilla-cargando { width: 3.5em; height: 3.5em; object-fit: contain; image-rendering: pixelated; animation: girar 6s linear infinite; }
+.carga-zinnia { display: flex; align-items: flex-end; gap: .4em; color: var(--aurora-1); font-size: .95em; letter-spacing: .04em; }
+.carga-zinnia span { padding-bottom: .8em; text-shadow: 0 0 .5em rgba(36, 7, 63, .9); }
+.zinnia-onda { height: 7em; width: auto; image-rendering: pixelated; }
 .logo-carga { width: 6em; height: 6em; object-fit: contain; }
 .creditos-logos { display: flex; gap: 1em; align-items: flex-end; justify-content: center; }
 .logo-equipo { max-height: 9em; max-width: 40%; object-fit: contain; }
