@@ -24,7 +24,7 @@
         { "quien": "Zinn-IA", "texto": "Esta es mi tablet: el mapa de tu caminata. Tócala en la esquina y se amplía." },
         { "quien": "Zinn-IA", "texto": "Las capas las junté en Mars Trek, el portal de mapas de Marte del JPL de NASA: ahí se superponen datos de muchas misiones.", "capa": "optica" },
         { "quien": "Zinn-IA", "texto": "Capa Óptica: fotos de la cámara HiRISE desde órbita. Se ven rocas de menos de un metro.", "capa": "optica" },
-        { "quien": "Zinn-IA", "texto": "Capa Relieve: alturas medidas por el láser MOLA. Te avisa de pendientes peligrosas.", "capa": "relieve" },
+        { "quien": "Zinn-IA", "texto": "Capa Relieve: alturas reales de los modelos 3D de HiRISE, con la pendiente marcada. Te avisa de pendientes peligrosas.", "capa": "relieve" },
         { "quien": "Zinn-IA", "texto": "Capa Terreno: datos térmicos de THEMIS. Lo que se enfría rápido de noche suele ser arena suelta.", "capa": "termico" },
         { "quien": "Zinn-IA", "texto": "Capa Minerales: CRISM detecta minerales desde órbita. Así sabemos dónde buscar huellas de agua.", "capa": "minerales" },
         { "quien": "Zinn-IA", "texto": "Capa Geología: el mapa geológico de USGS y NASA muestra qué tipo de roca forma cada región.", "capa": "geologia" },
