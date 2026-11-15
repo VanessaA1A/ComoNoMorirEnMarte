@@ -61,7 +61,7 @@ export default function Inicio() {
             <span className="consola-etiqueta">Tripulación · Aurora-1</span>
           </div>
           <div className="consola-escena">
-            <img src="/img/zinnia_multiexpresion.gif" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
+            <img src="/img/zinnia_multiexpresion.webp" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">

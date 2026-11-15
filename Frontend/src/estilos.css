@@ -24,7 +24,7 @@ body {
   /* Rellena las franjas laterales con el mismo fondo del inicio (fijo para que empate sin cortes) */
   background:
     linear-gradient(rgba(36, 7, 63, .6), rgba(36, 7, 63, .6)),
-    url("/img/FondoPantallaInicio.png") center / cover no-repeat,
+    url("/img/fondos/inicio.jpg") center / cover no-repeat,
     var(--noche);
   background-attachment: fixed;
 }
@@ -303,7 +303,7 @@ a { color: var(--turquesa); }
   /* Overlay #24073F al 60% sobre el fondo aurora, para que la interfaz resalte. */
   background:
     linear-gradient(rgba(36, 7, 63, .6), rgba(36, 7, 63, .6)),
-    url("/img/fondos/inicio.png") center / cover no-repeat,
+    url("/img/fondos/inicio.jpg") center / cover no-repeat,
     var(--noche);
   background-attachment: fixed; /* alineado con el fondo del body: sin costuras en los bordes */
 }
@@ -323,7 +323,7 @@ a { color: var(--turquesa); }
   background: rgba(36, 7, 63, .72); border: 2px solid var(--aurora-2);
   backdrop-filter: blur(3px);
 }
-a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-box; display: flex; }
+a.boton.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-box; display: flex; } /* más específico que "a.boton" (inline-block) */
 
 /* ===== Solo computadora: aviso en celular o ventana de menos de 1024 px ===== */
 .solo-computadora {
@@ -381,7 +381,7 @@ a.boton-grande { color: var(--texto); text-decoration: none; box-sizing: border-
   border-top: 1px solid rgba(1, 203, 174, .5);
   background:
     linear-gradient(90deg, rgba(36, 7, 63, .75), rgba(36, 7, 63, .45)),
-    url("/img/fondos/cargando.png") center / cover no-repeat;
+    url("/img/fondos/cargando.jpg") center / cover no-repeat;
 }
 .estado-sistema { display: flex; align-items: center; gap: .5em; font-size: .95em; color: var(--aurora-1); }
 .estado-sistema .zinnia-estatica { height: 4.6em; margin: -.6em 0; width: auto; }

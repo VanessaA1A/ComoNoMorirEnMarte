@@ -25,7 +25,7 @@ export default function TarjetaCapitulo({ numero }) {
     <div className="tarjeta-capitulo" onClick={j.cerrarTarjeta} role="button" tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); j.cerrarTarjeta(); } }}
       aria-label={`Capítulo ${numero}: ${info.titulo}. Pulsa para continuar.`}>
-      <img src="/img/fondos/cargando.png" alt="" className="fondo" draggable={false} />
+      <img src="/img/fondos/cargando.jpg" alt="" className="fondo" draggable={false} />
       <div className="contenido">
         <div className="numero">CAPÍTULO {numero} DE 10</div>
         <h1 className="titulo-capitulo">{info.titulo}</h1>
@@ -36,7 +36,7 @@ export default function TarjetaCapitulo({ numero }) {
           <img src="/img/zinnia/onda.gif" alt="" className="zinnia-onda" draggable={false} />
           <span>{numero === 1 ? 'Te damos la bienvenida a bordo · Cargando…' : 'Cargando…'}</span>
         </div>
-        <Recurso src="/img/logos/logotipo_zinnia_aurora.png" alt="" className="logo-carga" respaldo={null} />
+        <Recurso src="/img/logos/logotipo_zinnia_aurora.webp" alt="" className="logo-carga" respaldo={null} />
       </div>
     </div>
   );

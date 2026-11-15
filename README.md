@@ -9,6 +9,42 @@ Novela visual web de supervivencia en Marte con datos reales de NASA. Equipo **Z
 | `Imagenes/` | Imágenes originales del equipo (se copian a `Frontend/public/img/`) | [Frontend/tools/mapa-imagenes.md](Frontend/tools/mapa-imagenes.md) |
 | `render.yaml` | Blueprint de Render para la API | — |
 
+## Desde cero (otra computadora)
+
+Requisitos: **Node 20.6 o más reciente** y **git**. La base de datos es opcional: el juego funciona solo.
+
+```bash
+git clone https://github.com/VanessaA1A/DemoVisualNovel.git
+cd DemoVisualNovel
+git checkout prueba            # rama de trabajo (main = versión congelada)
+
+# 1. Juego: http://localhost:5173
+cd Frontend
+npm install
+cp .env.example .env           # opcional; en PowerShell: Copy-Item .env.example .env
+                               # deja VITE_API_URL vacía para jugar solo en el navegador
+npm run dev
+
+# 2. API (opcional), en otra terminal: http://localhost:3001/api
+cd Backend
+npm install
+cp .env.example .env           # pega DATABASE_URL de Neon (y ANTHROPIC_API_KEY si usas Zinn-IA con IA)
+npm run db:schema              # crea las tablas (se puede repetir)
+npm run db:seed                # carga capas, pois y datos
+npm run dev
+```
+
+Para conectar el juego con tu API local, pon `VITE_API_URL=http://localhost:3001/api` en `Frontend/.env` y reinicia `npm run dev`.
+
+### Plan B: sin internet
+
+El juego no necesita internet ni la API: guarda en el navegador y usa solo archivos locales (fuentes e imágenes incluidas).
+
+1. Con internet, una sola vez: clonar e instalar (`cd Frontend && npm install`).
+2. Sin `VITE_API_URL` en `Frontend/.env`, compilar y servir la versión final: `npm run build` y luego `npx vite preview` (abre http://localhost:4173).
+3. Para la presentación: **http://localhost:4173/?demo=1** (modo demo: toda decisión con riesgo sale bien). La guía queda en http://localhost:4173/guia.html.
+4. Si algo falla con el build, `npm run dev` también funciona sin internet (http://localhost:5173/?demo=1).
+
 ## Correr en local
 
 ```bash
@@ -19,7 +55,7 @@ cd Frontend && npm install && npm run dev
 cd Backend && npm install && npm run db:schema && npm run db:seed && npm run dev
 ```
 
-Pruebas del juego: `cd Frontend && npm run probar` (motor: 154.197 rutas y 61,4 % de final bueno; Zinn-IA; guardado local; cola de sincronización).
+Pruebas del juego: `cd Frontend && npm run probar` (motor: 154.197 rutas y 61,4 % de final bueno; Zinn-IA; guardado local; cola de sincronización; recorridos A, B y C; render de cada panel).
 
 ## Despliegue
 
