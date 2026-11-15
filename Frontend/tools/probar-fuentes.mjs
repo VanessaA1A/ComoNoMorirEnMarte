@@ -60,6 +60,10 @@ ok(punto('perseverance')?.lat === 18.4447 && punto('perseverance')?.lon === 77.4
   const sinFichaA = visiblesA.filter((a) => !(a.mision && a.anio && a.lugar && a.dato && a.que && tieneFuente(a))).map((a) => a.id);
   ok(sinFichaA.length === 0, `cada pin tiene ficha (misión, año, qué es, lugar, dato) y fuente${sinFichaA.length ? ` (sin ficha: ${sinFichaA.join(', ')})` : ''}`);
   ok(punto('curiosity')?.jugable && /Aquí es tu misión/.test(fs.readFileSync(path.join(raiz, 'src/componentes/Mapas.jsx'), 'utf8')), 'Curiosity (Gale) marcado "Aquí es tu misión"');
+  // Globo 3D: los mismos aterrizajes, con la imagen del pin (no bolitas) y "Aquí es tu misión" en Curiosity
+  const m3d = fs.readFileSync(path.join(raiz, 'src/componentes/Marte3D.jsx'), 'utf8');
+  ok(/PIN = '\/img\/ui\/pin\.png'/.test(m3d) && /new THREE\.Sprite\(new THREE\.SpriteMaterial\(\{ map: texPin/.test(m3d) && !/SphereGeometry\(p ===/.test(m3d), 'globo 3D: un pin (pin.png) por aterrizaje, sin bolitas');
+  ok(/Aquí es tu misión/.test(m3d) && /intersectObjects\(globo\.visible \? \[esfera, \.\.\.pines\]/.test(m3d), 'globo 3D: "Aquí es tu misión" en Curiosity y los pines del otro lado no se tocan a través de la esfera');
   // Conversión al lienzo de −180°…180° E (Olympus Mons a la izquierda) y contra el mosaico: Olympus, Hellas y Gale
   const xLon = (l) => (((l > 180 ? l - 360 : l) + 180) / 360) * 1000; const yLat = (l) => ((90 - l) / 180) * 500;
   const z = (id) => zonas.find((x) => x.id === id);

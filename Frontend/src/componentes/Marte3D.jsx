@@ -10,8 +10,9 @@ import * as C from '../juego/cartografia.js';
 import MALLA from '../../public/cartografia/relieve_malla.json';
 import { MapaCompleto } from './MapaReal.jsx';
 
-const GALE = { id: 'gale', nombre: 'Cráter Gale', lat: -5.44, lon: 137.70, dato: 'Cráter de 155,3 km de diámetro; en su centro está Aeolis Mons (Mount Sharp). Aquí está la zona boxwork del juego.', fuente: 'https://planetarynames.wr.usgs.gov/Feature/2071', fuente_nombre: 'USGS Gazetteer of Planetary Nomenclature' };
-const PUNTOS_GLOBO = [...MARTE.aterrizajes, ...MARTE.destinos].filter((p) => !p.pendiente && p.fuente);
+// Los mismos 10 aterrizajes del Mapa de Marte (marte.json, con fuente). Curiosity (Gale) es "Aquí es tu misión".
+export const PUNTOS_GLOBO = [...MARTE.aterrizajes, ...MARTE.destinos].filter((p) => !p.pendiente && p.fuente);
+const PIN = '/img/ui/pin.png';
 const COLOR_PUNTO = { base: 0x01efac, parada: 0x0cd3b6, muestra: 0xcaff95, deposito: 0xfa932e, peligro: 0xdd2811 };
 const COLOR_TRAMO = { principal: 0x01efac, alternativa: 0xfa932e, peligro: 0xdd2811 };
 const TEXTURAS = [
@@ -71,10 +72,29 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
       const globo = new THREE.Group();
       const esfera = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), new THREE.MeshStandardMaterial({ map: tex('globo_viking.jpg'), roughness: 1 }));
       globo.add(esfera); recursos.push(esfera);
+      // Pines: la misma imagen del mapa de Gale (public/img/ui/pin.png, 64 × 96); la punta de abajo toca el punto.
+      // La esfera tapa los del otro lado (prueba de profundidad) y también los tapa para el clic (ver alClic).
+      const texPin = cargador.load(PIN); texPin.colorSpace = THREE.SRGBColorSpace;
       const pines = [];
-      for (const p of [...PUNTOS_GLOBO, GALE]) {
-        const m = new THREE.Mesh(new THREE.SphereGeometry(p === GALE ? 0.022 : 0.015, 12, 12), new THREE.MeshBasicMaterial({ color: p === GALE ? 0x01efac : p.anio ? 0x2082a6 : 0xfa932e }));
-        m.position.copy(enGlobo(THREE, p.lat, p.lon, 1.005)); m.userData = { ficha: p }; globo.add(m); pines.push(m); recursos.push(m);
+      for (const p of PUNTOS_GLOBO) {
+        const alto = p.jugable ? 0.13 : 0.09;
+        const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: texPin, transparent: true, alphaTest: 0.3 }));
+        s.center.set(0.5, 0); s.scale.set((alto * 64) / 96, alto, 1);
+        s.position.copy(enGlobo(THREE, p.lat, p.lon, 1.002)); s.userData = { ficha: p }; globo.add(s); pines.push(s); recursos.push(s);
+      }
+      // "Aquí es tu misión" sobre el pin de Curiosity (Gale)
+      const mision = PUNTOS_GLOBO.find((p) => p.jugable);
+      if (mision) {
+        const lienzo = document.createElement('canvas'); lienzo.width = 512; lienzo.height = 96;
+        const ctx = lienzo.getContext('2d');
+        if (ctx) {
+          ctx.font = 'bold 52px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 12; ctx.strokeStyle = '#24073F'; ctx.fillStyle = '#CAFF95';
+          ctx.strokeText('Aquí es tu misión', 256, 48); ctx.fillText('Aquí es tu misión', 256, 48);
+          const texTexto = new THREE.CanvasTexture(lienzo); texTexto.colorSpace = THREE.SRGBColorSpace;
+          const t = new THREE.Sprite(new THREE.SpriteMaterial({ map: texTexto, transparent: true }));
+          t.center.set(0.5, 0); t.scale.set(0.4, 0.075, 1); t.position.copy(enGlobo(THREE, mision.lat, mision.lon, 1.002)); t.center.set(0.5, -1.75); // encima del pin
+          globo.add(t); recursos.push(t); // la limpieza recorre la escena y libera sus texturas
+        }
       }
 
       // Región de Gale
@@ -135,7 +155,7 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
 
       const verGlobo = () => {
         region.visible = false; globo.visible = true; controles.minDistance = 1.2; controles.maxDistance = 8;
-        const v = enGlobo(THREE, GALE.lat, GALE.lon, 3.2); camara.position.copy(v); camara.near = 0.01; camara.far = 100; camara.updateProjectionMatrix(); controles.target.set(0, 0, 0);
+        const v = enGlobo(THREE, mision?.lat ?? -4.59, mision?.lon ?? 137.44, 3.2); /* empieza mirando Gale */ camara.position.copy(v); camara.near = 0.01; camara.far = 100; camara.updateProjectionMatrix(); controles.target.set(0, 0, 0);
       };
       const verRegion = (centro) => {
         globo.visible = false; region.visible = true; controles.minDistance = 80; controles.maxDistance = 6000;
@@ -150,10 +170,10 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
         const r = renderer.domElement.getBoundingClientRect();
         raton.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
         rayo.setFromCamera(raton, camara);
-        const golpe = rayo.intersectObjects(globo.visible ? pines : marcas, false)[0];
-        if (!golpe) return;
-        const f = golpe.object.userData.ficha;
-        if (f === GALE) { setFicha(f); setVista('region'); } else setFicha(f);
+        // En el globo la esfera entra en la prueba: un pin del otro lado queda detrás de ella y no se toca.
+        const golpe = rayo.intersectObjects(globo.visible ? [esfera, ...pines] : marcas, false)[0];
+        if (!golpe || golpe.object === esfera) return;
+        setFicha(golpe.object.userData.ficha);
       };
       renderer.domElement.addEventListener('click', alClic);
       const alTeclear = (e) => {
@@ -217,7 +237,7 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
     );
   }
   const atrib = vista === 'globo'
-    ? 'Viking MDIM 2.1 · NASA/USGS (Mars Trek) · aterrizajes: NASA NSSDC, PDS PLACES, NASA MMGIS · Gale: USGS Gazetteer'
+    ? 'Viking MDIM 2.1 · NASA/USGS (Mars Trek) · aterrizajes: NASA NSSDC, NASA/JPL, PDS PLACES, Nature Astronomy · toca un pin para ver su ficha'
     : `Relieve: DEM 1 m USGS (Parker y Calef, 2016), malla de ${MALLA.vertices[0]} × ${MALLA.vertices[1]} (~${MALLA.m_entre_vertices} m) · ${TEXTURAS.find((t) => t.id === textura)?.nombre} · Ruta de Curiosity: PDS PLACES`;
   return (
     <div className="marte3d">
@@ -244,11 +264,13 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
         <div className="ficha-capa marte3d-ficha" role="dialog" aria-label={`Ficha: ${ficha.nombre ?? ficha.mision}`}>
           <button className="boton-icono" onClick={() => setFicha(null)} aria-label="Cerrar la ficha">✕</button>
           <h3>{ficha.id && ficha.terreno ? `${ficha.id} · ${ficha.nombre}` : ficha.mision ? `${ficha.anio} · ${ficha.mision}` : ficha.nombre}</h3>
+          {ficha.que && <p><strong>Qué es:</strong> {ficha.que}</p>}
           {ficha.lugar && <p>{ficha.lugar}</p>}
           <p>{C.fmtLat(ficha.lat)}, {C.fmtLon(ficha.lon)}</p>
           <p>{ficha.terreno ?? ficha.dato}</p>
           {ficha.por_que_el_nombre && <p><em>¿Por qué se llama {ficha.nombre_real}?</em> {ficha.por_que_el_nombre}</p>}
-          <p className="fuente">Fuente: {(ficha.fuentes ?? [ficha.fuente]).filter(Boolean).map((u) => <a key={u} href={u} target="_blank" rel="noreferrer">{u.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]} </a>)}</p>
+          <p className="fuente">Fuente: {(ficha.fuentes ?? [ficha.fuente]).filter(Boolean).map((u) => <a key={u} href={u} target="_blank" rel="noreferrer">{u.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]} </a>)}{ficha.guia ? ` · Guía de supervivencia ${ficha.guia}` : ''}</p>
+          {ficha.jugable && vista === 'globo' && <button className="boton principal" onClick={() => setVista('region')}>Ver Gale en 3D</button>}
         </div>
       )}
     </div>
