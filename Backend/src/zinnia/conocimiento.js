@@ -15,10 +15,13 @@ function leer(base, archivo, defecto = []) {
 export const DATOS = leer(DATA, 'datos.json');
 export const GLOSARIO = leer(DATA, 'glosario.json');
 export const CAPAS = leer(DATA, 'capas.json');
-export const POIS = leer(DATA, 'pois.json');
+// Lo marcado "pendiente" (sin fuente o sin coordenadas reales) no se muestra al jugador: Zinn-IA tampoco lo usa.
+const sinPendientes = (lista) => lista.filter((x) => !x.pendiente);
+export const POIS = sinPendientes(leer(DATA, 'pois.json'));
 export const RECURSOS = leer(DATA, 'recursos_nasa.json');
 export const CHISTES = leer(DATA, 'chistes.json');
-export const MARTE = leer(DATA, 'marte.json', { aterrizajes: [], destinos: [] });
+const MARTE_TODO = leer(DATA, 'marte.json', { aterrizajes: [], destinos: [] });
+export const MARTE = { aterrizajes: sinPendientes(MARTE_TODO.aterrizajes ?? []), destinos: sinPendientes(MARTE_TODO.destinos ?? []) };
 export const GUIA = leer(PUBLICO, 'guia_supervivencia.json', { secciones: [] });
 
 const fuenteDe = (idDato) => DATOS.find((d) => d.id === idDato)?.fuente ?? null;
@@ -42,7 +45,7 @@ export const ENTRADAS = [
   })),
   ...POIS.map((p) => ({ id: `poi:${p.id}`, tipo: 'poi', titulo: p.nombre, texto: `${p.nombre} (parada de la ruta en el cráter Gale): ${p.dato ?? ''}. ${p.nota ?? ''} Misión: ${p.mision ?? ''}`, fuente: p.fuente })),
   ...MARTE.destinos.map((d) => ({ id: `poi:${d.id}`, tipo: 'lugar', titulo: d.nombre, texto: `${d.nombre} (Mapa de Marte): ${d.dato}`, fuente: fuenteDe(d.ficha) })),
-  ...MARTE.aterrizajes.map((a) => ({ id: `poi:${a.id}`, tipo: 'aterrizaje', titulo: a.mision, texto: `${a.mision} aterrizó en ${a.lugar} en ${a.anio}. ${a.dato}`, fuente: a.galeria ?? null })),
+  ...MARTE.aterrizajes.map((a) => ({ id: `poi:${a.id}`, tipo: 'aterrizaje', titulo: a.mision, texto: `${a.mision} aterrizó en ${a.lugar} en ${a.anio}. ${a.dato}`, fuente: a.fuente ?? a.galeria ?? null })),
   ...RECURSOS.map((r) => ({ id: `recurso:${r.id}`, tipo: 'recurso', titulo: r.nombre, texto: `${r.nombre}: ${r.que_es}`, fuente: r.url })),
   ...CHISTES.map((c) => ({ id: c.id, tipo: 'chiste', titulo: 'chiste', texto: c.texto, fuente: c.dato ? fuenteDe(c.dato) : null, ficha: c.dato })),
   // Guía de supervivencia (docs/guia_supervivencia.md): cada fragmento con su sección y la URL de su cita [n]
