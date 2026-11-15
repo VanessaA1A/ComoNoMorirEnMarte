@@ -9,18 +9,18 @@ export function usePuedeJugar() {
     const revisar = () => setPuede(puedeJugarAhora());
     window.addEventListener('resize', revisar);
     window.addEventListener('orientationchange', revisar);
-    const puntero = window.matchMedia?.('(any-pointer: fine)');
-    puntero?.addEventListener?.('change', revisar);
+    const consultas = ['(any-pointer: fine)', '(pointer: coarse)'].map((q) => window.matchMedia?.(q)).filter(Boolean);
+    consultas.forEach((c) => c.addEventListener?.('change', revisar));
     return () => {
       window.removeEventListener('resize', revisar);
       window.removeEventListener('orientationchange', revisar);
-      puntero?.removeEventListener?.('change', revisar);
+      consultas.forEach((c) => c.removeEventListener?.('change', revisar));
     };
   }, []);
   return puede;
 }
 
-/** Pantalla en celular o ventana chica: el juego sigue en memoria y aparece al agrandar la ventana. */
+/** Pantalla en celular o tablet (nunca en una computadora, aunque la ventana sea angosta). */
 export function PantallaSoloComputadora() {
   return (
     <main className="solo-computadora" role="main">
