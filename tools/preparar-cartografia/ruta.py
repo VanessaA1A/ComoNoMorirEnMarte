@@ -191,8 +191,18 @@ def estadisticas(xy):
     pend = [PEND[ij(x, y)] for x, y in densos if 0 <= ij(x, y)[0] < DEM.shape[0] and 0 <= ij(x, y)[1] < DEM.shape[1]]
     lls = [latlon(x, y) for x, y in xy]
     largo = sum(dist(a, b) for a, b in zip(lls, lls[1:]))
+    # Perfil de elevación REAL (DEM) cada ~10 m: [distancia_m, elevación_m]
+    perfil, d_acum, prev = [], 0.0, None
+    for k, (x, y) in enumerate(densos):
+        if prev is not None:
+            d_acum += math.hypot(x - prev[0], y - prev[1])
+        prev = (x, y)
+        if k % 5 == 0 or k == len(densos) - 1:
+            i, j = ij(x, y)
+            if 0 <= i < DEM.shape[0] and 0 <= j < DEM.shape[1]:
+                perfil.append([round(d_acum), round(float(DEM[i, j]), 1)])
     return {"largo_m": round(largo), "pendiente_media": round(float(np.mean(pend)), 1), "pendiente_p90": round(float(np.percentile(pend, 90)), 1),
-            "pendiente_max": round(float(np.max(pend)), 1), "frac_mas_15": round(float(np.mean(np.array(pend) > 15)), 3)}
+            "pendiente_max": round(float(np.max(pend)), 1), "frac_mas_15": round(float(np.mean(np.array(pend) > 15)), 3), "perfil": perfil}
 
 
 def punto(ide, x, y, extra):

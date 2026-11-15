@@ -23,16 +23,36 @@ const enCarpeta = fs.readdirSync(dir).filter((f) => !['fuentes.json', 'capas_rea
 const sinFicha = enCarpeta.filter((f) => !fuentes.archivos.some((a) => a.archivo.replace(/\/$/, '') === f));
 ok(sinFicha.length === 0, `todo archivo de public/cartografia está en fuentes.json${sinFicha.length ? ` (faltan: ${sinFicha.join(', ')})` : ''}`);
 
-// Pesos (Parte 1: ~15 MB en total; ortofoto ≤ 25 MB)
+// Peso total: public/cartografia ≤ 25 MB (límite del proyecto)
 const total = peso(dir) / 1e6;
-ok(total <= 15, `peso total ${total.toFixed(2)} MB ≤ 15 MB`);
-ok(peso(path.join(dir, 'ortofoto')) / 1e6 <= 25, 'ortofoto ≤ 25 MB');
+ok(total <= 25, `peso total ${total.toFixed(2)} MB ≤ 25 MB`);
 
-// Mosaicos de la ortofoto: todos los que anuncia tiles.json existen
+// Mosaicos de la ortofoto: todos los que anuncia tiles.json existen (niveles 4 y 5: solo los del corredor de la ruta)
 const tiles = JSON.parse(fs.readFileSync(path.join(dir, 'ortofoto/tiles.json'), 'utf8'));
-const faltanMosaicos = tiles.niveles.flatMap((n) => Array.from({ length: n.mosaicos_por_lado ** 2 }, (_, i) => `${n.nivel}/${Math.floor(i / n.mosaicos_por_lado)}/${i % n.mosaicos_por_lado}.jpg`))
-  .filter((r) => !fs.existsSync(path.join(dir, 'ortofoto', r)));
+const lista = (n) => (n.solo_corredor ? (tiles.corredor_25cm?.mosaicos?.[n.nivel] ?? []).map((xy) => `${n.nivel}/${xy}.jpg`)
+  : Array.from({ length: n.mosaicos_por_lado ** 2 }, (_, i) => `${n.nivel}/${Math.floor(i / n.mosaicos_por_lado)}/${i % n.mosaicos_por_lado}.jpg`));
+const faltanMosaicos = tiles.niveles.flatMap(lista).filter((r) => !fs.existsSync(path.join(dir, 'ortofoto', r)));
 ok(faltanMosaicos.length === 0, `ortofoto: todos los mosaicos de tiles.json existen${faltanMosaicos.length ? ` (faltan ${faltanMosaicos.length})` : ''}`);
+ok(tiles.niveles.some((n) => n.nivel === 5 && n.m_por_px === 0.25) && (tiles.corredor_25cm?.mosaicos?.['5'] ?? []).length > 100, `corredor de la ruta a 25 cm/px (${tiles.corredor_25cm?.mosaicos?.['5']?.length ?? 0} mosaicos)`);
+const r1 = JSON.parse(fs.readFileSync(path.join(dir, 'relieve_1m/relieve_1m.json'), 'utf8'));
+ok(r1.m_por_px === 1 && r1.mosaicos.every((xy) => fs.existsSync(path.join(dir, 'relieve_1m', `${xy}.png`))) && r1.error_max_m <= r1.escala_m, `relieve de 1 m en el corredor: ${r1.mosaicos.length} mosaicos, error ≤ ${r1.escala_m} m`);
+const malla = JSON.parse(fs.readFileSync(path.join(dir, 'relieve_malla.json'), 'utf8'));
+ok(fs.statSync(path.join(dir, 'relieve_malla.bin')).size === malla.vertices[0] * malla.vertices[1] * 2, `malla 3D: ${malla.vertices.join(' × ')} alturas reales en 16 bits`);
+
+// Ruta real del juego (Parte 2): todos los puntos, en la zona, con fuente; tramos a pie con pendiente < 15° (percentil 90)
+const RUTA = JSON.parse(fs.readFileSync(path.join(raiz, 'src/data/ruta_real.json'), 'utf8'));
+const L0 = relieveLim();
+function relieveLim() { return JSON.parse(fs.readFileSync(path.join(dir, 'relieve.json'), 'utf8')).limites; }
+const ids = RUTA.puntos.map((p) => p.id);
+ok(['H', 'P1', 'P2', 'D1', 'P3', 'DEP', 'D2', 'P4', 'P5'].every((i) => ids.includes(i)), `ruta: están todos los puntos (${ids.join(', ')})`);
+ok(RUTA.puntos.every((p) => p.lat <= L0.norte && p.lat >= L0.sur && p.lon >= 0 && p.lon < 360 && p.lon >= L0.oeste && p.lon <= L0.este), 'ruta: lat planetocéntrica y lon Este 0–360 dentro de la zona');
+ok(RUTA.puntos.every((p) => p.fuentes?.length && p.fuentes.every(url) && p.terreno && p.criterio), 'ruta: cada punto tiene terreno, criterio y fuentes');
+const POIS = JSON.parse(fs.readFileSync(path.join(raiz, 'src/data/pois.json'), 'utf8'));
+ok(POIS.every((p) => ids.includes(p.id)), 'ruta: cada parada del guion (pois.json) tiene coordenadas reales');
+for (const t of ['H-P1', 'P1-P2', 'P2-D1', 'D1-P3 (camino firme)', 'P3-DEP (desvío)', 'P4-H (regreso)']) {
+  const x = RUTA.tramos[t];
+  ok(x && x.pendiente_p90 < 15 && x.pendiente_max < 23 && x.perfil.length > 2, `tramo a pie ${t}: ${x?.largo_m} m, pendiente p90 ${x?.pendiente_p90}° (< 15°), máx ${x?.pendiente_max}° (< 23°), con perfil`);
+}
 
 // Relieve: el desnivel cabe en 16 bits con la escala declarada
 const relieve = leer('relieve.json');

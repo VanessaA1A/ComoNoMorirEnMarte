@@ -46,11 +46,11 @@
    "archivo": "ortofoto/",
    "producto": "MSL Gale Merged Orthophoto Mosaic 25cm (v3)",
    "instrumento": "HiRISE (Mars Reconnaissance Orbiter)",
-   "resolucion": "1 m/px (zona); 25 cm/px en el corredor de la ruta (pendiente)",
+   "resolucion": "25 cm/px en el corredor de la ruta (<= 150 m); 1 m/px en la zona; niveles de 50 cm, 2, 4 y 8 m",
    "fecha_producto": "2016",
    "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_orthophoto_mosaic_25cm",
    "cita": "Calef y Parker (2016), USGS",
-   "bytes": 2353190
+   "bytes": 5506100
   },
   {
    "archivo": "relieve.png",
@@ -231,6 +231,46 @@
    "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
    "cita": "Regla del juego sobre el relieve de Parker y Calef (2016)",
    "bytes": 319135
+  },
+  {
+   "archivo": "relieve_1m/",
+   "producto": "Mars MSL Gale Merged DEM 1m (v3), corredor de la ruta sin remuestrear",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "1 m/px (solo a <= 150 m de la ruta)",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Parker y Calef (2016), USGS",
+   "bytes": 923882
+  },
+  {
+   "archivo": "relieve_malla.bin",
+   "producto": "Malla 3D del DEM 1m (v3) remuestreada a 512 × 512",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "~5,9 m entre vértices",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Derivado de Parker y Calef (2016)",
+   "bytes": 524288
+  },
+  {
+   "archivo": "relieve_malla.json",
+   "producto": "Metadatos de la malla 3D",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+   "resolucion": "~5,9 m entre vértices",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+   "cita": "Derivado de Parker y Calef (2016)",
+   "bytes": 1250
+  },
+  {
+   "archivo": "ortofoto_3d.jpg",
+   "producto": "Textura 3D de la ortofoto 25cm (v3) reducida a 2048 px",
+   "instrumento": "HiRISE (Mars Reconnaissance Orbiter)",
+   "resolucion": "~1,46 m/px",
+   "fecha_producto": "2016",
+   "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_orthophoto_mosaic_25cm",
+   "cita": "Derivado de Calef y Parker (2016), USGS",
+   "bytes": 861556
   }
  ]
 }

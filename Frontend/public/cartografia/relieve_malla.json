@@ -1,0 +1,39 @@
+{
+ "archivo": "relieve_malla.bin",
+ "formato": "uint16 little-endian, filas de norte a sur, columnas de oeste a este",
+ "vertices": [
+  512,
+  512
+ ],
+ "m_entre_vertices": 5.87,
+ "lado_m": 3000.0,
+ "codificacion": "altura = -4022.90673828125 + valor × 0.02 m (igual que relieve.png)",
+ "altura_min_m": -4022.90673828125,
+ "escala_m": 0.02,
+ "altura_min_malla_m": -4022.12,
+ "altura_max_malla_m": -3323.46,
+ "remuestreo": "bilineal desde el relieve de 2 m (que viene del DEM de 1 m)",
+ "error_codificacion_max_m": 0.01,
+ "limites": {
+  "norte": -4.779931603844927,
+  "sur": -4.830543418419272,
+  "oeste": 137.35655077444702,
+  "este": 137.40716258902137
+ },
+ "proyectado_m": {
+  "x0": 8141768,
+  "x1": 8144768.0,
+  "y0": -286329.0,
+  "y1": -283329
+ },
+ "fuente": {
+  "producto": "Mars MSL Gale Merged DEM 1m (v3)",
+  "autores": "Parker, T. J. y Calef, F. J. III",
+  "anio": 2016,
+  "editor": "USGS Astrogeology Science Center",
+  "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
+  "archivo": "https://planetarymaps.usgs.gov/mosaic/Mars/MSL/MSL_Gale_DEM_Mosaic_1m_v3.tif",
+  "instrumento": "HiRISE (Mars Reconnaissance Orbiter), modelos estéreo",
+  "resolucion_original_m": 1.0
+ }
+}

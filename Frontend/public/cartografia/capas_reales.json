@@ -13,8 +13,8 @@
     "ortofoto/tiles.json"
    ],
    "instrumento": "HiRISE (MRO)",
-   "resolucion": "1 m/px en la zona; 25 cm/px en el corredor de la ruta (pendiente de la Parte 2)",
-   "atribucion": "HiRISE · 1 m/px · USGS/NASA/JPL",
+   "resolucion": "25 cm/px en el corredor de la ruta; 1 m/px en la zona",
+   "atribucion": "HiRISE · 25 cm/px (ruta) y 1 m/px (zona) · USGS (Calef y Parker, 2016)",
    "fuente": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_orthophoto_mosaic_25cm",
    "limitacion": "Mosaico de imágenes de fechas distintas."
   },
