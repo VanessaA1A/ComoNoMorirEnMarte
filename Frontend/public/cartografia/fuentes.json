@@ -80,7 +80,7 @@
    "fecha_producto": "2016",
    "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
    "cita": "Derivado de Parker y Calef (2016)",
-   "bytes": 287875
+   "bytes": 188748
   },
   {
    "archivo": "pendiente.png",
@@ -90,7 +90,7 @@
    "fecha_producto": "2016",
    "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
    "cita": "Derivado de Parker y Calef (2016); umbrales: NASA/JPL (2023)",
-   "bytes": 506622
+   "bytes": 278000
   },
   {
    "archivo": "curiosity_ruta.geojson",
@@ -230,7 +230,7 @@
    "fecha_producto": "2016",
    "url": "https://astrogeology.usgs.gov/search/map/mars_msl_gale_merged_dem_1m",
    "cita": "Regla del juego sobre el relieve de Parker y Calef (2016)",
-   "bytes": 319135
+   "bytes": 189011
   },
   {
    "archivo": "relieve_1m/",

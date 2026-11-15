@@ -168,6 +168,14 @@ const bloqueo = fs.readFileSync(path.join(raiz, 'src/componentes/SoloComputadora
 ok(bloqueo.includes('¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.') && bloqueo.includes('href="/guia.html"') && !emoji.test(bloqueo), 'pantalla de bloqueo: texto de Zinn-IA, enlace a guia.html y sin emojis');
 ok(!fs.readFileSync(path.join(raiz, 'public/guia.html'), 'utf8').includes('puedeJugar'), 'guia.html no usa el bloqueo');
 
+// Una sola Guía de supervivencia en el Inicio; su versión para leer o imprimir (guia.html) se abre desde dentro de la Guía
+{
+  const inicio = fs.readFileSync(path.join(raiz, 'src/componentes/Inicio.jsx'), 'utf8');
+  const guiaJsx = fs.readFileSync(path.join(raiz, 'src/componentes/Guia.jsx'), 'utf8');
+  ok((inicio.match(/titulo="Guía[^"]*"/g) ?? []).length === 1 && inicio.includes('titulo="Guía de supervivencia"') && !inicio.includes('/guia.html') && guiaJsx.includes('href="/guia.html"'),
+    'Inicio: un solo botón "Guía de supervivencia"; la versión para imprimir se abre desde la Guía');
+}
+
 // Color de la arena en Gale: dunas Bagnold oscuras (basalto) y el marrón rojizo solo en falso color infrarrojo (CRISM)
 ok(nombres.includes('Color de la arena en Gale') && nombres.includes('falso color infrarrojo') && nombres.includes('olivino')
   && (guia.referencias[64]?.url ?? '').includes('jpl.nasa.gov') && (guia.referencias[65]?.url ?? '').includes('science.nasa.gov') && (guia.referencias[66]?.url ?? '').includes('10.1029/2022JE007436'),
