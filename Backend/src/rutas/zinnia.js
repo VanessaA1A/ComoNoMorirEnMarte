@@ -1,9 +1,25 @@
 import { Router } from 'express';
 import { pool } from '../db.js';
 import { chatZinnia } from '../validar.js';
-import { conversar, MODELO } from '../zinnia/agente.js';
+import { conversar, MODELO, hayIA } from '../zinnia/agente.js';
+import { ENTRADAS } from '../zinnia/conocimiento.js';
 
 export const zinnia = Router();
+
+// Último resultado del agente (sin texto de mensajes ni secretos): para diagnosticar desde /zinnia/estado
+const ultimo = { modo: null, motivo: null, fecha: null };
+const anotar = (modo, motivo = null) => Object.assign(ultimo, { modo, motivo, fecha: new Date().toISOString() });
+
+/** GET /api/zinnia/estado — ¿hay key configurada? ¿qué pasó la última vez? Nunca muestra la key. */
+zinnia.get('/zinnia/estado', (_req, res) => {
+  res.json({
+    ia: hayIA(), // hay ANTHROPIC_API_KEY configurada (no dice cuál ni si tiene saldo)
+    modelo: MODELO,
+    conocimiento: ENTRADAS.length,
+    limite: { mensajes: 20, minutos: 10 },
+    ultima_respuesta: ultimo, // modo 'ia' | 'sin_ia' | 'semilla'; motivo del último fallo (p. ej. api_400_invalid_request_error = sin crédito)
+  });
+});
 
 // ---------- Límite: 20 mensajes cada 10 minutos por playerId (o por IP) ----------
 const VENTANA_MS = 10 * 60 * 1000;
@@ -61,10 +77,12 @@ zinnia.post('/zinnia/chat', async (req, res) => {
   try {
     const r = await conversar(cuerpo);
     registrarUso(cuerpo.playerId, r); // sin await: no retrasa la respuesta
+    anotar('ia');
     res.json({ modo: 'ia', texto: r.texto, acciones: r.acciones, herramientas: r.herramientas, tokens: r.tokens, modelo: MODELO });
   } catch (err) {
     if (err.sinIA) {
       console.warn(`[zinnia] sin IA: ${err.motivo}`); // solo el motivo, nunca el mensaje del jugador
+      anotar('sin_ia', err.motivo ?? null);
       return res.status(503).json({ modo: 'sin_ia' });
     }
     throw err;

@@ -145,6 +145,8 @@ try {
   for (let i = 0; i < 40; i++) { if (await fetch(`${apiSinKey}/salud`).then(() => true).catch(() => false)) break; await new Promise((r) => setTimeout(r, 250)); }
   const s = await fetch(`${apiSinKey}/salud`).then((r) => r.json());
   ok(s.zinnia?.ia === false, 'API sin key: /salud dice ia=false');
+  const est = await fetch(`${apiSinKey}/zinnia/estado`).then((r) => r.json());
+  ok(est.ia === false && est.modelo && est.conocimiento > 0 && !JSON.stringify(est).includes('sk-ant'), '/zinnia/estado: ia=false, modelo y conocimiento, sin secretos');
   const sinKey = await chat(apiSinKey, [{ rol: 'usuario', texto: '¿Cómo voy?' }], base, randomUUID());
   ok(sinKey.status === 503 && sinKey.cuerpo.modo === 'sin_ia', `sin key → 503 { modo: 'sin_ia' } (recibido ${sinKey.status})`);
   const semilla = await chat(apiSinKey, [{ rol: 'usuario', texto: '¿Qué es MOLA?' }], { ...base, bateria: 0 }, randomUUID());
