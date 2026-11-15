@@ -250,7 +250,7 @@ export async function chatZinnia({ mensajes, contexto }) {
     if (r.status === 429) return { modo: 'respaldo', motivo: 'limite', error: cuerpo.error };
     if (r.status === 503) return { modo: 'respaldo', motivo: 'sin_ia' };
     if (!r.ok || !cuerpo.texto) return { modo: 'respaldo', motivo: 'error' };
-    return { modo: cuerpo.modo === 'semilla' ? 'semilla' : 'ia', texto: cuerpo.texto, acciones: Array.isArray(cuerpo.acciones) ? cuerpo.acciones : [] };
+    return { modo: cuerpo.modo === 'semilla' ? 'semilla' : 'ia', texto: cuerpo.texto, acciones: Array.isArray(cuerpo.acciones) ? cuerpo.acciones : [], expresion: typeof cuerpo.expresion === 'string' ? cuerpo.expresion : null };
   } catch {
     return { modo: 'respaldo', motivo: 'sin_conexion' };
   }

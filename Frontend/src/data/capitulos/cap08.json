@@ -11,8 +11,8 @@
       "abrirTablet": true, "capa": "relieve",
       "lineas": [
         { "quien": "Narración", "texto": "Para llegar al fondo con carbonatos tienes que pasar al otro lado de una cresta." },
-        { "quien": "Zinn-IA", "texto": "Con traje y herramientas, una pared de 1 a 2 metros es un obstáculo serio." },
-        { "quien": "Zinn-IA", "texto": "En la imagen de HiRISE veo un paso que rodea la cresta, pero toma más tiempo.", "capa": "optica" }
+        { "quien": "Zinn-IA", "texto": "Con traje y herramientas, una pared de 1 a 2 metros es un obstáculo serio.", "expresion": "seria" },
+        { "quien": "Zinn-IA", "texto": "En la imagen de HiRISE veo un paso que rodea la cresta, pero toma más tiempo.", "expresion": "seria", "capa": "optica" }
       ],
       "opciones": [
         { "texto": "Bajar de frente", "efecto": { "minutos": -5, "oxigeno": -5, "bateria": -2, "alimentacion": -3, "integridad": -30 }, "probabilidad": { "exito": 0.8, "ir_fallo": "c08_caida" }, "ir": "c08_02a" },
@@ -25,7 +25,7 @@
       "efecto": { "integridad": -40, "oxigeno": -10 },
       "lineas": [
         { "quien": "Narración", "texto": "La roca se desmorona bajo tus botas y caes al otro lado." },
-        { "quien": "Zinn-IA", "texto": "¡{nombre}! ¿Me escuchas? El traje tiene una rasgadura. Estás perdiendo oxígeno." }
+        { "quien": "Zinn-IA", "texto": "¡{nombre}! ¿Me escuchas? El traje tiene una rasgadura. Estás perdiendo oxígeno.", "expresion": "asustada" }
       ],
       "ir": "c08_03"
     },
@@ -33,7 +33,7 @@
       "id": "c08_02a",
       "fondo": "bg_c08_bajada.jpg", "astro": "neutral", "zinnia": "triste",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "Llegaste, pero las rocas filosas rasparon el traje. La integridad bajó bastante." }
+        { "quien": "Zinn-IA", "texto": "Llegaste, pero las rocas filosas rasparon el traje. La integridad bajó bastante.", "expresion": "llorona" }
       ],
       "ir": "c08_03"
     },

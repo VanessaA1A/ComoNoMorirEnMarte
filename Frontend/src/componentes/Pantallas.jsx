@@ -5,7 +5,7 @@ import { CAPITULOS } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { RANURAS, leerRanura } from '../juego/partidas.js';
 import { Modal } from './Modal.jsx';
-import { ZinniaHablando } from './Personajes.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 import { ETIQUETA } from './HUD.jsx';
 import { Enlace } from './Mapas.jsx';
 import FuentesCartografia from './FuentesCartografia.jsx';
@@ -82,7 +82,7 @@ export function PanelGuardar({ modo }) {
       <div className="ranuras-layout">
         <aside className="ranuras-guia">
           <div className="burbuja texto-ui">{consejo}</div>
-          <ZinniaHablando />
+          <ZinniaAvatar className="zinnia-guardar" />
         </aside>
 
         <div className="ranuras-lista">

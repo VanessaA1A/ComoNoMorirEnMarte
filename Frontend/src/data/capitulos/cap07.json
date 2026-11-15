@@ -42,7 +42,7 @@
       "id": "c07_03b",
       "fondo": "bg_c07_crestas.jpg", "astro": "caminando", "zinnia": "curiosa",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "De acuerdo. Cada minuto cuenta." }
+        { "quien": "Zinn-IA", "texto": "De acuerdo. Cada minuto cuenta.", "expresion": "seria" }
       ],
       "ir": "c07_04"
     },

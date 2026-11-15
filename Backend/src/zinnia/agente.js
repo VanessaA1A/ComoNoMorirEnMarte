@@ -1,8 +1,9 @@
-// Agente Zinn-IA: bucle de tool use de máximo 3 vueltas. Devuelve { texto, acciones[], herramientas[], tokens }.
+// Agente Zinn-IA: bucle de tool use de máximo 3 vueltas. Devuelve { texto, expresion, acciones[], herramientas[], tokens }.
 // No guarda ni registra el texto de los mensajes (privacidad 13+).
 import Anthropic from '@anthropic-ai/sdk';
 import { personaje, contexto } from './personaje.js';
 import { HERRAMIENTAS, ejecutar } from './herramientas.js';
+import { EXPRESIONES } from '../../../Frontend/src/juego/expresiones.js';
 
 export const MODELO = process.env.ZINNIA_MODEL || 'claude-haiku-5-5';
 const MAX_TOKENS = 400;
@@ -29,6 +30,21 @@ export function aMensajes(mensajes) {
 
 const SIN_EMOJIS = /[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu;
 const textoDe = (r) => r.content.filter((b) => b.type === 'text').map((b) => b.text).join('').replace(SIN_EMOJIS, '').trim();
+
+// Expresión: el modelo empieza su respuesta con [expresion] (ver personaje.js). Se valida aquí: si falta o no es
+// una de las 6, normal. La etiqueta se quita del texto (también si aparece en otra parte de la respuesta).
+const AL_INICIO = /^\s*\[\s*([a-záéíóúñ-]{3,20})\s*\]\s*/i;
+const ETIQUETA = /\s*\[\s*([a-z-]{3,20})\s*\]/gi;
+export function separarExpresion(texto = '') {
+  const t = String(texto);
+  const m = t.match(AL_INICIO);
+  const pedida = m?.[1]?.toLowerCase();
+  const expresion = EXPRESIONES.includes(pedida) ? pedida : 'normal';
+  const limpio = (m ? t.slice(m[0].length) : t)
+    .replace(ETIQUETA, (e, nombre) => (EXPRESIONES.includes(nombre.toLowerCase()) ? '' : e))
+    .trim();
+  return { expresion, texto: limpio };
+}
 
 /** Error con .sinIA = true: la ruta responde 503 { modo: 'sin_ia' } y el frontend usa el respaldo. */
 const sinIA = (motivo) => Object.assign(new Error(motivo), { sinIA: true, motivo });
@@ -73,7 +89,7 @@ export async function conversar({ mensajes, contexto: c = {} }) {
     if (t) textos.push(t);
 
     if (r.stop_reason === 'refusal') {
-      return { texto: 'Mmm, de eso no puedo hablar. ¿Volvemos a Marte? Puedo contarte de las capas del mapa o de los peligros reales.', acciones, herramientas, tokens };
+      return { texto: 'Mmm, de eso no puedo hablar. ¿Volvemos a Marte? Puedo contarte de las capas del mapa o de los peligros reales.', expresion: 'seria', acciones, herramientas, tokens };
     }
     if (r.stop_reason !== 'tool_use') break;
 
@@ -89,7 +105,8 @@ export async function conversar({ mensajes, contexto: c = {} }) {
     historial.push({ role: 'user', content: resultados });
   }
 
-  const texto = textos.at(-1) || (acciones.length ? '¡Listo! Te lo abrí en la pantalla.' : '');
-  if (!texto) throw sinIA('sin_texto');
-  return { texto, acciones, herramientas, tokens };
+  const { texto, expresion } = separarExpresion(textos.at(-1) || '');
+  const final = texto || (acciones.length ? '¡Listo! Te lo abrí en la pantalla.' : '');
+  if (!final) throw sinIA('sin_texto');
+  return { texto: final, expresion, acciones, herramientas, tokens };
 }

@@ -69,7 +69,7 @@ export const MENSAJE_SEMILLA = 'Batería en cero: no puedo pensar bien. Busca en
 zinnia.post('/zinnia/chat', async (req, res) => {
   const cuerpo = chatZinnia.parse(req.body);
   if (typeof cuerpo.contexto?.bateria === 'number' && cuerpo.contexto.bateria <= 0) {
-    return res.json({ modo: 'semilla', texto: MENSAJE_SEMILLA, acciones: [] });
+    return res.json({ modo: 'semilla', texto: MENSAJE_SEMILLA, expresion: 'ojos-cerrados', acciones: [] });
   }
   const clave = cuerpo.playerId ?? `ip:${req.ip}`;
   if (!dentroDelLimite(clave)) return res.status(429).json({ modo: 'limite', error: MENSAJE_LIMITE });
@@ -78,7 +78,7 @@ zinnia.post('/zinnia/chat', async (req, res) => {
     const r = await conversar(cuerpo);
     registrarUso(cuerpo.playerId, r); // sin await: no retrasa la respuesta
     anotar('ia');
-    res.json({ modo: 'ia', texto: r.texto, acciones: r.acciones, herramientas: r.herramientas, tokens: r.tokens, modelo: MODELO });
+    res.json({ modo: 'ia', texto: r.texto, expresion: r.expresion, acciones: r.acciones, herramientas: r.herramientas, tokens: r.tokens, modelo: MODELO });
   } catch (err) {
     if (err.sinIA) {
       console.warn(`[zinnia] sin IA: ${err.motivo}`); // solo el motivo, nunca el mensaje del jugador

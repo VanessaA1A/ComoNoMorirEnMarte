@@ -6,6 +6,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { leerRanura } from '../juego/partidas.js';
 import Recurso from './Recurso.jsx';
 import { Astronauta } from './Personajes.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
   return (
@@ -61,7 +62,7 @@ export default function Inicio() {
             <span className="consola-etiqueta">Tripulación · Aurora-1</span>
           </div>
           <div className="consola-escena">
-            <img src="/img/zinnia_multiexpresion.webp" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
+            <ZinniaAvatar className="zinnia-principal" alt="Zinn-IA, tu guía de supervivencia" />
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">
@@ -84,7 +85,7 @@ export default function Inicio() {
 
       <footer className="inicio-pie">
         <div className="estado-sistema" role="status">
-          <img src="/img/zinnia_estatica.gif" alt="" className="pixel zinnia-estatica" draggable={false} />
+          <ZinniaAvatar className="zinnia-estatica" expresion={j.conectado ? 'normal' : 'seria'} alt="" />
           <span>{j.conectado ? 'Sistema en línea' : 'Sin señal con la Tierra · modo local'}</span>
         </div>
         <div className="pie-textos">

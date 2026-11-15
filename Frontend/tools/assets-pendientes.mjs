@@ -36,18 +36,13 @@ for (const a of [...index.capitulos.map((c) => c.archivo), index.finales]) {
   for (const e of leerJSON(`${capDir}/${a}`).escenas) {
     if (e.fondo) agregar(`fondos/${e.fondo}`, 'Fondos de escenas', e.id);
     if (e.astro) agregar(`astronauta/${e.astro}.png`, 'Astronauta', e.id, 'astronauta/base.png');
-    if (e.zinnia) agregar(`zinnia/${e.zinnia}.gif`, 'Zinn-IA', e.id);
   }
 }
 agregar('fondos/inicio.png', 'Pantallas', 'pantalla de inicio');
 agregar('fondos/cargando.png', 'Pantallas', 'tarjetas de capítulo sin fondo propio');
-agregar('zinnia/apagada.png', 'Zinn-IA', 'batería en 0 (semilla) e indicador de carga');
-agregar('zinnia/peligro.gif', 'Zinn-IA', 'cuando una barra está en rojo');
-agregar('zinnia/inicio.gif', 'Zinn-IA', 'pantalla de inicio y celebración del final bueno');
-agregar('zinnia/sin_conexion.gif', 'Zinn-IA', 'pantalla sin conexión');
-for (const t of leerJSON('src/data/tutorial.json')) agregar(`zinnia/${t.zinnia}.gif`, 'Zinn-IA', `tutorial: ${t.id}`);
+// Zinn-IA: sus 6 expresiones están en public/zinnia/ (las revisa tools/probar-imagenes.mjs).
 agregar('astronauta/base.png', 'Astronauta', 'todas las poses (con efectos CSS)');
-agregar('logos/isotipo.png', 'Logos e interfaz', 'favicon y Zinn-IA de respaldo');
+agregar('logos/isotipo.png', 'Logos e interfaz', 'favicon (nunca como imagen de Zinn-IA)');
 agregar('logos/titulo.png', 'Logos e interfaz', 'título de la pantalla de inicio');
 agregar('logos/logotipo_zinnia_aurora.png', 'Logos e interfaz', 'Créditos y pantalla de carga');
 agregar('ui/icono_zinnia.png', 'Logos e interfaz', 'ícono flotante del panel de Zinn-IA');

@@ -52,14 +52,7 @@ export function comoVoy(p) {
   return frases;
 }
 
-/** Expresión de Zinn-IA en su panel según el estado. */
-export function expresionZinnia(p) {
-  if (!p) return 'feliz';
-  if (p.bateria <= 0) return 'apagada';
-  if (barrasEnRojo(p).length) return 'alerta';
-  if (p.hud && p.capitulo >= 3 && p.minutos < 30) return 'triste';
-  return 'feliz';
-}
+// La expresión de Zinn-IA según el estado está en src/juego/expresiones.js (expresionPanel).
 
 /** Respuesta de "¿Cómo recupero batería?" según lo que queda en la ruta del guion. */
 export function comoRecuperoBateria(p) {

@@ -5,7 +5,7 @@ import { formatear } from '../engine/texto.js';
 import { fichasDe, esDestacada } from '../juego/fichas.js';
 import { Cajon } from './Modal.jsx';
 import { Enlace, etiquetaCapa } from './Mapas.jsx';
-import Recurso from './Recurso.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 import FuentesCartografia from './FuentesCartografia.jsx';
 import GLOSARIO from '../data/glosario.json';
 import RECURSOS from '../data/recursos_nasa.json';
@@ -28,7 +28,7 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
 
   return (
     <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay}
-      cabecera={<div className="cara"><Recurso src="/img/zinnia/triste.png" alt="" className="zinnia" respaldo={null} /></div>}>
+      cabecera={<div className="cara"><ZinniaAvatar recorte="cara" alt="" /></div>}>
       <nav className="guia-indice" aria-label="Índice de la guía">
         <div className="pestanas" role="tablist" aria-label="Secciones">
           {GUIA.secciones.map((s) => (

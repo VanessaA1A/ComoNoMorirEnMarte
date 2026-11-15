@@ -36,11 +36,13 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "¡Alerta! Viene un evento de partículas solares."
+          "texto": "¡Alerta! Viene un evento de partículas solares.",
+          "expresion": "asustada"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Como revisamos el clima en el mirador, te aviso con 20 minutos de ventaja."
+          "texto": "Como revisamos el clima en el mirador, te aviso con 20 minutos de ventaja.",
+          "expresion": "seria"
         }
       ],
       "ir": "c09_03"
@@ -53,11 +55,13 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "¡Alerta! Evento de partículas solares... y ya está llegando."
+          "texto": "¡Alerta! Evento de partículas solares... y ya está llegando.",
+          "expresion": "asustada"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Si hubiéramos revisado el clima en el mirador, te habría avisado antes."
+          "texto": "Si hubiéramos revisado el clima en el mirador, te habría avisado antes.",
+          "expresion": "enojada"
         }
       ],
       "ir": "c09_03",
@@ -73,11 +77,13 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "En una caminata corta, la radiación de fondo de Marte es baja. El peligro real son estos eventos solares."
+          "texto": "En una caminata corta, la radiación de fondo de Marte es baja. El peligro real son estos eventos solares.",
+          "expresion": "seria"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Opciones: volver ya o refugiarnos junto a una cresta..."
+          "texto": "Opciones: volver ya o refugiarnos junto a una cresta...",
+          "expresion": "seria"
         },
         {
           "quien": "Zinn-IA",
@@ -138,7 +144,8 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Te alcanzaron algunas partículas, pero tu dosis sigue en rango."
+          "texto": "Te alcanzaron algunas partículas, pero tu dosis sigue en rango.",
+          "expresion": "seria"
         }
       ],
       "ir": "c09_05"
@@ -173,7 +180,8 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Es hermoso... y peligroso. Tu dosis subió mucho. Volvamos ya."
+          "texto": "Es hermoso... y peligroso. Tu dosis subió mucho. Volvamos ya.",
+          "expresion": "enojada"
         }
       ],
       "ir": "c09_05"
@@ -194,7 +202,8 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "¡Integridad del traje en estado crítico!"
+          "texto": "¡Integridad del traje en estado crítico!",
+          "expresion": "asustada"
         }
       ],
       "ir": "c09_05"

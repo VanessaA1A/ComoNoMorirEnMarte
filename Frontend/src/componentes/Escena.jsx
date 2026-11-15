@@ -2,13 +2,37 @@ import { useEffect, useRef, useState } from 'react';
 import { escena as escenaDe, lineasVisibles, opcionesVisibles } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import { Fondo, ZinnIA, ZinniaHablando, Astronauta } from './Personajes.jsx';
+import { Fondo, Astronauta } from './Personajes.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 import { MapaRuta, poiActual } from './Mapas.jsx';
 import HUD from './HUD.jsx';
-import { barrasEnRojo } from '../juego/comoVoy.js';
+import { BARRAS } from '../engine/reglas.js';
+import { expresionEscena } from '../juego/expresiones.js';
 
 const VELOCIDAD_MS = 22; // por letra
 const ESPERA_GUIA_MS = 15000; // "esperarGuia": a los 15 s aparece "La abro después"
+const REACCION_MS = 1800; // enojada (riesgo elegido) o llorona (pérdida de un recurso) duran un momento
+const RIESGO_ALTO = 0.4; // "Riesgo: 4 de 10" o más
+const PERDIDA = 15; // una barra baja 15 o más de golpe (la radiación sube 15 o más)
+
+/** Reacción breve de Zinn-IA: enojo cariñoso al elegir algo arriesgado, llanto si se pierde un recurso. */
+function useReaccion(partida) {
+  const [reaccion, setReaccion] = useState(null);
+  const antes = useRef(partida);
+  useEffect(() => {
+    const a = antes.current;
+    antes.current = partida;
+    if (!a?.hud || !partida?.hud || a === partida) return;
+    const perdio = BARRAS.some((b) => (b === 'radiacion' ? partida[b] - a[b] : a[b] - partida[b]) >= PERDIDA);
+    if (perdio) setReaccion({ e: 'llorona', t: Date.now() });
+  }, [partida]);
+  useEffect(() => {
+    if (!reaccion) return undefined;
+    const t = setTimeout(() => setReaccion(null), REACCION_MS);
+    return () => clearTimeout(t);
+  }, [reaccion]);
+  return [reaccion?.e ?? null, (e) => setReaccion({ e, t: Date.now() })];
+}
 
 export default function Escena() {
   const j = useJuego();
@@ -77,11 +101,14 @@ export default function Escena() {
   const quien = actual ? formatear(actual.quien, partida) : '';
   const esZinnia = actual?.quien === 'Zinn-IA';
   const esNarracion = actual?.quien === 'Narración';
-  // Con batería en 0 se repliega en semilla; con una barra en rojo usa el GIF de peligro
-  const expresion = partida.bateria <= 0 ? 'apagada'
-    : !esc.esFinal && barrasEnRojo(partida).length ? 'peligro'
-    : esc.zinnia ?? 'feliz';
+  // Expresión: la de la línea de Zinn-IA, una reacción breve, o la de la escena y los recursos (src/juego/expresiones.js)
+  const [reaccion, reaccionar] = useReaccion(partida);
+  const { expresion, apagada } = expresionEscena({ partida, escena: esc, linea: actual, reaccion });
   const apagado = partida.bateria <= 0;
+  const elegirOpcion = (o) => {
+    if (o.probabilidad && 1 - o.probabilidad.exito >= RIESGO_ALTO && !j.modoDemo) reaccionar('enojada');
+    j.elegir(o);
+  };
   const conTablet = Boolean(esc.abrirTablet);
   const verMinimapa = partida.capitulo >= 3 && !conTablet && !esc.esFinal;
 
@@ -104,16 +131,16 @@ export default function Escena() {
         </div>
       )}
 
-      {/* Cuando Zinn-IA habla se usa el GIF parpadeando; apagada (batería 0) nunca habla. */}
+      {/* Misma caja siempre (habla o no): al cambiar de expresión no se mueve. Apagada (batería 0) nunca habla. */}
       <div className={`personaje-zinnia ${esZinnia && !apagado ? 'hablando' : ''}`}>
-        {esZinnia && !apagado ? <ZinniaHablando className={`zinnia-${expresion}`} /> : <ZinnIA expresion={expresion} />}
+        <ZinniaAvatar expresion={expresion} apagada={apagada} />
       </div>
 
       <div className="zona-dialogo">
         {opciones.length > 0 && (
           <div className="opciones" role="group" aria-label="Decisión" data-tutorial="opciones">
             {opciones.map((o, i) => (
-              <button key={i} className="opcion" onClick={() => j.elegir(o)} autoFocus={i === 0}>
+              <button key={i} className="opcion" onClick={() => elegirOpcion(o)} autoFocus={i === 0}>
                 <span>{formatear(o.texto, partida)}</span>
                 {o.probabilidad && (
                   <span className="riesgo">

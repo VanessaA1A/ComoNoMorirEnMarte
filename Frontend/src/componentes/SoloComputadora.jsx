@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { puedeJugarAhora } from '../juego/dispositivo.js';
-import Recurso from './Recurso.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 
 /** true si se puede jugar en esta ventana. Se revisa de nuevo al cambiar el tamaño o el puntero. */
 export function usePuedeJugar() {
@@ -25,7 +25,7 @@ export function PantallaSoloComputadora() {
   return (
     <main className="solo-computadora" role="main">
       <div className="solo-computadora-caja">
-        <Recurso src={['/img/zinnia/feliz.gif', '/img/zinnia_estatica.gif']} alt="Zinn-IA" className="pixel solo-computadora-zinnia" respaldo={null} />
+        <ZinniaAvatar className="solo-computadora-zinnia" alt="Zinn-IA" />
         <p className="solo-computadora-texto">
           ¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.
           Mientras tanto, puedes leer la Guía de supervivencia.

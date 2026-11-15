@@ -5,7 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ESCENAS } from '../src/engine/guion.js';
 import { estadoInicial } from '../src/engine/motor.js';
-import { comoVoy, expresionZinnia, comoRecuperoBateria } from '../src/juego/comoVoy.js';
+import { comoVoy, comoRecuperoBateria } from '../src/juego/comoVoy.js';
+import { expresionPanel } from '../src/juego/expresiones.js';
 import { fichasPara } from '../src/juego/fichas.js';
 import { PASOS } from '../src/juego/tutorial.js';
 
@@ -38,9 +39,10 @@ ok(lectura.includes('oxígeno está en rojo'), 'lee el oxígeno en rojo');
 ok(lectura.includes('40 minutos'), 'lee los minutos que quedan');
 ok(lectura.includes('2 de 3 muestras'), 'lee las muestras');
 ok(lectura.includes('capítulo 6'), 'dice el capítulo');
-ok(expresionZinnia(s) === 'alerta', 'expresión alerta con una barra en rojo');
-ok(expresionZinnia({ ...s, oxigeno: 90, minutos: 20 }) === 'triste', 'expresión triste con menos de 30 min');
-ok(expresionZinnia({ ...s, bateria: 0 }) === 'apagada', 'apagada con batería en 0');
+ok(expresionPanel(s).expresion === 'asustada', 'expresión asustada con una barra en rojo');
+ok(expresionPanel({ ...s, oxigeno: 90, minutos: 20 }).expresion === 'seria', 'expresión seria con menos de 30 min');
+ok(expresionPanel({ ...s, bateria: 0 }).apagada === true, 'apagada (semilla) con batería en 0');
+ok(expresionPanel(s, { pensando: true }).expresion === 'ojos-cerrados', 'ojos cerrados mientras piensa');
 ok(comoRecuperoBateria({ ...s, capitulo: 9, escena: 'c09_03', flags: {} }).includes('Ya no quedan'), 'batería: sin fuentes después del depósito');
 ok(comoRecuperoBateria({ ...s, capitulo: 5, escena: 'c05_01', flags: { equipo_bateria: true } }).includes('depósito'), 'batería: menciona el depósito antes del cap. 7');
 

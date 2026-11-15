@@ -1,5 +1,6 @@
-// Fondos, Zinn-IA y astronauta. Rutas (public/img/):
-//   fondos/<archivo del guion>   zinnia/<expresion>   astronauta/<pose> → sprite definitivo   logos/   ui/
+// Fondos y astronauta. Rutas (public/img/):
+//   fondos/<archivo del guion>   astronauta/<pose> → sprite definitivo   logos/   ui/
+// Zinn-IA está en ZinniaAvatar.jsx (public/zinnia/<expresion>.png).
 // Cualquier extensión sirve (.png, .gif, .jpg, .webp): Recurso las prueba todas.
 import { useEffect, useState } from 'react';
 import Recurso, { variantes } from './Recurso.jsx';
@@ -53,30 +54,7 @@ function FondoImagen({ archivo, capitulo, alternativas }) {
   );
 }
 
-const NOMBRE = { feliz: 'feliz', curiosa: 'curiosa', alerta: 'en alerta', triste: 'triste', apagada: 'apagada (modo semilla)', peligro: 'en peligro', inicio: 'saludando' };
-
-/**
- * Zinn-IA. Expresiones del guion: feliz, curiosa, alerta, triste; el motor usa "apagada" (batería 0).
- * La interfaz agrega "peligro" (barra en rojo) e "inicio" (pantalla de inicio y celebración).
- * Con prefers-reduced-motion se muestra estática (logos/isotipo).
- */
-export function ZinnIA({ expresion = 'feliz', className = '' }) {
-  const menos = useMenosMovimiento();
-  const alt = `Zinn-IA ${NOMBRE[expresion] ?? ''}`;
-  const respaldo = <img src={`${IMG}/logos/isotipo.png`} alt={alt} className={`zinnia zinnia-respaldo zinnia-${expresion} ${className}`} draggable={false} />;
-  // triste.png es el cuerpo entero sin animación: se le aplica el filtro de tristeza
-  const filtro = expresion === 'triste' ? 'zinnia-filtro-triste' : '';
-  if (menos && expresion !== 'triste' && expresion !== 'apagada') return respaldo;
-  return (
-    <Recurso src={`${IMG}/zinnia/${expresion}.gif`} alt={alt} escalaEntera
-      className={`zinnia zinnia-real ${filtro} ${className}`} respaldo={respaldo} />
-  );
-}
-
-/** Zinn-IA de cuerpo completo parpadeando: se usa cuando te habla en escenas, menús y tutoriales. */
-export function ZinniaHablando({ className = '' }) {
-  return <img src={`${IMG}/zinnia_parpadeando.gif`} alt="Zinn-IA" className={`zinnia zinnia-hablando ${className}`} draggable={false} />;
-}
+// Zinn-IA ya no se dibuja aquí: usa ZinniaAvatar.jsx (un solo componente, sin logotipo de respaldo).
 
 // Sprites definitivos del astronauta. Si Valeria sube astronauta/<pose>.png, ese gana;
 // si no, cada pose usa el sprite más cercano y se distingue con efectos CSS (temblor, brillo rojo).

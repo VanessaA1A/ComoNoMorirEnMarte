@@ -51,7 +51,7 @@
       "id": "c05_03c",
       "fondo": "bg_c05_transicion.jpg", "astro": "caminando", "zinnia": "triste",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "Ahorraste tiempo. Pero sin la roca de transición será difícil compararla con las crestas." }
+        { "quien": "Zinn-IA", "texto": "Ahorraste tiempo. Pero sin la roca de transición será difícil compararla con las crestas.", "expresion": "seria" }
       ],
       "ir": "c05_04"
     },
@@ -59,7 +59,7 @@
       "id": "c05_04",
       "fondo": "bg_c05_transicion.jpg", "astro": "caminando", "zinnia": "alerta",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "Más adelante hay una hondonada. Tendremos que decidir cómo cruzarla." }
+        { "quien": "Zinn-IA", "texto": "Más adelante hay una hondonada. Tendremos que decidir cómo cruzarla.", "expresion": "seria" }
       ],
       "siguienteCapitulo": 6
     }

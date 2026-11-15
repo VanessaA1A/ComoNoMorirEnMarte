@@ -22,9 +22,9 @@
       "fondo": "final_intermedio.jpg", "astro": "neutral", "zinnia": "triste",
       "lineas": [
         { "quien": "Narración", "texto": "Llegas a la base justo para ver la estela del módulo de ascenso en el cielo." },
-        { "quien": "Zinn-IA", "texto": "Se fue sin {nosotros|nosotras|nosotres}, {nombre}. La próxima oportunidad de volver a la Tierra tardará muchísimo." },
+        { "quien": "Zinn-IA", "texto": "Se fue sin {nosotros|nosotras|nosotres}, {nombre}. La próxima oportunidad de volver a la Tierra tardará muchísimo.", "expresion": "llorona" },
         { "quien": "Zinn-IA", "texto": "Pero la Base Aurora tiene todo para vivir. Desde hoy eres {el|la|le} {primer|primera|primere} habitante permanente de Marte." },
-        { "quien": "Zinn-IA", "texto": "Lección: el reloj también es una barra de vida. Los desvíos y las muestras cuestan minutos." },
+        { "quien": "Zinn-IA", "texto": "Lección: el reloj también es una barra de vida. Los desvíos y las muestras cuestan minutos.", "expresion": "seria" },
         { "quien": "Narración", "texto": "FIN: Te quedas en Marte." }
       ],
       "accion": "pantallaResumen"
@@ -35,9 +35,9 @@
       "fondo": "final_intermedio.jpg", "astro": "herido", "zinnia": "triste",
       "lineas": [
         { "quien": "Narración", "texto": "Despiertas en la Base. El rover de apoyo te encontró desmayad{o|a|e}, sin energía." },
-        { "quien": "Zinn-IA", "texto": "Tardó tanto en traerte que el módulo de ascenso despegó sin ti." },
+        { "quien": "Zinn-IA", "texto": "Tardó tanto en traerte que el módulo de ascenso despegó sin ti.", "expresion": "llorona" },
         { "quien": "Zinn-IA", "texto": "Desde hoy vives en la Base Aurora. Eres {el|la|le} {primer|primera|primere} habitante permanente de Marte." },
-        { "quien": "Zinn-IA", "texto": "Lección: caminar con traje gasta muchísima energía. Las raciones y el depósito de suministros estaban ahí por algo." },
+        { "quien": "Zinn-IA", "texto": "Lección: caminar con traje gasta muchísima energía. Las raciones y el depósito de suministros estaban ahí por algo.", "expresion": "seria" },
         { "quien": "Narración", "texto": "FIN: Te quedas en Marte." }
       ],
       "accion": "pantallaResumen"
@@ -49,8 +49,8 @@
       "lineas": [
         { "quien": "Narración", "texto": "Llegas a tiempo, pero el equipo médico revisa tu dosis de radiación." },
         { "quien": "Control de misión", "texto": "Con esta dosis acumulada, el viaje de regreso, que recibe casi el triple de radiación por día, es demasiado riesgoso." },
-        { "quien": "Zinn-IA", "texto": "Te quedarás en la base, bajo su blindaje. Eres {el|la|le} {primer|primera|primere} habitante permanente de Marte." },
-        { "quien": "Zinn-IA", "texto": "Lección: revisar el clima espacial y buscar refugio a tiempo cuida tu dosis para el viaje de vuelta." },
+        { "quien": "Zinn-IA", "texto": "Te quedarás en la base, bajo su blindaje. Eres {el|la|le} {primer|primera|primere} habitante permanente de Marte.", "expresion": "llorona" },
+        { "quien": "Zinn-IA", "texto": "Lección: revisar el clima espacial y buscar refugio a tiempo cuida tu dosis para el viaje de vuelta.", "expresion": "seria" },
         { "quien": "Narración", "texto": "FIN: Te quedas en Marte." }
       ],
       "accion": "pantallaResumen"
@@ -61,8 +61,8 @@
       "fondo": "final_malo.jpg", "astro": "herido", "zinnia": "triste",
       "lineas": [
         { "quien": "Narración", "texto": "El indicador de oxígeno llega a cero." },
-        { "quien": "Zinn-IA", "texto": "{nombre}... lo siento. No pude traerte de vuelta." },
-        { "quien": "Zinn-IA", "texto": "Lección: cada atajo, caída y desvío gasta oxígeno. Las capas Relieve y Terreno muestran qué caminos cuestan menos." },
+        { "quien": "Zinn-IA", "texto": "{nombre}... lo siento. No pude traerte de vuelta.", "expresion": "llorona" },
+        { "quien": "Zinn-IA", "texto": "Lección: cada atajo, caída y desvío gasta oxígeno. Las capas Relieve y Terreno muestran qué caminos cuestan menos.", "expresion": "llorona" },
         { "quien": "Narración", "texto": "FIN: No sobreviviste a Marte." }
       ],
       "accion": "pantallaResumen"
@@ -73,8 +73,8 @@
       "fondo": "final_malo.jpg", "astro": "herido", "zinnia": "triste",
       "lineas": [
         { "quien": "Narración", "texto": "Una grieta se abre en el traje y la presión cae en segundos." },
-        { "quien": "Zinn-IA", "texto": "{nombre}... lo siento. No pude traerte de vuelta." },
-        { "quien": "Zinn-IA", "texto": "Lección: las crestas de 1 a 2 metros y las pendientes se ven en HiRISE y MOLA. Rodearlas cuesta tiempo, pero protege el traje." },
+        { "quien": "Zinn-IA", "texto": "{nombre}... lo siento. No pude traerte de vuelta.", "expresion": "llorona" },
+        { "quien": "Zinn-IA", "texto": "Lección: las crestas de 1 a 2 metros y las pendientes se ven en HiRISE y MOLA. Rodearlas cuesta tiempo, pero protege el traje.", "expresion": "llorona" },
         { "quien": "Narración", "texto": "FIN: No sobreviviste a Marte." }
       ],
       "accion": "pantallaResumen"
@@ -85,8 +85,8 @@
       "fondo": "final_malo.jpg", "astro": "herido", "zinnia": "triste",
       "lineas": [
         { "quien": "Narración", "texto": "La dosis de radiación supera el límite seguro." },
-        { "quien": "Zinn-IA", "texto": "{nombre}... lo siento. No pude traerte de vuelta." },
-        { "quien": "Zinn-IA", "texto": "Lección: los eventos de partículas solares son el mayor riesgo de radiación en Marte. Revisar el clima y refugiarse a tiempo hace la diferencia." },
+        { "quien": "Zinn-IA", "texto": "{nombre}... lo siento. No pude traerte de vuelta.", "expresion": "llorona" },
+        { "quien": "Zinn-IA", "texto": "Lección: los eventos de partículas solares son el mayor riesgo de radiación en Marte. Revisar el clima y refugiarse a tiempo hace la diferencia.", "expresion": "llorona" },
         { "quien": "Narración", "texto": "FIN: No sobreviviste a Marte." }
       ],
       "accion": "pantallaResumen"

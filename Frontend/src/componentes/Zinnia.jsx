@@ -7,13 +7,13 @@ import MARTE from '../data/marte.json';
 import { escena as escenaDe, lineasVisibles, opcionesVisibles } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import { comoVoy, expresionZinnia, comoRecuperoBateria } from '../juego/comoVoy.js';
+import { comoVoy, comoRecuperoBateria } from '../juego/comoVoy.js';
+import { expresionPanel } from '../juego/expresiones.js';
 import { fichasDe } from '../juego/fichas.js';
 import { apiActiva, iaDisponible } from '../api.js';
-import { ZinnIA, ZinniaHablando } from './Personajes.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 import { Cajon, Modal, useFocoAtrapado } from './Modal.jsx';
 import { Enlace, visible } from './Mapas.jsx';
-import Recurso from './Recurso.jsx';
 import { PARADAS } from '../juego/cartografia.js';
 const PARADAS_REALES = new Set(PARADAS.map((p) => p.id));
 import PISTAS from '../data/pistas.json';
@@ -111,7 +111,7 @@ function ChatZinnia({ p }) {
         ))}
         {pensando && (
           <div className="burbuja chat-pensando" role="status">
-            <Recurso src={['/img/zinnia/pensando.gif', '/img/zinnia/pensando.png']} alt="" className="pixel chat-pensando-cara" respaldo={<img src="/img/zinnia_rostro.png" alt="" className="pixel chat-pensando-cara" />} />
+            <span className="chat-pensando-cara"><ZinniaAvatar expresion="ojos-cerrados" recorte="cara" parpadeo={false} alt="" /></span>
             <span className="oculto-lector">Zinn-IA está pensando</span><span className="puntitos" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
           </div>
         )}
@@ -145,16 +145,6 @@ function Pregunta({ r, p }) {
   );
 }
 
-/** Expresión de la cabecera: semilla (batería 0), pensando, alerta (barra en rojo), contenta tras responder. */
-export function expresionPanel(p, { pensando, ultima } = {}) {
-  const base = expresionZinnia(p); // apagada | alerta | triste | feliz
-  if (base === 'apagada') return 'apagada';
-  if (pensando) return 'curiosa';
-  if (base === 'alerta') return 'alerta';
-  if (ultima?.rol === 'zinnia') return 'feliz';
-  return base;
-}
-
 /** Batería en 0: Zinn-IA "se apaga" (modo semilla). No responde preguntas libres; solo lleva a la Guía. */
 function Semilla() {
   const j = useJuego();
@@ -162,7 +152,7 @@ function Semilla() {
   useEffect(() => { const t = setTimeout(() => boton.current?.focus(), 0); return () => clearTimeout(t); }, []);
   return (
     <section className="semilla" aria-labelledby="semilla-texto">
-      <div className="semilla-cara"><ZinnIA expresion="apagada" /></div>
+      <div className="semilla-cara"><ZinniaAvatar apagada /></div>
       <p id="semilla-texto" className="burbuja">{SEMILLA}</p>
       <button ref={boton} className="boton principal" onClick={() => j.abrir('guia')}>Abrir la Guía</button>
     </section>
@@ -172,31 +162,32 @@ function Semilla() {
 export function PanelZinnia() {
   const j = useJuego();
   const p = j.pantalla === 'juego' ? j.partida : null;
-  const expresion = expresionZinnia(p);
   const emergencia = enSemilla(p);
   const { pensando, mensajes } = useSyncExternalStore(suscribir, leerChat, leerChat);
-  const cara = expresionPanel(p, { pensando, ultima: mensajes.at(-1) });
+  const ops = opcionesActuales(p, j.linea);
+  const pista = ops.length ? PISTAS[p.escena] : null;
+  // Carita del ícono y de la cabecera: semilla, pensando, la de la última respuesta o la de los recursos; con una pista importante, seria
+  const base = expresionPanel(p, { pensando, ultima: mensajes.at(-1) });
+  const cara = pista && !pensando && base.expresion === 'normal' ? { ...base, expresion: 'seria' } : base;
   const totalFichas = fichasDe(j.catalogo.datos).length;
 
   const icono = (
     <button className="icono-zinnia" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
       aria-label={`Zinn-IA, tu asistente (tecla Z)${j.avisoZinnia ? ': tiene algo nuevo para ti' : ''}`} aria-expanded={j.panelZinnia}
       aria-controls="panel-zinnia" title="Zinn-IA (tecla Z)">
-      <img src="/img/zinnia_rostro.png" alt="" className={`pixel ${expresion === 'apagada' ? 'zinnia-apagada' : ''}`} draggable={false} />
+      <ZinniaAvatar expresion={cara.expresion} apagada={cara.apagada} recorte="cara" alt="" />
       {j.avisoZinnia && <span className="punto" aria-hidden="true" />}
     </button>
   );
   if (!j.panelZinnia) return icono;
 
-  const ops = opcionesActuales(p, j.linea);
-  const pista = ops.length ? PISTAS[p.escena] : null;
   const lectura = comoVoy(p).map((t) => formatear(t, p ?? {}));
 
   return (
     <>
       {icono}
       <Cajon titulo={emergencia ? 'Zinn-IA · modo semilla' : 'Zinn-IA'} onCerrar={() => j.abrirPanelZinnia(false)} className="panel-zinnia"
-        cabecera={<div className={`cara cara-${cara}`}><ZinnIA expresion={cara} /></div>}>
+        cabecera={<div className={`cara cara-${cara.expresion}`}><ZinniaAvatar expresion={cara.expresion} apagada={cara.apagada} recorte="cara" /></div>}>
         <div className="cajon-cuerpo" id="panel-zinnia">
           {emergencia ? <Semilla /> : <ChatZinnia p={p} />}
 
@@ -276,7 +267,7 @@ export function Tutorial() {
     <div className="tutorial" ref={ref} role="dialog" aria-modal="true" aria-label="Tutorial de Zinn-IA" tabIndex={-1}>
       {rect ? <div className="foco" style={{ top: rect.top, left: rect.left, width: rect.width, height: rect.height }} /> : <div className="velo-tutorial" />}
       <div className="caja" style={abajo ? { bottom: '6%' } : { top: '6%' }}>
-        <div className="cara"><ZinniaHablando /></div>
+        <div className="cara"><ZinniaAvatar expresion={paso.expresion ?? paso.zinnia} /></div>
         <div className="dialogo zinnia-habla" aria-live="polite">
           <span className="quien">Zinn-IA</span>
           {formatear(paso.texto, j.partida ?? {})}
@@ -296,8 +287,7 @@ export function SinConexion() {
   return (
     <div className="sin-conexion">
       <Modal titulo="Sin señal con la Tierra" onCerrar={j.descartarSinConexion}>
-        <Recurso src="/img/zinnia/sin_conexion.gif" alt="Zinn-IA sin conexión"
-          respaldo={<ZinniaHablando />} />
+        <div className="zinnia-sin-conexion"><ZinniaAvatar expresion="seria" alt="Zinn-IA sin conexión" /></div>
         <p>{formatear('Perdimos la señal con la Tierra. Tranquil{o|a|e}: tu partida se guarda aquí y la mando cuando vuelva la conexión.', j.partida ?? {})}</p>
         <button className="boton principal" onClick={j.descartarSinConexion} autoFocus>Seguir sin conexión</button>
       </Modal>

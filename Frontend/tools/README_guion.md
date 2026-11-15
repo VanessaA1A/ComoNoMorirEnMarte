@@ -20,7 +20,8 @@ Después de cualquier cambio: `node tools/validar.mjs src/data/capitulos` (revis
 | `id` | Único en todo el juego (`c06_02a`) |
 | `fondo` | Archivo en `public/img/fondos/` (nombres de la lista de Valeria) |
 | `astro` | Pose del astronauta: `neutral`, `caminando`, `muestra`, `herido`, `asustado` |
-| `zinnia` | Expresión de Zinn-IA: `feliz`, `curiosa`, `alerta`, `triste` (si la batería está en 0, el motor usa `apagada`) |
+| `zinnia` | Ambiente de la escena cuando Zinn-IA no habla: `feliz`/`curiosa` (se ve normal), `alerta` (seria), `peligro` (asustada), `triste` (llorona). También acepta las 6 expresiones nuevas |
+| `expresion` | En una línea de Zinn-IA: `normal`, `ojos-cerrados`, `seria`, `asustada`, `enojada` o `llorona` (imágenes en `public/zinnia/`). Sin el campo, normal. Otra palabra se muestra como normal. Con la batería en 0 se ve en modo semilla |
 | `lineas` | Lista de `{ quien, texto }`. `quien` puede ser `Zinn-IA`, `Narración`, `{nombre}` o `Control de misión`. Una línea con `requiere` solo se muestra si se cumple. Una línea con `capa` cambia la capa visible del minimapa |
 | `efecto` | Cambios de barras al **entrar** a la escena (tramos de camino, atascos, caídas) |
 | `opciones` | Botones: `{ texto, efecto?, marca?, muestra?, pronombre?, probabilidad?, requiere?, ir }` |

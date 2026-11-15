@@ -22,15 +22,18 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Activo la capa Terreno, con datos de THEMIS: esta hondonada se enfría muy rápido de noche."
+          "texto": "Activo la capa Terreno, con datos de THEMIS: esta hondonada se enfría muy rápido de noche.",
+          "expresion": "seria"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Eso indica arena suelta. Con el traje puedes hundirte o resbalar."
+          "texto": "Eso indica arena suelta. Con el traje puedes hundirte o resbalar.",
+          "expresion": "asustada"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Si la rodeamos por el borde, el suelo es roca firme, pero el camino es el doble de largo."
+          "texto": "Si la rodeamos por el borde, el suelo es roca firme, pero el camino es el doble de largo.",
+          "expresion": "seria"
         }
       ],
       "opciones": [
@@ -81,7 +84,8 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "¡No te muevas rápido! Respira despacio: así gastas menos oxígeno."
+          "texto": "¡No te muevas rápido! Respira despacio: así gastas menos oxígeno.",
+          "expresion": "asustada"
         },
         {
           "quien": "Narración",
@@ -89,7 +93,8 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "La capa Terreno tenía razón. Lo anoto en la guía."
+          "texto": "La capa Terreno tenía razón. Lo anoto en la guía.",
+          "expresion": "enojada"
         }
       ],
       "ir": "c06_03"

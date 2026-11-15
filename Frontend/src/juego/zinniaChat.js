@@ -6,6 +6,7 @@ import { chatZinnia } from '../api.js';
 import { formatear, pronombreElegido } from '../engine/texto.js';
 import { BARRAS, colorBarra } from '../engine/reglas.js';
 import { comoVoy } from './comoVoy.js';
+import { expresionValida, expresionRespaldo } from './expresiones.js';
 import GLOSARIO from '../data/glosario.json' with { type: 'json' };
 import DATOS from '../data/datos.json' with { type: 'json' };
 import CHISTES from '../data/chistes.json' with { type: 'json' };
@@ -175,11 +176,13 @@ export async function enviar(texto, { partida = null, fichas = [] } = {}) {
   cambiar({ mensajes, pensando: true });
   const r = await chatZinnia({ mensajes: mensajes.slice(-MAX_ENVIADOS).map(({ rol, texto: t }) => ({ rol, texto: t })), contexto: contextoDe(partida, fichas) });
   let respuesta;
-  if (r.modo === 'ia' || r.modo === 'semilla') respuesta = { id: siguienteId++, rol: 'zinnia', texto: r.texto, acciones: r.acciones ?? [], modo: r.modo };
-  else {
+  // expresion: la que eligió el modelo (validada en el servidor y otra vez aquí) o, sin IA, por reglas simples
+  if (r.modo === 'ia' || r.modo === 'semilla') {
+    respuesta = { id: siguienteId++, rol: 'zinnia', texto: r.texto, acciones: r.acciones ?? [], modo: r.modo, expresion: r.modo === 'semilla' ? 'ojos-cerrados' : expresionValida(r.expresion) };
+  } else {
     const f = respaldo(limpio, partida);
     const nota = r.motivo === 'limite' ? (r.error || 'Mis pétalos necesitan recargar, ¡pregúntame en un ratito!') : MOTIVO[r.motivo] ?? SIN_CONEXION;
-    respuesta = { id: siguienteId++, rol: 'zinnia', texto: r.motivo === 'limite' ? `${nota} Mientras tanto: ${f.texto}` : `${f.texto} ${nota}`, fuente: f.fuente ?? null, chiste: f.chiste ?? null, acciones: [], modo: 'respaldo' };
+    respuesta = { id: siguienteId++, rol: 'zinnia', texto: r.motivo === 'limite' ? `${nota} Mientras tanto: ${f.texto}` : `${f.texto} ${nota}`, fuente: f.fuente ?? null, chiste: f.chiste ?? null, acciones: [], modo: 'respaldo', expresion: expresionRespaldo(f.texto, { chiste: Boolean(f.chiste), p: partida }) };
   }
   cambiar({ mensajes: [...estado.mensajes, respuesta], pensando: false, modo: respuesta.modo === 'semilla' ? estado.modo : respuesta.modo });
   return respuesta;

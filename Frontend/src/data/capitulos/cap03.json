@@ -40,7 +40,7 @@
         { "quien": "Zinn-IA", "texto": "Objetivo: las crestas boxwork, una red de paredes de roca de 1 a 2 metros de alto. Las formó el agua subterránea hace miles de millones de años." },
         { "quien": "Zinn-IA", "texto": "Ruta: mirador, zona de transición, hondonada, crestas, fondo con carbonatos y regreso. Unos 4 km." },
         { "quien": "Zinn-IA", "texto": "La tracé como los científicos de Curiosity cuando propusieron su camino por Mount Sharp: un mapa con las zonas que vale la pena explorar, anotadas una por una.", "capa": "optica" },
-        { "quien": "Zinn-IA", "texto": "El módulo de regreso despega en 3 horas y media. Si no estás aquí, se va sin ti." }
+        { "quien": "Zinn-IA", "texto": "El módulo de regreso despega en 3 horas y media. Si no estás aquí, se va sin ti.", "expresion": "seria" }
       ],
       "ir": "c03_04"
     },
@@ -85,7 +85,7 @@
       "fondo": "bg_c03_base.jpg", "astro": "caminando", "zinnia": "feliz",
       "lineas": [
         { "quien": "Narración", "texto": "Se abre la escotilla." },
-        { "quien": "Zinn-IA", "texto": "Tu primer paso en Marte, {nombre}. Respira hondo... bueno, del tanque." }
+        { "quien": "Zinn-IA", "texto": "Tu primer paso en Marte, {nombre}. Respira hondo... bueno, del tanque.", "expresion": "ojos-cerrados" }
       ],
       "siguienteCapitulo": 4
     }

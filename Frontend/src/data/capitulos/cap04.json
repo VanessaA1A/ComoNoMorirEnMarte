@@ -21,7 +21,7 @@
       "id": "c04_02",
       "fondo": "bg_c04_mirador.jpg", "astro": "neutral", "zinnia": "alerta",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "Antes de seguir... ¿revisamos la capa de radiación y clima? Toma unos minutos." }
+        { "quien": "Zinn-IA", "texto": "Antes de seguir... ¿revisamos la capa de radiación y clima? Toma unos minutos.", "expresion": "seria" }
       ],
       "opciones": [
         { "texto": "Sí, revisar radiación y clima (−10 min)", "efecto": { "minutos": -10 }, "marca": "clima_revisado", "ir": "c04_03a" },
@@ -34,7 +34,7 @@
       "abrirTablet": true, "capa": "radiacion",
       "lineas": [
         { "quien": "Zinn-IA", "texto": "Temperatura bajo cero, como casi siempre aquí. La radiación de fondo está normal: unos 0,64 mSv por día." },
-        { "quien": "Zinn-IA", "texto": "Pero veo actividad en el Sol. Si lanza partículas, te avisaré con tiempo extra." }
+        { "quien": "Zinn-IA", "texto": "Pero veo actividad en el Sol. Si lanza partículas, te avisaré con tiempo extra.", "expresion": "seria" }
       ],
       "ir": "c04_04"
     },
@@ -42,7 +42,7 @@
       "id": "c04_03b",
       "fondo": "bg_c04_mirador.jpg", "astro": "caminando", "zinnia": "triste",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "Entendido. Vamos sin pronóstico... crucemos los dedos. Bueno, yo no tengo dedos." }
+        { "quien": "Zinn-IA", "texto": "Entendido. Vamos sin pronóstico... crucemos los dedos. Bueno, yo no tengo dedos.", "expresion": "enojada" }
       ],
       "ir": "c04_04"
     },

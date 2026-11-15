@@ -10,8 +10,8 @@
       "fondo": "bg_c02_basura.jpg", "astro": "asustado", "zinnia": "alerta",
       "lineas": [
         { "quien": "Narración", "texto": "Al salir de la órbita de la Tierra, algo golpea el casco de la nave." },
-        { "quien": "Zinn-IA", "texto": "¡Tranquil{o|a|e}! Es basura espacial: restos de satélites y cohetes viejos que siguen girando alrededor de la Tierra." },
-        { "quien": "Zinn-IA", "texto": "Los escudos aguantaron, pero la bodega quedó abierta y hay cosas flotando por todos lados." }
+        { "quien": "Zinn-IA", "texto": "¡Tranquil{o|a|e}! Es basura espacial: restos de satélites y cohetes viejos que siguen girando alrededor de la Tierra.", "expresion": "asustada" },
+        { "quien": "Zinn-IA", "texto": "Los escudos aguantaron, pero la bodega quedó abierta y hay cosas flotando por todos lados.", "expresion": "seria" }
       ],
       "ir": "c02_02"
     },
@@ -21,7 +21,7 @@
       "lineas": [
         { "quien": "Narración", "texto": "Semanas después." },
         { "quien": "Zinn-IA", "texto": "Curiosidad del día: desde aquí, la Tierra y la Luna se ven como dos puntitos brillantes." },
-        { "quien": "Zinn-IA", "texto": "Y un dato serio: en el viaje recibes cerca de 1,8 mSv de radiación por día. En la superficie de Marte es casi un tercio de eso." },
+        { "quien": "Zinn-IA", "texto": "Y un dato serio: en el viaje recibes cerca de 1,8 mSv de radiación por día. En la superficie de Marte es casi un tercio de eso.", "expresion": "seria" },
         { "quien": "Zinn-IA", "texto": "Lo midió el instrumento RAD, que viajó a Marte dentro del rover Curiosity." }
       ],
       "ir": "c02_03"
@@ -30,9 +30,9 @@
       "id": "c02_03",
       "fondo": "bg_c02_nave.jpg", "astro": "asustado", "zinnia": "alerta",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "¡Alerta! El Sol acaba de lanzar una tormenta de partículas. Llega en minutos." },
+        { "quien": "Zinn-IA", "texto": "¡Alerta! El Sol acaba de lanzar una tormenta de partículas. Llega en minutos.", "expresion": "asustada" },
         { "quien": "{nombre}", "texto": "Pero todavía no termino de ordenar la bodega..." },
-        { "quien": "Zinn-IA", "texto": "Tú decides, {nombre}." }
+        { "quien": "Zinn-IA", "texto": "Tú decides, {nombre}.", "expresion": "seria" }
       ],
       "opciones": [
         { "texto": "Ir al refugio blindado de la nave", "efecto": { "radiacion": 10, "alimentacion": -10 }, "ir": "c02_04a" },
@@ -52,8 +52,8 @@
       "id": "c02_04b",
       "fondo": "bg_c02_nave.jpg", "astro": "neutral", "zinnia": "triste",
       "lineas": [
-        { "quien": "Zinn-IA", "texto": "La bodega quedó en orden, pero tu dosis de radiación subió bastante." },
-        { "quien": "Zinn-IA", "texto": "Ojo: si acumulas demasiada radiación en Marte, quizá no puedas hacer el viaje de regreso." }
+        { "quien": "Zinn-IA", "texto": "La bodega quedó en orden, pero tu dosis de radiación subió bastante.", "expresion": "enojada" },
+        { "quien": "Zinn-IA", "texto": "Ojo: si acumulas demasiada radiación en Marte, quizá no puedas hacer el viaje de regreso.", "expresion": "seria" }
       ],
       "ir": "c02_05"
     },
