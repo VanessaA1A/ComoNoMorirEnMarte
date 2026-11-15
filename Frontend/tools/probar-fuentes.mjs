@@ -41,8 +41,37 @@ ok(aprox.length === 0, `marte.json: ningún punto "aproximado" visible${aprox.le
 
 // Correcciones de la Parte 0 (valores de la fuente oficial citada en cada punto)
 const punto = (id) => marte.aterrizajes.find((a) => a.id === id);
-ok(punto('viking2')?.lat === 47.6673 && punto('viking2')?.lon === 134.2809 && punto('viking2')?.fuente?.includes('nssdc.gsfc.nasa.gov'), 'Viking 2: 47.6673 N, 134.2809 E (NSSDC/NASA)');
-ok(punto('perseverance')?.lat === 18.4446 && punto('perseverance')?.lon === 77.4509 && punto('perseverance')?.fuente?.includes('mars.nasa.gov'), 'Perseverance: 18.4446 N, 77.4509 E (NASA/JPL)');
+ok(punto('viking2')?.lat === 47.64 && punto('viking2')?.lon === 134.29 && punto('viking2')?.fuente === 'https://nssdc.gsfc.nasa.gov/planetary/viking.html', 'Viking 2: 47.64 N, 134.29 E (NSSDC/NASA, planetocéntrico)');
+ok(punto('perseverance')?.lat === 18.4447 && punto('perseverance')?.lon === 77.4508 && punto('perseverance')?.fuente?.includes('mars.nasa.gov'), 'Perseverance: 18.4447 N, 77.4508 E (NASA/JPL)');
+
+// Mapa de Marte: ningún pin ni zona sin ficha (nombre, qué es, dato) y fuente con enlace
+{
+  const { ZONAS_MARTE, ATERRIZAJES_MARTE, lugarMarte } = await import('../src/componentes/Mapas.jsx').catch(() => ({}));
+  const zonas = marte.zonas ?? [];
+  revisar('zonas (marte.json)', zonas);
+  const PEDIDAS = ['Tharsis Montes', 'Olympus Mons', 'Valles Marineris', 'Hellas Planitia', 'Argyre Planitia', 'Utopia Planitia', 'Elysium Planitia', 'Arabia Terra', 'Syrtis Major Planum', 'Isidis Planitia', 'Chryse Planitia', 'Acidalia Planitia', 'Meridiani Planum', 'Gale', 'Planum Boreum', 'Planum Australe'];
+  const faltan = PEDIDAS.filter((n) => !zonas.some((z) => z.nombre_oficial === n));
+  ok(faltan.length === 0, `las 16 zonas pedidas están${faltan.length ? ` (faltan: ${faltan.join(', ')})` : ''}`);
+  const sinFichaZ = zonas.filter((z) => !(z.nombre && z.tipo && z.dato && z.fuente?.startsWith('https://planetarynames.wr.usgs.gov/Feature/') && Number.isFinite(z.lat) && Number.isFinite(z.lon) && (z.limites || (z.diametro_km > 0 && z.extension_aproximada)))).map((z) => z.id);
+  ok(sinFichaZ.length === 0, `cada zona tiene ficha (nombre, qué es, dato, centro, extensión) y fuente del Gazetteer${sinFichaZ.length ? ` (sin ficha: ${sinFichaZ.join(', ')})` : ''}`);
+  const MISIONES = ['viking1', 'viking2', 'pathfinder', 'spirit', 'opportunity', 'phoenix', 'curiosity', 'insight', 'perseverance', 'zhurong'];
+  const visiblesA = visibles(marte.aterrizajes);
+  ok(MISIONES.every((id) => visiblesA.some((a) => a.id === id)) && visiblesA.length === MISIONES.length, `los 10 aterrizajes pedidos tienen pin (${visiblesA.length})`);
+  const sinFichaA = visiblesA.filter((a) => !(a.mision && a.anio && a.lugar && a.dato && a.que && tieneFuente(a))).map((a) => a.id);
+  ok(sinFichaA.length === 0, `cada pin tiene ficha (misión, año, qué es, lugar, dato) y fuente${sinFichaA.length ? ` (sin ficha: ${sinFichaA.join(', ')})` : ''}`);
+  ok(punto('curiosity')?.jugable && /Aquí es tu misión/.test(fs.readFileSync(path.join(raiz, 'src/componentes/Mapas.jsx'), 'utf8')), 'Curiosity (Gale) marcado "Aquí es tu misión"');
+  // Conversión al lienzo de −180°…180° E (Olympus Mons a la izquierda) y contra el mosaico: Olympus, Hellas y Gale
+  const xLon = (l) => (((l > 180 ? l - 360 : l) + 180) / 360) * 1000; const yLat = (l) => ((90 - l) / 180) * 500;
+  const z = (id) => zonas.find((x) => x.id === id);
+  ok(Math.abs(xLon(z('olympus').lon) - 128.3) < 1 && Math.abs(yLat(z('olympus').lat) - 198.2) < 1, 'Olympus Mons (226,2° E = 133,8° O) cae a la izquierda: x≈128, y≈198');
+  ok(Math.abs(xLon(z('hellas').lon) - 695.8) < 1 && Math.abs(yLat(z('hellas').lat) - 367.9) < 1, 'Hellas (70,5° E, 42,4° S): x≈696, y≈368');
+  ok(Math.abs(xLon(z('gale').lon) - 882.8) < 1 && Math.abs(yLat(z('gale').lat) - 264.9) < 1 && Math.abs(xLon(punto('curiosity').lon) - xLon(z('gale').lon)) < 2, 'Gale (137,8° E, 5,4° S): x≈883, y≈265, y el pin de Curiosity cae dentro');
+  if (ZONAS_MARTE) {
+    const todos = [...ZONAS_MARTE, ...ATERRIZAJES_MARTE];
+    const sinLugar = todos.filter((x) => !lugarMarte(x.id)?.fuente).map((x) => x.id);
+    ok(sinLugar.length === 0 && todos.length === 26, `el Mapa de Marte dibuja ${todos.length} lugares y cada uno abre su ficha con fuente${sinLugar.length ? ` (sin ficha: ${sinLugar.join(', ')})` : ''}`);
+  }
+}
 ok(punto('curiosity')?.jugable && !punto('curiosity')?.pendiente && punto('curiosity')?.fuente?.includes('msl_places'), 'Curiosity (jugable) visible con fuente PLACES');
 
 // Geología: desactivada hasta tener el SIM 3292
