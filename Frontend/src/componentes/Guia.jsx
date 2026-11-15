@@ -4,7 +4,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { fichasDe, esDestacada } from '../juego/fichas.js';
 import { Cajon } from './Modal.jsx';
 import { Enlace, etiquetaCapa } from './Mapas.jsx';
-import Recurso from './Recurso.jsx';
+import { ZinnIA } from './Personajes.jsx';
 import GLOSARIO from '../data/glosario.json';
 import RECURSOS from '../data/recursos_nasa.json';
 
@@ -16,12 +16,11 @@ export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
   const todas = fichasDe(j.catalogo.datos);
   const nuevas = j.fichasNuevas;
 
-  // Al salir de la pestaña Fichas, las nuevas dejan de brillar
-  useEffect(() => () => { if (pestana === 'Fichas') j.marcarFichasVistas(); }, [pestana]); // eslint-disable-line
+  useEffect(() => () => { if (pestana === 'Fichas') j.marcarFichasVistas(); }, [pestana, j]);
 
   return (
     <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay}
-      cabecera={<div className="cara"><Recurso src="/img/zinnia/triste.png" alt="" className="zinnia" respaldo={null} /></div>}>
+      cabecera={<div className="cara"><ZinnIA expresion="triste" /></div>}>
       <div className="pestanas" role="tablist">
         {PESTANAS.map((p) => (
           <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)}>
@@ -106,7 +105,7 @@ function Reglas() {
         <li><strong>Traje</strong> (integridad): bajo 30 hay fuga (−10 de O2 en cada decisión); en 0 la misión termina.</li>
         <li><strong>Radiación</strong>: va al revés. En 100 la misión termina; con 70 o más al volver no puedes viajar a casa.</li>
       </ul>
-      <p>Colores: <span style={{ color: 'var(--barra-verde)' }}>verde</span> más de 50, <span style={{ color: 'var(--barra-amarillo)' }}>amarillo</span> de 25 a 50, <span style={{ color: 'var(--barra-rojo)' }}>rojo</span> menos de 25. Radiación: verde menos de 40, amarillo 40–69, rojo 70 o más.</p>
+      <p>Colores: <span style={{ color: 'var(--barra-verde)' }}>verde</span> más de 50, <span style={{ color: 'var(--barra-amarillo)' }}>amarillo</span> de 25 a 50, <span style={{ color: 'var(--barra-rojo)' }}>rojo</span> menos de 25.</p>
       <h3>Los 3 finales</h3>
       <ul>
         <li><strong>Bueno:</strong> vuelves viv{'o/a/e'}, a tiempo y con radiación menor a 70.</li>
