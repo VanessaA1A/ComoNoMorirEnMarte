@@ -156,14 +156,15 @@ ok(txtGuia.includes('Raciones o el depósito'), 'guía = motor: la alimentación
 ok(aplicarEfecto({ ...base, integridad: 1 }, { integridad: -5 }).integridad === 0 && txtGuia.includes('**Menos de 30:** fuga en el traje'), 'guía = motor: integridad en 0 y fuga bajo 30');
 
 // Solo computadora: bloqueo en celular o ventana chica (guia.html y la API no se bloquean)
-const { puedeJugar, ANCHO_MINIMO } = await import('../src/juego/dispositivo.js');
-ok(ANCHO_MINIMO === 1024, 'ancho mínimo: 1024 px');
-ok(!puedeJugar({ ancho: 800, punteroFino: true }), 'a 800 px se bloquea');
-ok(puedeJugar({ ancho: 1280, punteroFino: true }), 'a 1280 px con mouse se juega');
-ok(!puedeJugar({ ancho: 1280, punteroFino: false }), 'pantalla grande sin puntero fino (tablet) se bloquea');
-ok(!puedeJugar({ ancho: 390, punteroFino: false }), 'celular se bloquea');
-ok(puedeJugar({ ancho: 390, punteroFino: false, buscar: '?forzar=1' }) && puedeJugar({ ancho: 390, punteroFino: false, buscar: '?demo=1&forzar=1' }), '?forzar=1 salta el bloqueo (solo pruebas)');
-ok(!puedeJugar({ ancho: 390, punteroFino: false, buscar: '?demo=1' }) && !puedeJugar({ ancho: 390, punteroFino: false, buscar: '?forzar=0' }), '?demo=1 o ?forzar=0 no saltan el bloqueo');
+const { puedeJugar } = await import('../src/juego/dispositivo.js');
+ok(puedeJugar({ punteroFino: true }), 'computadora con mouse o trackpad: se juega');
+ok(puedeJugar({ punteroFino: true, ancho: 800 }), 'computadora con la ventana angosta (DevTools, media pantalla, zoom o escala de Windows): se juega, sin aviso');
+ok(puedeJugar({ punteroFino: true, principalTactil: false }), 'laptop con pantalla táctil (puntero principal: trackpad): se juega');
+ok(!puedeJugar({ punteroFino: false, principalTactil: true }), 'celular se bloquea');
+ok(!puedeJugar({ punteroFino: false, principalTactil: true }), 'tablet (solo táctil) se bloquea');
+ok(!puedeJugar({ punteroFino: true, principalTactil: true }), 'celular con lápiz (puntero principal: el dedo) se bloquea');
+ok(puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?forzar=1' }) && puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?demo=1&forzar=1' }), '?forzar=1 salta el bloqueo (solo pruebas)');
+ok(!puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?demo=1' }) && !puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?forzar=0' }), '?demo=1 o ?forzar=0 no saltan el bloqueo');
 const bloqueo = fs.readFileSync(path.join(raiz, 'src/componentes/SoloComputadora.jsx'), 'utf8');
 ok(bloqueo.includes('¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.') && bloqueo.includes('href="/guia.html"') && !emoji.test(bloqueo), 'pantalla de bloqueo: texto de Zinn-IA, enlace a guia.html y sin emojis');
 ok(!fs.readFileSync(path.join(raiz, 'public/guia.html'), 'utf8').includes('puedeJugar'), 'guia.html no usa el bloqueo');
