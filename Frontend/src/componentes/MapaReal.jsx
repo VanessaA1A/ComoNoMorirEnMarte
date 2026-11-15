@@ -26,6 +26,21 @@ export const CAPAS_MAPA = [
   { id: 'radiacion', corto: 'Radiación', nombre: 'Radiación y clima: RAD y REMS (un punto) + regla del juego', fuente: 'radiacion' },
 ];
 const COLOR_PUNTO = { base: '#01EFAC', parada: '#0CD3B6', muestra: '#CAFF95', deposito: '#FA932E', peligro: '#DD2811' };
+// Pin sobre cada punto de la ruta (public/img/ui/pin.png, 64 × 96 px): la punta de abajo toca el punto.
+const PIN = '/img/ui/pin.png';
+const iconoPin = (L, alto) => {
+  const ancho = Math.round((alto * 64) / 96);
+  return L.icon({ iconUrl: PIN, iconSize: [ancho, alto], iconAnchor: [ancho / 2, alto], tooltipAnchor: [0, -alto], popupAnchor: [0, -alto], className: 'pin-punto' });
+};
+// Capas que se dibujan como una sola imagen: se piden en segundo plano al abrir el mapa, así al tocarlas ya están
+const IMAGENES_CAPAS = ['sombreado.png', 'curvas.png', 'pendiente.png', 'contexto_ctx.jpg', 'radiacion_reglas.png'];
+let capasPrecargadas = false;
+function precargarCapas() {
+  if (capasPrecargadas || typeof window === 'undefined') return;
+  capasPrecargadas = true;
+  const pedir = () => IMAGENES_CAPAS.forEach((a) => { const i = new Image(); i.decoding = 'async'; i.src = `${C.BASE}/${a}`; });
+  (window.requestIdleCallback ?? ((fn) => setTimeout(fn, 1500)))(pedir);
+}
 const ESTILO_TRAMO = {
   principal: { color: '#01EFAC', weight: 4, opacity: 0.95 },
   alternativa: { color: '#FA932E', weight: 3, opacity: 0.95, dashArray: '8 6' },
@@ -172,19 +187,22 @@ export function MapaCompleto({ capa = 'optica', setCapa, poi = null, seleccion =
         .on('click', () => setTramoSel(t.id)).addTo(ruta);
     }
     const marcadores = {};
+    const pin = iconoPin(L, 30);
     for (const p of C.PARADAS) {
-      marcadores[p.id] = L.circleMarker(C.aMapa(p.lat, p.lon), { radius: 7, color: '#24073F', weight: 2, fillColor: COLOR_PUNTO[p.tipo] ?? '#fff', fillOpacity: 1 })
+      L.circleMarker(C.aMapa(p.lat, p.lon), { radius: 5, color: '#24073F', weight: 2, fillColor: COLOR_PUNTO[p.tipo] ?? '#fff', fillOpacity: 1, interactive: false }).addTo(ruta);
+      marcadores[p.id] = L.marker(C.aMapa(p.lat, p.lon), { icon: pin, title: `${p.id} · ${p.nombre}`, alt: `Punto ${p.id}: ${p.nombre}`, riseOnHover: true })
         .bindTooltip(`${p.id} · ${p.nombre}`).bindPopup(fichaHtml(p), { maxWidth: 320 }).addTo(ruta);
     }
     // recuadro de la zona del juego (se ve al alejarse o con CTX/geología)
     L.rectangle(C.ZONA, { color: '#01EFAC', weight: 1, fill: false, dashArray: '4 4', interactive: false }).addTo(map);
     const aqui = poi && C.parada(poi);
-    const jugador = aqui ? L.marker(C.aMapa(aqui.lat, aqui.lon), { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [18, 18] }), interactive: false }) : null;
+    const jugador = aqui ? L.marker(C.aMapa(aqui.lat, aqui.lon), { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [18, 18] }), interactive: false, zIndexOffset: 1000 }) : null;
     const elegido = seleccion && C.parada(seleccion);
     if (elegido) map.setView(C.aMapa(elegido.lat, elegido.lon), 0.5); else if (aqui) map.setView(C.aMapa(aqui.lat, aqui.lon), compacto ? -1.5 : -0.5); else map.fitBounds(C.ZONA);
     if (elegido) setTimeout(() => { ruta.addTo(map); marcadores[elegido.id].openPopup(); }, 50);
     map.setMaxBounds(C.limitesArchivo('contexto_ctx.jpg'));
     pintarEsquinas();
+    precargarCapas();
     return { map, ruta, curiosity, jugador, capa: null, leyenda: null };
   });
 
@@ -213,8 +231,8 @@ export function MapaCompleto({ capa = 'optica', setCapa, poi = null, seleccion =
         {CAPAS_MAPA.map((c) => (
           <button key={c.id} title={c.nombre} aria-label={c.nombre} aria-pressed={c.id === capaVisible} disabled={apagado && c.id !== 'optica'} onClick={() => setCapa?.(c.id)}>{c.corto}</button>
         ))}
-        <button title="Mostrar u ocultar la ruta del juego" aria-pressed={verRuta} onClick={() => setVerRuta(!verRuta)}>Ruta</button>
-        <button title="Mostrar u ocultar la ruta real de Curiosity (PDS PLACES)" aria-pressed={verCuriosity} onClick={() => setVerCuriosity(!verCuriosity)}>Curiosity</button>
+        <button title="Mostrar u ocultar la ruta del astronauta (la del juego)" aria-pressed={verRuta} onClick={() => setVerRuta(!verRuta)}>Ruta del astronauta</button>
+        <button title="Mostrar u ocultar el recorrido real del rover Curiosity (PDS PLACES): no es la ruta del astronauta" aria-pressed={verCuriosity} onClick={() => setVerCuriosity(!verCuriosity)}>Ruta real de Curiosity</button>
       </div>
       {apagado && <div className="mapa-sin-bateria">Sin batería: el mapa pierde sus capas</div>}
       {tramo && <Perfil tramo={tramo} onCerrar={() => setTramoSel(null)} />}
@@ -262,7 +280,7 @@ export function Minimapa({ poi, apagado = false, onAbrir }) {
     L.control.scale({ imperial: false, position: 'bottomleft', maxWidth: 60 }).addTo(map);
     controlTexto(L, 'topright', 'mapa-norte mini', '<span>N</span>▲').addTo(map);
     const capaRuta = L.layerGroup().addTo(map);
-    const jugador = L.marker([0, 0], { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [14, 14] }), interactive: false });
+    const jugador = L.marker([0, 0], { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [14, 14] }), interactive: false, zIndexOffset: 1000 });
     const p = C.parada(poi) ?? C.parada('H');
     map.setView(C.aMapa(p.lat, p.lon), ZOOM_MINI);
     return { map, capaRuta, jugador };
@@ -282,9 +300,10 @@ export function Minimapa({ poi, apagado = false, onAbrir }) {
             : { ...ESTILO_TRAMO[tipo], weight: 2, opacity: 0.55 };
         L.polyline(t.puntos, { ...estilo, interactive: false }).addTo(m.capaRuta);
       }
+      const pin = iconoPin(L, 20);
       for (const q of C.PARADAS) {
-        L.circleMarker(C.aMapa(q.lat, q.lon), { radius: 4, color: '#24073F', weight: 1.5, fillColor: COLOR_PUNTO[q.tipo] ?? '#fff', fillOpacity: 1 })
-          .bindTooltip(q.nombre, { direction: 'top' }).addTo(m.capaRuta);
+        L.circleMarker(C.aMapa(q.lat, q.lon), { radius: 3, color: '#24073F', weight: 1.5, fillColor: COLOR_PUNTO[q.tipo] ?? '#fff', fillOpacity: 1, interactive: false }).addTo(m.capaRuta);
+        L.marker(C.aMapa(q.lat, q.lon), { icon: pin, interactive: false, keyboard: false }).addTo(m.capaRuta);
       }
       m.jugador.setLatLng(C.aMapa(p.lat, p.lon)).addTo(m.capaRuta);
     }

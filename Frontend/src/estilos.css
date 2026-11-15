@@ -683,3 +683,6 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
 
 /* Guía: enlace a la versión para leer o imprimir (la misma guía, public/guia.html) */
 .guia-imprimir { display: inline-block; margin: .35em 0 .1em 1rem; font-size: .85em; color: var(--aurora-1); }
+
+/* Pin sobre cada punto del mapa (public/img/ui/pin.png) */
+.leaflet-marker-icon.pin-punto { filter: drop-shadow(0 1px 1.5px rgba(10, 2, 20, .85)); }
