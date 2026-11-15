@@ -13,7 +13,7 @@ import POIS from '../data/pois.json';
 import DATOS from '../data/datos.json';
 import PISTAS from '../data/pistas.json';
 
-const JuegoContext = createContext(null);
+export const JuegoContext = createContext(null); // exportado solo para tools/probar-render.mjs
 export const useJuego = () => useContext(JuegoContext);
 
 export const modoDemo = typeof location !== 'undefined' && new URLSearchParams(location.search).get('demo') === '1';

@@ -9,7 +9,7 @@ import Recurso from './Recurso.jsx';
 import GLOSARIO from '../data/glosario.json';
 import RECURSOS from '../data/recursos_nasa.json';
 
-const PESTANAS = ['Barras y reglas', 'Capas del mapa', 'Fichas', 'Recursos NASA', 'Glosario', 'Fuentes'];
+export const PESTANAS = ['Barras y reglas', 'Capas del mapa', 'Fichas', 'Recursos NASA', 'Glosario', 'Fuentes'];
 
 export default function Guia({ pestanaInicial = 'Barras y reglas' }) {
   const j = useJuego();
@@ -96,6 +96,7 @@ export function RecursosNasa() {
 const pista = (cap) => (cap === 'Mapa' ? 'ábrela en el Mapa de Marte' : cap === 'Final' ? 'se gana al ver un final' : `se gana en el capítulo ${String(cap).split(',')[0]}`);
 
 function Reglas() {
+  const j = useJuego();
   const e = INDEX.estadoInicial;
   return (
     <div>

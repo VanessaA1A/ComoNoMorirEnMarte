@@ -10,7 +10,7 @@ if [ ! -d node_modules ]; then
   exit 1
 fi
 
-echo "pre-push: corriendo npm run probar (motor, Zinn-IA, guardado, sincronización y recorridos)..."
+echo "pre-push: corriendo npm run probar (motor, Zinn-IA, guardado, sincronización, recorridos y render)..."
 if npm run probar --silent; then
   echo "pre-push: todas las pruebas pasan. Subiendo."
   exit 0
