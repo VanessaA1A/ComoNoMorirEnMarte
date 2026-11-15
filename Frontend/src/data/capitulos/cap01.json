@@ -19,11 +19,7 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "¡Hola! Soy Zinn-IA, tu guía de supervivencia. Vivo en la tablet de tu traje."
-        },
-        {
-          "quien": "Zinn-IA",
-          "texto": "Me llamo así por la zinnia, la primera flor que floreció en la Estación Espacial Internacional, en 2016."
+          "texto": "¡Hola! Soy Zinn-IA, tu guía de supervivencia. Vivo en la tablet de tu traje y me llamo así por la zinnia, la primera flor que floreció en la Estación Espacial Internacional, en 2016."
         },
         {
           "quien": "Zinn-IA",
@@ -70,15 +66,11 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "Perfecto. Te hablaré así durante toda la misión."
+          "texto": "Perfecto, así te hablaré toda la misión. El plan: llegar a Marte, caminar hasta las crestas boxwork de Mount Sharp, tomar muestras y volver viv{o|a|e}."
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Nuestro plan: llegar a Marte, caminar hasta las crestas boxwork de Mount Sharp, tomar muestras y volver viv{o|a|e}."
-        },
-        {
-          "quien": "Zinn-IA",
-          "texto": "Esta misión se llama \"Cómo no morir en Marte\". Así que presta atención, {nombre}."
+          "texto": "Por algo esta misión se llama \"Cómo no morir en Marte\". Presta atención, {nombre}."
         }
       ],
       "ir": "c01_04"
@@ -92,42 +84,27 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "¡Alto, {nombre}! Antes de despegar, una canción para no olvidar. Yo empiezo el verso y tú lo terminas. ¿List{o|a|e}?",
-          "respuesta": "¡List{o|a|e}!"
-        },
-        {
-          "quien": "Zinn-IA",
-          "texto": "Si el oxígeno se va…",
+          "texto": "¡Alto, {nombre}! Las reglas en una canción: yo empiezo el verso y tú lo terminas. Si el oxígeno se va…",
           "respuesta": "…¡la caminata acabará!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "¡Eso! En cero no hay segunda vuelta. Siguiente: si la batería se apaga…",
+          "texto": "En cero no hay segunda vuelta. Si la batería se apaga…",
           "respuesta": "…¡Zinn-IA se calla y todo se gasta!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "¡Y nadie quiere eso! Sin mí, el oxígeno y la comida se gastan el doble. Y yo me pierdo la vista. Si la comida se acaba…",
+          "texto": "Sin mí, el oxígeno y la comida se gastan el doble. Si la comida se acaba…",
           "respuesta": "…¡mis piernas se traban!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Bajo 30 caminas lento, y en cero te desmayas. Si el traje se rasga…",
-          "respuesta": "…¡el aire se escapa!"
-        },
-        {
-          "quien": "Zinn-IA",
-          "texto": "Bajo 30 el traje tiene fuga y cada decisión te quita oxígeno. Ahora la difícil: la radiación sube y nunca baja…",
+          "texto": "Bajo 30 caminas lento; en cero te desmayas. Si el traje baja de 30, cada decisión te quita oxígeno. Y la radiación sube y nunca baja…",
           "respuesta": "…¡cada punto que evito es ventaja!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "¡Bravo! Con 70 o más no te dejan volver a casa. Y el reloj hace tic, tac…",
-          "respuesta": "…¡si llego tarde, el módulo se va!"
-        },
-        {
-          "quien": "Zinn-IA",
-          "texto": "Tres horas y media, ni un minuto más. Último verso: ¿y si un verso se te olvida?",
+          "texto": "Con 70 o más no vuelves a casa. Tienes tres horas y media o el módulo se va sin ti. ¿Y si un verso se te olvida?",
           "respuesta": "…¡la Guía me salva la vida!"
         }
       ],
@@ -142,7 +119,7 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "¡Exacto! Mira el ícono del libro. Tócalo ahora, que te espero."
+          "texto": "¡Exacto! Toca el ícono del libro, te espero."
         }
       ],
       "ir": "c01_04c"
@@ -155,11 +132,7 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "Ahí está todo: las barras, el mapa, los peligros y de dónde sale cada dato. Ábrela cuando quieras, hasta en pausa. Yo me la sé de memoria… casi toda. ¡Jiji!"
-        },
-        {
-          "quien": "Zinn-IA",
-          "texto": "Ahora sí: ¡motores encendidos!"
+          "texto": "Ahí están las barras, el mapa, los peligros y las fuentes. Ábrela cuando quieras, hasta en pausa. Ahora sí: ¡motores encendidos!"
         }
       ],
       "ir": "c01_05"
@@ -236,8 +209,7 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "Próxima parada: el espacio profundo. Allá afuera la radiación es otra historia.",
-          "expresion": "seria"
+          "texto": "Próxima parada: el espacio profundo. Allá afuera la radiación es otra historia."
         }
       ],
       "siguienteCapitulo": 2
