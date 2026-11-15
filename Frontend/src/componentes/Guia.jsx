@@ -64,7 +64,7 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
               {tiene ? (
                 <>
                   <strong>{d.id}{esDestacada(d) ? ' ★' : ''}</strong> {d.texto}
-                  <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · pendiente de revisión'}</p>
+                  <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · fuente por verificar'}</p>
                 </>
               ) : <span>{d.id} · Ficha bloqueada: {pista(d.capitulo)}</span>}
             </div>
