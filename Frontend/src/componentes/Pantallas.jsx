@@ -1,12 +1,13 @@
 // Créditos, Menú en juego, Guardar/Cargar e Historial.
 import { useState } from 'react';
 import { BARRAS, colorBarra } from '../engine/reglas.js';
-import { CAPITULOS } from '../engine/guion.js';
+import { CAPITULOS, infoCapitulo } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { RANURAS, leerRanura } from '../juego/partidas.js';
 import { Modal } from './Modal.jsx';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
-import { ETIQUETA } from './HUD.jsx';
+import Icono from './Iconostemp.jsx';
+import { ETIQUETA, formatoReloj } from './HUD.jsx';
 import { Enlace } from './Mapas.jsx';
 import FuentesCartografia from './FuentesCartografia.jsx';
 
@@ -29,20 +30,61 @@ export function Creditos() {
 
 export function MenuJuego() {
   const j = useJuego();
+  const p = j.partida;
+  const [salir, setSalir] = useState(false);
+  const cap = p?.capitulo ?? 1;
+  const enMarte = cap >= 3;
+
+  if (salir) {
+    return (
+      <Modal titulo="¿Volver al menú principal?" onCerrar={() => setSalir(false)} className="menu-pausa menu-salir">
+        <p className="texto-ui">Tu avance queda en el autoguardado. Desde el menú principal puedes seguir con <strong>Continuar</strong>.</p>
+        <div className="menu-salir-botones">
+          <button className="boton" onClick={() => setSalir(false)} autoFocus>No, seguir aquí</button>
+          <button className="boton principal" onClick={j.volverInicio}>Sí, ir al menú</button>
+        </div>
+      </Modal>
+    );
+  }
+
+  const Ficha = ({ icono, titulo, detalle, ...resto }) => (
+    <button className="menu-ficha" {...resto}>
+      <span className="menu-icono" aria-hidden="true"><Icono nombre={icono} /></span>
+      <span className="menu-textos"><span className="menu-titulo">{titulo}</span><span className="menu-detalle">{detalle}</span></span>
+    </button>
+  );
+
   return (
-    <Modal titulo="Menú" onCerrar={j.cerrarOverlay}>
-      <p className="provisional">El juego está en pausa.</p>
-      <div className="lista-botones">
-        <button className="boton principal" onClick={j.cerrarOverlay}>Seguir jugando</button>
-        <button className="boton" onClick={() => j.abrir('guardar')}>Guardar</button>
-        <button className="boton" onClick={() => j.abrir('cargar')}>Cargar</button>
-        <button className="boton" onClick={() => j.abrir('guia')}>Guía de supervivencia</button>
-        <button className="boton" onClick={() => j.abrir('mapaRuta')} disabled={j.partida?.capitulo < 3}>Mapa de la ruta</button>
-        <button className="boton" onClick={() => j.abrir('mapaMarte')}>Mapa de Marte</button>
-        <button className="boton" onClick={() => j.abrir('marte3d', { vista: j.partida?.capitulo >= 3 ? 'region' : 'globo' })}>Ver en 3D</button>
-        <button className="boton" onClick={() => j.abrir('historial')}>Historial</button>
-        <button className="boton secundario" onClick={j.volverInicio}>Volver al inicio</button>
+    <Modal titulo="Misión en pausa" onCerrar={j.cerrarOverlay} className="menu-pausa">
+      <div className="menu-estado texto-ui">
+        <span className="menu-chip">Capítulo {cap} de 10</span>
+        <span>{infoCapitulo(cap)?.titulo}</span>
+        {p?.hud && <span className="menu-reloj"><Icono nombre="reloj" /> {formatoReloj(p.minutos)}</span>}
       </div>
+
+      <button className="boton principal menu-seguir" onClick={j.cerrarOverlay} autoFocus><Icono nombre="jugar" /> Seguir jugando</button>
+
+      <div className="menu-grupos">
+        <section aria-labelledby="menu-partida">
+          <h3 id="menu-partida" className="menu-grupo">Partida</h3>
+          <div className="menu-rejilla">
+            <Ficha icono="guardar" titulo="Guardar" detalle="3 ranuras" onClick={() => j.abrir('guardar')} />
+            <Ficha icono="cargar" titulo="Cargar" detalle="Ranuras y autoguardado" onClick={() => j.abrir('cargar')} />
+            <Ficha icono="historial" titulo="Historial" detalle="Lo que ha pasado" onClick={() => j.abrir('historial')} />
+          </div>
+        </section>
+        <section aria-labelledby="menu-explorar">
+          <h3 id="menu-explorar" className="menu-grupo">Explorar</h3>
+          <div className="menu-rejilla">
+            <Ficha icono="guia" titulo="Guía" detalle="Reglas, capas y fichas" onClick={() => j.abrir('guia')} />
+            <Ficha icono="ruta" titulo="Mapa de la ruta" detalle={enMarte ? 'Tablet de Zinn-IA' : 'Disponible desde el cap. 3'} disabled={!enMarte} onClick={() => j.abrir('mapaRuta')} />
+            <Ficha icono="marte" titulo="Mapa de Marte" detalle="Aterrizajes reales" onClick={() => j.abrir('mapaMarte')} />
+            <Ficha icono="tresd" titulo="Ver en 3D" detalle={enMarte ? 'Gale en relieve' : 'Globo de Marte'} onClick={() => j.abrir('marte3d', { vista: enMarte ? 'region' : 'globo' })} />
+          </div>
+        </section>
+      </div>
+
+      <button className="menu-salir-boton" onClick={() => setSalir(true)}><Icono nombre="casa" /> Volver al menú principal</button>
     </Modal>
   );
 }
