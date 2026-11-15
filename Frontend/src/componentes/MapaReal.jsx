@@ -99,6 +99,7 @@ function construirCapa(L, id) {
     case 'minerales':
       return { grupo, aviso: C.CAPA_REAL.minerales?.texto ?? 'Sin datos de CRISM a esta escala' };
     case 'geologia':
+      img('contexto_ctx.jpg', { opacity: 0.9 }); // contexto real (CTX) debajo de la unidad geológica
       capaGeologia(L).addTo(grupo);
       return { grupo, leyenda: `<span class="ley" style="background:#613395"></span> <strong>${esc(GEO.unidad.codigo)}</strong>: ${esc(GEO.unidad.nombre_oficial)} (Tanaka et al., 2014, USGS SIM 3292, 1:20.000.000). ${esc(GEO.nota_nasa.texto)}`, encuadre: C.limitesArchivo('contexto_ctx.jpg') };
     case 'radiacion': {

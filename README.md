@@ -66,6 +66,16 @@ Pruebas del juego: `cd Frontend && npm run probar` (motor: 154.197 rutas y 61,4 
 - **Batería en 0:** modo semilla; no responde preguntas libres, solo lleva a la Guía (regla del juego).
 - **Key:** tiene que ser una API key de la Claude Console (empieza con `sk-ant-api`) **con saldo**; va solo en Render (`ANTHROPIC_API_KEY`). Prueba del agente: `cd Backend && npm run dev` y en otra terminal `npm run probar:zinnia`.
 
+## Cartografía real (mapas 2D y 3D)
+
+Todo sale de datos reales con su fuente (lista completa en `Frontend/public/cartografia/fuentes.json`, que se muestra en Créditos y en la Guía). Coordenadas: latitud planetocéntrica y longitud Este 0–360°.
+
+- **Zona:** 3 × 3 km de la zona boxwork de Gale, centrada en las perforaciones de Curiosity de 2025 (PDS PLACES, doi:10.17189/1520397).
+- **Ortofoto** HiRISE de USGS (Calef y Parker, 2016): 25 cm/px en el corredor de la ruta y 1 m/px en la zona. **Relieve:** DEM 1 m de USGS (Parker y Calef, 2016). Además: THEMIS y CTX (Mars Trek), geología SIM 3292 (Tanaka et al., 2014), Viking MDIM 2.1 para el globo.
+- **Ruta del juego:** `Frontend/src/data/ruta_real.json` (propuesta en `docs/ruta_propuesta.md`). Para mover un punto, cambia su lat/lon ahí y vuelve a correr `tools/preparar-cartografia/corredor.py` (recorta la ortofoto de 25 cm alrededor de la ruta nueva).
+- **Mapas:** minimapa (solo el mapa, ~150 m alrededor del astronauta), mapa completo con capas, y Marte 3D (globo y terreno de Gale) desde el inicio, el menú o Zinn-IA.
+- **Regenerar** (una vez, sin bajar archivos completos: lee por rangos HTTP): `py -m venv tools/cache/venv`, `tools/cache/venv/Scripts/python.exe -m pip install rasterio numpy pillow scikit-image imagecodecs`, y en orden `preparar.py`, `ruta.py`, `corredor.py`, `tres_d.py` y `fuentes_partes_2a5.py` (carpeta `tools/preparar-cartografia/`). `public/cartografia/` no puede pasar de 25 MB (lo comprueba `npm run probar`).
+
 ## Despliegue
 
 El juego va en **Vercel** y la API en **Render**; la base de datos está en **Neon**.
