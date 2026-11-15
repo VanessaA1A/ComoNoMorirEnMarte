@@ -80,7 +80,7 @@ for (const r of RECORRIDOS) {
   const final = s.final ? `${s.final.final}:${s.final.causa}` : '(sin final)';
   const iC = visitadas.indexOf('c01_05');
   if (!['c01_04', 'c01_04b', 'c01_04c'].every((x) => visitadas.includes(x))) problemas.push('El recorrido no pasó por la canción (c01_04 → c01_04b → c01_04c)');
-  if (clicsCancion !== 9) problemas.push(`La canción debería pedir 9 clics (8 versos + esperarGuia) y pidió ${clicsCancion}`);
+  if (clicsCancion !== 6) problemas.push(`La canción debería pedir 6 clics (5 versos + esperarGuia) y pidió ${clicsCancion}`);
   if (iC < 0) problemas.push('El recorrido no llegó a c01_05');
   const e = r.esperado;
   if (e.barras && JSON.stringify(barras(s)) !== JSON.stringify(e.barras)) problemas.push(`Barras: esperado ${fmt(e.barras)} · obtenido ${fmt(barras(s))}`);

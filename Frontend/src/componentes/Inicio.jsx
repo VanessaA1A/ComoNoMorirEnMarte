@@ -6,6 +6,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { leerRanura } from '../juego/partidas.js';
 import Recurso from './Recurso.jsx';
 import { Astronauta } from './Personajes.jsx';
+import ZinniaAvatar from './ZinniaAvatar.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
   return (
@@ -62,7 +63,7 @@ export default function Inicio() {
             <span className="consola-etiqueta">Tripulación · Aurora-1</span>
           </div>
           <div className="consola-escena">
-            <img src="/img/zinnia_multiexpresion.webp" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
+            <ZinniaAvatar className="zinnia-principal" alt="Zinn-IA, tu guía de supervivencia" />
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">
@@ -73,6 +74,7 @@ export default function Inicio() {
         <nav className="inicio-col explorar" aria-label="Explorar">
           <p className="inicio-col-titulo" aria-hidden="true">Explorar</p>
           <BotonGrande className="secundario-borde" titulo="Mapa de Marte" detalle="Aterrizajes reales y destinos" onClick={() => j.abrir('mapaMarte')} />
+          <BotonGrande className="secundario-borde" titulo="Explorar Marte en 3D" detalle="Globo y terreno real de Gale" onClick={() => j.abrir('marte3d', { vista: 'globo' })} />
           <BotonGrande className="secundario-borde" titulo="Guía" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
           {/* Página independiente: se lee e imprime en cualquier pantalla, también en celular */}
           <a className="boton boton-grande secundario-borde" href="/guia.html" target="_blank" rel="noopener">
