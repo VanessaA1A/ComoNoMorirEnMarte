@@ -30,13 +30,13 @@
 | P3-DEP (desvío) | 229 m | 8.1° | 13.2° | 16.9° | 2 % |
 | P3-D2 | 1 m | 20.2° | 23.3° | 23.3° | 67 % |
 | D2-P4 (de frente) | 9 m | 18.7° | 21.9° | 23.3° | 100 % |
-| D2-P4 (rodear) | 33 m | 15.6° | 21.5° | 23.3° | 59 % |
+| D2-P4 (rodear) | 41 m | 13.1° | 16.1° | 21.7° | 19 % |
 | P4-P5 (mirador alto, opcional) | 451 m | 16.1° | 34.5° | 62.6° | 40 % |
 | P4-H (regreso) | 1435 m | 7.7° | 13.2° | 22.1° | 3 % |
 
 Notas:
 - Umbrales de pendiente: 15° para caminar y 23° de peligro (Curiosity se desvió 150 m ante una pendiente de 23° para buscar una de menos de 15°; NASA/JPL, 2023).
 - El DEM a 2 m suaviza las crestas de 1–2 m del boxwork; las pendientes muy cortas pueden ser más fuertes en el terreno real.
-- "Rodear" (capítulo 8) no tiene un recorrido medido aparte: se dibuja como un desvío corto a un lado de la cresta.
+- "Rodear" (capítulo 8) es un camino de menor costo sobre el relieve real que va de la cresta a la hondonada sin cruzar el borde empinado (D2).
 - El depósito (DEP) es ficción del juego; su lugar es real y llano.
 - Las paradas P3 y P4 están a unos 10 m: así de cerca están la cresta y la hondonada que perforó Curiosity.

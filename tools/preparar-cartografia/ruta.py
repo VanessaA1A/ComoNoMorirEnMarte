@@ -171,6 +171,18 @@ def camino(a, b):
     return [a] + xy[1:]
 
 
+def camino_rodeando(a, b, i_borde, j_borde, radio_px=3):
+    """Camino de menor costo de a hasta b que NO cruza el borde empinado (radio de 3 px = 6 m alrededor del borde)."""
+    costo = COSTO.copy()
+    costo[max(0, i_borde - radio_px):i_borde + radio_px + 1, max(0, j_borde - radio_px):j_borde + radio_px + 1] = 1e6
+    ia, ja = ij(*a); ib, jb = ij(*b)
+    costo[ia, ja] = costo[ib, jb] = 1.0  # los extremos siempre transitables
+    mcp = MCP_Geometric(costo)
+    mcp.find_costs([(ia, ja)], [(ib, jb)])
+    ruta = mcp.traceback((ib, jb))
+    return [a] + [(X0 + (j + 0.5) * PASO, Y1 - (i + 0.5) * PASO) for i, j in ruta[1:-1]] + [b]
+
+
 # ---------------------------------------------------------------- perfiles de cada tramo
 def muestras_linea(a, b, paso_m=2.0):
     d = math.hypot(a[0] - b[0], a[1] - b[1])
@@ -240,11 +252,11 @@ tramos = {
     "P3-DEP (desvío)": camino((P3["x"], P3["y"]), (DEP["x"], DEP["y"])),
     "P3-D2": [(P3["x"], P3["y"]), (x_d2, y_d2)],
     "D2-P4 (de frente)": [(x_d2, y_d2), (P4["x"], P4["y"])],
-    "D2-P4 (rodear)": [(x_d2, y_d2), (x_d2 + 12, y_d2 + 12), (P4["x"] + 12, P4["y"]), (P4["x"], P4["y"])],
+    "D2-P4 (rodear)": camino_rodeando((P3["x"], P3["y"]), (P4["x"], P4["y"]), i_d2, j_d2),
     "P4-P5 (mirador alto, opcional)": [(P4["x"], P4["y"]), (x_p5, y_p5)],
     "P4-H (regreso)": camino((P4["x"], P4["y"]), (H["x"], H["y"])),
 }
-# "rodear" no tiene un recorrido medido aparte: se marca como desvío corto de ~17 m a un lado de la cresta.
+# "rodear": camino de menor costo desde la cresta (P3) hasta la hondonada (P4) que evita el borde empinado (D2).
 info_tramos = {k: {**estadisticas(v), "linea": ll(v)} for k, v in tramos.items()}
 
 orden = ["H", "P1", "P2", "D1", "P3", "DEP", "D2", "P4", "P5"]
@@ -307,7 +319,7 @@ md = f"""# Propuesta de la ruta real del juego (Parte 2)
 Notas:
 - Umbrales de pendiente: 15° para caminar y 23° de peligro (Curiosity se desvió 150 m ante una pendiente de 23° para buscar una de menos de 15°; NASA/JPL, 2023).
 - El DEM a 2 m suaviza las crestas de 1–2 m del boxwork; las pendientes muy cortas pueden ser más fuertes en el terreno real.
-- "Rodear" (capítulo 8) no tiene un recorrido medido aparte: se dibuja como un desvío corto a un lado de la cresta.
+- "Rodear" (capítulo 8) es un camino de menor costo sobre el relieve real que va de la cresta a la hondonada sin cruzar el borde empinado (D2).
 - El depósito (DEP) es ficción del juego; su lugar es real y llano.
 - Las paradas P3 y P4 están a unos {dist((P3['lat'], P3['lon']), (P4['lat'], P4['lon'])):.0f} m: así de cerca están la cresta y la hondonada que perforó Curiosity.
 """
