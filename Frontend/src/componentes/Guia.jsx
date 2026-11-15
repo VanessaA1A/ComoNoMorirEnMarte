@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CAPITULOS } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { formatear } from '../engine/texto.js';
@@ -7,6 +7,7 @@ import { Cajon } from './Modal.jsx';
 import { Enlace, etiquetaCapa } from './Mapas.jsx';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
 import FuentesCartografia from './FuentesCartografia.jsx';
+import Icono from './Iconos.jsx';
 import GLOSARIO from '../data/glosario.json';
 import RECURSOS from '../data/recursos_nasa.json';
 // Una sola fuente: el mismo JSON que lee public/guia.html (va dentro del bundle para funcionar sin conexión)
@@ -16,85 +17,169 @@ import GUIA from '../../public/data/guia_supervivencia.json';
 const MAS = ['Fichas', 'Capas del mapa', 'Recursos NASA', 'Glosario completo', 'Fuentes'];
 export const PESTANAS = [...GUIA.secciones.map((s) => s.id), ...MAS];
 
+const ICONO_MAS = { Fichas: 'ficha', 'Capas del mapa': 'capas', 'Recursos NASA': 'cohete', 'Glosario completo': 'letras', Fuentes: 'enlace' };
+const INTRO_MAS = {
+  Fichas: 'Datos reales de NASA que desbloqueas al jugar. Las nuevas brillan.',
+  'Capas del mapa': 'Qué muestra cada capa de la tablet de Zinn-IA, de qué misión viene y qué no puede ver.',
+  'Recursos NASA': 'Los recursos oficiales del reto que usa el juego.',
+  'Glosario completo': 'Palabras de Marte explicadas en una línea.',
+  Fuentes: 'De dónde sale cada dato del juego, capítulo por capítulo.',
+};
+
 export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
   const j = useJuego();
   const [pestana, setPestana] = useState(PESTANAS.includes(pestanaInicial) ? pestanaInicial : GUIA.secciones[0].id);
   const todas = fichasDe(j.catalogo.datos);
   const nuevas = j.fichasNuevas;
   const seccion = GUIA.secciones.find((s) => s.id === pestana);
+  const cuerpo = useRef(null);
 
   // Al salir de la pestaña Fichas, las nuevas dejan de brillar
   useEffect(() => () => { if (pestana === 'Fichas') j.marcarFichasVistas(); }, [pestana]); // eslint-disable-line
+  // Cada pestaña empieza arriba
+  useEffect(() => { cuerpo.current?.scrollTo?.({ top: 0 }); }, [pestana]);
+
+  const i = PESTANAS.indexOf(pestana);
+  const anterior = PESTANAS[i - 1];
+  const siguiente = PESTANAS[i + 1];
+  const nombreDe = (id) => {
+    const s = GUIA.secciones.find((x) => x.id === id);
+    return s ? formatear(s.corto ?? s.titulo, j.partida) : id;
+  };
+  const progreso = todas.length ? Math.round((j.fichas.length / todas.length) * 100) : 0;
 
   return (
-    <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay}
+    <Cajon titulo="Guía de supervivencia" onCerrar={j.cerrarOverlay} className="cajon-guia"
       cabecera={<div className="cara"><ZinniaAvatar recorte="cara" alt="" /></div>}>
-      <nav className="guia-indice" aria-label="Índice de la guía">
-        <div className="pestanas" role="tablist" aria-label="Secciones">
-          {GUIA.secciones.map((s) => (
-            <button key={s.id} role="tab" aria-selected={s.id === pestana} onClick={() => setPestana(s.id)} title={formatear(s.titulo, j.partida)}>
-              {s.numero ? `${s.numero}. ` : ''}{formatear(s.corto ?? s.titulo, j.partida)}
-            </button>
-          ))}
-        </div>
-        <div className="pestanas pestanas-mas" role="tablist" aria-label="Más información">
-          {MAS.map((p) => (
-            <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)}>
-              {p === 'Fichas' ? `Fichas (${j.fichas.length}/${todas.length})${nuevas.length ? ' ✦' : ''}` : p}
-            </button>
-          ))}
-        </div>
-        {/* La misma guía como página aparte: para leerla o imprimirla (también funciona en celular) */}
-        <a className="guia-imprimir" href="/guia.html" target="_blank" rel="noopener">Versión para leer o imprimir (pestaña nueva)</a>
-      </nav>
-      <div className="cajon-cuerpo guia-cuerpo" role="tabpanel">
-        {seccion === GUIA.secciones[0] && GUIA.intro && <p className="guia-nota"><TextoGuia texto={GUIA.intro} partida={j.partida} /></p>}
-        {seccion && <SeccionGuia seccion={seccion} partida={j.partida} />}
-        {pestana === 'Capas del mapa' && j.catalogo.capas.map((c) => (
-          <div key={c.id} className="tarjeta-dato">
-            <strong>{c.etiqueta ? `${etiquetaCapa(c)}: ${c.nombre}` : c.nombre}</strong>
-            <p>{c.descripcion}</p>
-            <p>Misión: {c.mision} · Instrumento: {c.instrumento}</p>
-            <p>Limitación: {c.limitacion}</p>
-            <p className="fuente">Fuente: <Enlace url={c.fuente} /></p>
-          </div>
-        ))}
-        {pestana === 'Fichas' && todas.map((d) => {
-          const tiene = j.fichas.includes(d.id);
-          return (
-            <div key={d.id} className={`tarjeta-dato ${tiene ? '' : 'bloqueada'} ${nuevas.includes(d.id) ? 'nueva' : ''}`}>
-              {tiene ? (
-                <>
-                  <strong>{d.id}{esDestacada(d) ? ' ★' : ''}</strong> {d.texto}
-                  <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · fuente por verificar'}</p>
-                </>
-              ) : <span>{d.id} · Ficha bloqueada: {pista(d.capitulo)}</span>}
-            </div>
-          );
-        })}
-        {pestana === 'Recursos NASA' && <RecursosNasa />}
-        {pestana === 'Glosario completo' && <dl>{GLOSARIO.map((g) => (
-          <div key={g.termino} className="tarjeta-dato"><dt><strong>{g.termino}</strong></dt><dd style={{ margin: 0 }}>{g.definicion}</dd></div>
-        ))}</dl>}
-        {pestana === 'Fuentes' && (
-          <>
-            {CAPITULOS.map((c) => (
-              <div key={c.capitulo} className="tarjeta-dato">
-                <strong>Capítulo {c.capitulo}: {c.titulo}</strong>
-                <p>{c.dato}</p>
-                <ul className="fuente">{(c.fuentes ?? []).map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
-              </div>
+      <div className="guia-layout">
+        <nav className="guia-indice" aria-label="Índice de la guía">
+          <p className="guia-grupo">La guía</p>
+          <div className="guia-lista" role="tablist" aria-label="Secciones">
+            {GUIA.secciones.map((s, k) => (
+              <button key={s.id} role="tab" aria-selected={s.id === pestana} onClick={() => setPestana(s.id)} title={formatear(s.titulo, j.partida)}>
+                <span className="guia-num">{s.numero ?? (k === 0 ? 'i' : '·')}</span>
+                <span className="guia-nombre">{formatear(s.corto ?? s.titulo, j.partida)}</span>
+              </button>
             ))}
-            <div className="tarjeta-dato">
-              <strong>Banco de datos (fichas y pantallas de carga)</strong>
-              <ul className="fuente">{[...new Set(j.catalogo.datos.map((d) => d.fuente))].map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
+          </div>
+
+          <p className="guia-grupo">Más</p>
+          <div className="guia-lista" role="tablist" aria-label="Más información">
+            {MAS.map((p) => (
+              <button key={p} role="tab" aria-selected={p === pestana} onClick={() => setPestana(p)} className={p === 'Fichas' && nuevas.length ? 'con-nuevas' : ''}>
+                <span className="guia-num"><Icono nombre={ICONO_MAS[p]} /></span>
+                <span className="guia-nombre">{p}</span>
+                {p === 'Fichas' && <span className="guia-contador">{j.fichas.length}/{todas.length}</span>}
+              </button>
+            ))}
+          </div>
+
+          {/* La misma guía como página aparte: para leerla o imprimirla (también funciona en celular) */}
+          <a className="guia-imprimir" href="/guia.html" target="_blank" rel="noopener">
+            <Icono nombre="imprimir" /> Versión para imprimir
+          </a>
+        </nav>
+
+        <div className="cajon-cuerpo guia-cuerpo" role="tabpanel" ref={cuerpo}>
+          {!seccion && (
+            <header className="guia-portada">
+              <span className="guia-kicker">Más información</span>
+              <h3>{pestana}</h3>
+              <p>{INTRO_MAS[pestana]}</p>
+            </header>
+          )}
+
+          {seccion === GUIA.secciones[0] && GUIA.intro && <p className="guia-nota"><TextoGuia texto={GUIA.intro} partida={j.partida} /></p>}
+          {seccion && <SeccionGuia seccion={seccion} partida={j.partida} />}
+
+          {pestana === 'Capas del mapa' && (
+            <div className="guia-tarjetas">
+              {j.catalogo.capas.map((c) => (
+                <article key={c.id} className="tarjeta-dato guia-capa">
+                  <h4>{c.etiqueta ? `${etiquetaCapa(c)}: ${c.nombre}` : c.nombre}</h4>
+                  <p>{c.descripcion}</p>
+                  <p className="guia-etiquetas"><span>{c.mision}</span><span>{c.instrumento}</span></p>
+                  <p className="guia-limite"><strong>Limitación:</strong> {c.limitacion}</p>
+                  <p className="fuente">Fuente: <Enlace url={c.fuente} /></p>
+                </article>
+              ))}
             </div>
-            <div className="tarjeta-dato">
-              <strong>Cartografía (mapas)</strong>
-              <FuentesCartografia />
-            </div>
-          </>
-        )}
+          )}
+
+          {pestana === 'Fichas' && (
+            <>
+              <div className="guia-progreso" role="progressbar" aria-valuemin={0} aria-valuemax={todas.length} aria-valuenow={j.fichas.length}
+                aria-label={`Fichas desbloqueadas: ${j.fichas.length} de ${todas.length}`}>
+                <span className="guia-progreso-texto">{j.fichas.length} de {todas.length} fichas</span>
+                <span className="guia-progreso-riel"><span style={{ width: `${progreso}%` }} /></span>
+              </div>
+              <div className="guia-tarjetas">
+                {todas.map((d) => {
+                  const tiene = j.fichas.includes(d.id);
+                  return (
+                    <article key={d.id} className={`tarjeta-dato guia-ficha ${tiene ? '' : 'bloqueada'} ${nuevas.includes(d.id) ? 'nueva' : ''}`}>
+                      <header>
+                        <span className="guia-ficha-id">{d.id}</span>
+                        {tiene && esDestacada(d) && <span className="guia-ficha-estrella" title="Ficha destacada"><Icono nombre="estrella" /></span>}
+                        {nuevas.includes(d.id) && <span className="guia-ficha-nueva">Nueva</span>}
+                        {!tiene && <Icono nombre="candado" className="guia-ficha-candado" />}
+                      </header>
+                      {tiene ? (
+                        <>
+                          <p>{d.texto}</p>
+                          <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · por verificar'}</p>
+                        </>
+                      ) : <p className="guia-ficha-pista">Bloqueada: {pista(d.capitulo)}</p>}
+                    </article>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {pestana === 'Recursos NASA' && <RecursosNasa />}
+
+          {pestana === 'Glosario completo' && (
+            <dl className="guia-glosario">
+              {GLOSARIO.map((g) => (
+                <div key={g.termino} className="tarjeta-dato"><dt>{g.termino}</dt><dd>{g.definicion}</dd></div>
+              ))}
+            </dl>
+          )}
+
+          {pestana === 'Fuentes' && (
+            <>
+              {CAPITULOS.map((c) => (
+                <div key={c.capitulo} className="tarjeta-dato">
+                  <h4>Capítulo {c.capitulo}: {c.titulo}</h4>
+                  <p>{c.dato}</p>
+                  <ul className="fuente">{(c.fuentes ?? []).map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
+                </div>
+              ))}
+              <div className="tarjeta-dato">
+                <h4>Banco de datos (fichas y pantallas de carga)</h4>
+                <ul className="fuente">{[...new Set(j.catalogo.datos.map((d) => d.fuente))].map((f) => <li key={f}><Enlace url={f} /></li>)}</ul>
+              </div>
+              <div className="tarjeta-dato">
+                <h4>Cartografía (mapas)</h4>
+                <FuentesCartografia />
+              </div>
+            </>
+          )}
+
+          <nav className="guia-pasos" aria-label="Pasar de sección">
+            {anterior ? (
+              <button className="guia-paso" onClick={() => setPestana(anterior)}>
+                <Icono nombre="izquierda" /><span><small>Anterior</small>{nombreDe(anterior)}</span>
+              </button>
+            ) : <span />}
+            {siguiente && (
+              <button className="guia-paso siguiente" onClick={() => setPestana(siguiente)}>
+                <span><small>Siguiente</small>{nombreDe(siguiente)}</span><Icono nombre="derecha" />
+              </button>
+            )}
+          </nav>
+        </div>
       </div>
     </Cajon>
   );
@@ -130,7 +215,10 @@ export function TextoGuia({ texto, partida }) {
 export function SeccionGuia({ seccion, partida }) {
   return (
     <section className="guia-seccion" aria-labelledby={`guia-${seccion.id}`}>
-      <h3 id={`guia-${seccion.id}`}>{seccion.numero ? `Parte ${seccion.numero}. ` : ''}<TextoGuia texto={seccion.titulo} partida={partida} /></h3>
+      <header className="guia-portada">
+        <span className="guia-kicker">{seccion.numero ? `Parte ${seccion.numero}` : 'Guía de supervivencia'}</span>
+        <h3 id={`guia-${seccion.id}`}><TextoGuia texto={seccion.titulo} partida={partida} /></h3>
+      </header>
       {seccion.bloques.map((b, i) => {
         if (b.tipo === 'subtitulo') return <h4 key={i}><TextoGuia texto={b.texto} partida={partida} /></h4>;
         if (b.tipo === 'parrafo') return <p key={i}><TextoGuia texto={b.texto} partida={partida} /></p>;
@@ -161,14 +249,13 @@ export function SeccionGuia({ seccion, partida }) {
 
 export function RecursosNasa() {
   return (
-    <div>
-      <p>Los 5 recursos oficiales del reto que usa el juego:</p>
+    <div className="guia-tarjetas">
       {RECURSOS.map((r) => (
-        <div key={r.id} className="tarjeta-dato">
-          <strong><a href={r.url} target="_blank" rel="noreferrer">{r.nombre} ↗</a></strong>
+        <article key={r.id} className="tarjeta-dato">
+          <h4><a href={r.url} target="_blank" rel="noreferrer">{r.nombre} ↗</a></h4>
           <p>{r.que_es}</p>
           <ul>{r.uso_en_el_juego.map((u) => <li key={u}>{u}</li>)}</ul>
-        </div>
+        </article>
       ))}
     </div>
   );

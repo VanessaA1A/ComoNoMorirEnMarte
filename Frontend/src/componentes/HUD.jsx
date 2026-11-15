@@ -4,7 +4,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal } from './Modal.jsx';
-import Icono from './Iconostemp.jsx';
+import Icono from './Iconos.jsx';
 
 // "O2" sin subíndice: FORCED SQUARE no tiene el carácter ₂.
 export const ETIQUETA = { oxigeno: 'O2', bateria: 'Batería', alimentacion: 'Comida', integridad: 'Traje', radiacion: 'Radiación' };

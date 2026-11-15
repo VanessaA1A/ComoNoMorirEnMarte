@@ -6,7 +6,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { RANURAS, leerRanura } from '../juego/partidas.js';
 import { Modal } from './Modal.jsx';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
-import Icono from './Iconostemp.jsx';
+import Icono from './Iconos.jsx';
 import { ETIQUETA, formatoReloj } from './HUD.jsx';
 import { Enlace } from './Mapas.jsx';
 import FuentesCartografia from './FuentesCartografia.jsx';
@@ -16,7 +16,7 @@ export function Creditos() {
   const fuentes = [...new Set([...CAPITULOS.flatMap((c) => c.fuentes ?? []), ...j.catalogo.datos.map((d) => d.fuente)])];
   return (
     <Modal titulo="Créditos y fuentes" onCerrar={() => j.setPantalla('inicio')} ancho>
-      <p><strong>Equipo Zinnia Aurora:</strong> Vanessa, Valeria, Sefora, Ulisis, Kelly y Moises.</p>
+      <p><strong>Equipo Zinnia Aurora:</strong> Vanessa, Valeria, Sefora, Ulises, Kelly y Moises.</p>
       <p><strong>Tipografías:</strong> AMORIA de gunastudio (versión demo, solo para uso personal y no comercial) y FORCED SQUARE de Paul IJsendoorn (Drawperfect).</p>
       <p><strong>Imágenes:</strong> NASA/JPL-Caltech (y NASA/JPL-Caltech/MSSS en las fotos de Curiosity).</p>
       <p><strong>Zinn-IA:</strong> el guion, el tutorial, las pistas y las preguntas frecuentes están escritos por el equipo. En el chat responde con IA en vivo (Claude Haiku, de Anthropic), limitada a los datos verificados del juego con fuentes NASA/USGS; no guarda tus mensajes ni pide datos personales. Sin conexión responde con textos del equipo.</p>
