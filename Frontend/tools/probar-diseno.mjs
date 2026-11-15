@@ -2,7 +2,7 @@
 // Recorre el tutorial del cap. 3 (c03_02 y c03_03, todas sus líneas), la decisión c03_04, el cap. 4 con el minimapa
 // y un final, en 1366×768, 1536×864, 1920×1080 y 2560×1440. Falla si el panel de barras, el reloj, el minimapa,
 // el cuadro de diálogo o las opciones se superponen, si el texto del diálogo se desborda, si hay franjas a los lados
-// o si el minimapa muestra botones, coordenadas o créditos.
+// si el minimapa muestra botones, coordenadas o créditos, o si el globo de texto tapa al astronauta.
 // Uso: node tools/probar-diseno.mjs <url> [chrome] [carpeta-capturas]
 import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
@@ -39,7 +39,10 @@ const MEDIR = `(() => {
   const mapa = document.querySelector('.minimapa-real, .tablet-escena');
   const visible = (sel) => [...(mapa?.querySelectorAll(sel) ?? [])].some((e) => e.getBoundingClientRect().width > 0);
   const fuera = Object.entries(c).filter(([, v]) => v && (v.l < -1 || v.t < -1 || v.r > W + 1 || v.b > H + 1)).map(([k]) => k);
-  return { choques, fuera, desborde: d ? d.scrollHeight > d.clientHeight + 2 : false, franjas: esc ? Math.round(W - esc.width) + Math.round(H - esc.height) : null,
+  const im = document.querySelector('.personaje-astro img'); let astroTapado = 0;
+  if (im && d && im.naturalWidth) { const b = im.getBoundingClientRect(); const k = Math.min(b.width / im.naturalWidth, b.height / im.naturalHeight); const w = im.naturalWidth * k, h = im.naturalHeight * k; const dd = d.getBoundingClientRect();
+    const l = b.left + (b.width - w) / 2, r = l + w, t = b.bottom - h; if (Math.min(r, dd.right) > Math.max(l, dd.left)) astroTapado = Math.max(0, Math.round(Math.min(b.bottom, dd.bottom) - Math.max(t, dd.top))); }
+  return { astroTapado, choques, fuera, desborde: d ? d.scrollHeight > d.clientHeight + 2 : false, franjas: esc ? Math.round(W - esc.width) + Math.round(H - esc.height) : null,
     extrasEnMapa: ['.mapa-iconos button', '.mapa-coords', '.leaflet-control-attribution'].filter(visible), mapaAncho: mapa ? Math.round(mapa.getBoundingClientRect().width) : null,
     texto: d?.textContent?.slice(0, 40) ?? '' };
 })()`;
@@ -50,6 +53,7 @@ const revisar = async (donde) => {
   ok(!r.fuera.length, `${donde}: se sale de la ventana ${r.fuera.join(', ')}`);
   ok(!r.desborde, `${donde}: el texto del diálogo se desborda ("${r.texto}…")`);
   ok(r.franjas === 0, `${donde}: franjas a los lados o arriba/abajo (${r.franjas} px)`);
+  ok(r.astroTapado <= 2, `${donde}: el globo de texto tapa al astronauta (${r.astroTapado} px)`);
   ok(!r.extrasEnMapa.length, `${donde}: el minimapa muestra ${r.extrasEnMapa.join(', ')}`);
   return r;
 };
@@ -82,6 +86,7 @@ for (const [w, h] of TAMANOS) {
   }
   await foto(`${t}_c03_decision`);
   await ir('c04_02', 4); await revisar(`${t} cap. 4 con minimapa`); await foto(`${t}_c04_minimapa`);
+  await ir('c08_caida', 8); await revisar(`${t} cap. 8, caída`); await foto(`${t}_c08_caida`);
   await ir('final_bueno', 10); await revisar(`${t} final bueno`); await foto(`${t}_final_bueno`);
 }
 console.log(errores.length ? `✗ errores en la página: ${errores.join(' | ')}` : '✓ sin errores en la página');

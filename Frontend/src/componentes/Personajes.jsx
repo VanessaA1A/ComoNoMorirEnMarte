@@ -43,6 +43,8 @@ const sinExtension = (archivo) => archivo.replace(/.[a-z0-9]+$/i, '');
 // en esas escenas no se dibuja el sprite encima, para que no salgan dos astronautas.
 const CON_ASTRONAUTA = new Set(['bg_c09_alerta', 'bg_c09_refugio', 'final_bueno', 'final_intermedio', 'final_malo']);
 export const fondoTraeAstronauta = (archivo) => Boolean(archivo) && CON_ASTRONAUTA.has(sinExtension(archivo));
+// Color del suelo de esos fondos (mediana de la franja de abajo, fuera del astronauta): rellena detrás del globo de texto
+const COLOR_SUELO = { bg_c09_alerta: '#923321', bg_c09_refugio: '#511f1e', final_bueno: '#8b6e80', final_intermedio: '#b05131', final_malo: '#6a3336' };
 
 const SUPLENTE = {
   1: 'bg_c01_tierra.jpg', 2: 'bg_c02_nave.jpg', 3: 'bg_c03_base.jpg', 4: 'bg_c04_mirador.jpg', 5: 'bg_c05_transicion.jpg',
@@ -72,7 +74,21 @@ function FondoImagen({ archivo, capitulo, alternativas }) {
   if (!actual) {
     return <div className={`fondo-respaldo ${esViaje(capitulo) ? 'viaje' : 'marte'}`} aria-hidden="true" />;
   }
-  return <img src={`${IMG}/fondos/${actual}`} alt="" className={`fondo${prestado ? ' fondo-prestado' : ''}`} draggable={false} onError={() => setI((n) => n + 1)} />;
+  // Fondo con el astronauta pintado abajo: el fondo sube lo que mide el cuadro de diálogo, para que el astronauta
+  // quede encima del globo de texto y no detrás. Abajo, a los costados del globo, se ve el mismo fondo (sin huecos);
+  // detrás del globo no, para que no se asome un segundo astronauta.
+  const elevado = !prestado && fondoTraeAstronauta(archivo);
+  const img = <img src={`${IMG}/fondos/${actual}`} alt="" className={`fondo${prestado ? ' fondo-prestado' : ''}${elevado ? ' fondo-costados' : ''}`} draggable={false} onError={() => setI((n) => n + 1)} />;
+  if (elevado) {
+    return (
+      <>
+        <div className="fondo fondo-relleno" style={{ backgroundColor: COLOR_SUELO[sinExtension(archivo)] }} aria-hidden="true" />
+        {img}
+        <img src={`${IMG}/fondos/${actual}`} alt="" className="fondo fondo-elevado" draggable={false} />
+      </>
+    );
+  }
+  return img;
 }
 
 // Zinn-IA ya no se dibuja aquí: usa ZinniaAvatar.jsx (un solo componente, sin logotipo de respaldo).

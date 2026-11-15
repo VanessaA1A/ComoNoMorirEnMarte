@@ -1241,3 +1241,20 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
 .escena.con-tablet .dialogo.dialogo-imagen { font-size: 1.5em; }
 .escena.lugar-marte.con-tablet .personaje-astro { left: 44%; bottom: 18%; width: 17%; height: 58%; }
 .escena .dialogo.dialogo-imagen { min-height: auto; height: auto; max-height: 70vh; overflow-y: auto; }
+
+/* ===== El globo de texto nunca tapa al astronauta =====
+   --dialogo-alto: lo que ocupa el cuadro de diálogo desde abajo (bottom 1,5 % + ancho 83 % × 364/1600).
+   - Escenas de Marte: el sprite se apoya encima del globo y se achica si hace falta para no tocar el panel de barras.
+   - Fondos con el astronauta pintado (cap. 9 y finales): una copia del fondo sube lo que mide el globo. */
+.escena { --dialogo-alto: calc(1.5dvh + 83vw * 364 / 1600); }
+.escena.lugar-marte .personaje-astro, .escena.lugar-marte.con-tablet .personaje-astro {
+  bottom: var(--dialogo-alto); height: min(58%, calc(100dvh - var(--dialogo-alto) - 6.5em));
+}
+.fondo.fondo-elevado {
+  top: auto; bottom: var(--dialogo-alto); height: 100%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.5em), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 1.5em), transparent);
+}
+/* Copia de abajo: solo a los costados del globo (11 % y 6 %), donde los fondos no traen al astronauta pintado */
+.fondo.fondo-costados {
+  -webkit-mask-image: linear-gradient(to right, #000 11%, transparent 11%, transparent 94%, #000 94%); mask-image: linear-gradient(to right, #000 11%, transparent 11%, transparent 94%, #000 94%);
+}
