@@ -67,7 +67,8 @@ try {
 
   // Guía (docs/guia_supervivencia.md): partes, subtítulos, citas [n] como enlace a su fuente y sin marcas sueltas
   const reglas = dibujar(h(Guia, { pestanaInicial: 'reglas' }), enJuego('ella'));
-  ok(reglas.includes('Parte 1. ') && reglas.includes('<h4') && reglas.includes('llegas con vida'), 'Guía · Parte 1: título, subtítulos y "llegas con vida"');
+  // Desde "arreglos estéticos" (f4a4c48) el número va arriba ("Parte 1") y el título en su propio encabezado
+  ok(/Parte (<!-- -->)?1/.test(reglas) && reglas.includes('Cómo funciona tu supervivencia') && reglas.includes('<h4') && reglas.includes('llegas con vida'), 'Guía · Parte 1: título, subtítulos y "llegas con vida"');
   const mapa = dibujar(h(Guia, { pestanaInicial: 'mapa' }));
   ok(/<a class="cita" href="https:\/\/www\.uahirise\.org\/ESP_039384_1085"[^>]*>\[<!-- -->16<!-- -->\]<\/a>/.test(mapa) || /class="cita" href="https:\/\/www\.uahirise\.org\/ESP_039384_1085"/.test(mapa), 'Guía · Parte 2: la cita [16] enlaza a HiRISE');
   const inicioGuia = dibujar(h(Guia));
