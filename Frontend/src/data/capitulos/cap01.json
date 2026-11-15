@@ -99,12 +99,22 @@
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Bajo 30 caminas lento; en cero te desmayas. Si el traje baja de 30, cada decisión te quita oxígeno. Y la radiación sube y nunca baja…",
+          "texto": "Bajo 30 caminas lento; en cero te desmayas. Si el traje se rasga…",
+          "respuesta": "…¡el aire se escapa!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Si el traje baja de 30, cada decisión te quita oxígeno. Y la radiación sube y nunca baja…",
           "respuesta": "…¡cada punto que evito es ventaja!"
         },
         {
           "quien": "Zinn-IA",
-          "texto": "Con 70 o más no vuelves a casa. Tienes tres horas y media o el módulo se va sin ti. ¿Y si un verso se te olvida?",
+          "texto": "Con 70 o más no vuelves a casa. Y el reloj hace tic, tac…",
+          "respuesta": "…¡si llego tarde, el módulo se va!"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Tienes tres horas y media o el módulo se va sin ti. ¿Y si un verso se te olvida?",
           "respuesta": "…¡la Guía me salva la vida!"
         }
       ],

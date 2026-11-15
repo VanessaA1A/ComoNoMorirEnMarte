@@ -96,10 +96,10 @@ ok(formatear('viv{o|a|e}', { pronombre: 'el', escena: 'c01_01' }) === 'vivo/a/e'
 ok(formatear('viv{o|a|e}', null) === 'vivo/a/e', 'sin partida también (vivo/a/e)');
 ok(['vivo', 'viva', 'vive'].every((v, i) => formatear('viv{o|a|e}', { pronombre: ['el', 'ella', 'elle'][i], escena: 'c03_01' }) === v), 'después de elegir: vivo / viva / vive');
 
-// Canción del tutorial (cap. 1, versión corta de Moises): 5 versos con botón de UNA respuesta, luego "esperarGuia" y el cierre
+// Canción del tutorial (cap. 1, versión de Moises + traje y reloj): 7 versos, uno por barra, con botón de UNA respuesta, luego "esperarGuia" y el cierre
 const cancion = ESCENAS.get('c01_04');
 const versos = (cancion?.lineas || []).filter((l) => l.respuesta);
-ok(versos.length === 5 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 5 versos con respuesta, sin opciones ni efecto (no multiplica rutas)');
+ok(versos.length === 7 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 7 versos con respuesta (uno por barra, con traje y reloj), sin opciones ni efecto (no multiplica rutas)');
 ok(ESCENAS.get(cancion?.ir)?.accion === 'esperarGuia' && !ESCENAS.get(cancion.ir).opciones && !ESCENAS.get(cancion.ir).efecto, 'después de la canción viene "esperarGuia" (paso directo, sin efecto)');
 const cierre = ESCENAS.get(ESCENAS.get(cancion?.ir)?.ir);
 ok((cierre?.lineas?.at(-1)?.texto ?? '').endsWith('Ahora sí: ¡motores encendidos!') && cierre.ir === 'c01_05' && !cierre.efecto, 'cierre: termina en "Ahora sí: ¡motores encendidos!" y sigue a c01_05');

@@ -30,13 +30,14 @@ export function precargarZinnia() {
 }
 
 // Animaciones de cuerpo completo (inicio y tarjeta del capítulo 1). Con "menos movimiento", o si el archivo no
-// carga, se ve Zinn-IA quieta (normal.png), nunca el logotipo.
+// carga, se ve Zinn-IA quieta (normal.png), nunca el logotipo. Siempre es la MISMA <img> con las mismas clases:
+// las medidas del diseño no cambian en ningún caso.
 const ANIMACIONES = { multiexpresion: '/img/zinnia_multiexpresion.webp', estatica: '/img/zinnia_estatica.gif' };
 export function ZinniaAnimada({ animacion, className = '', alt = '' }) {
   const menos = useMenosMovimiento();
   const [fallo, setFallo] = useState(false);
-  const src = ANIMACIONES[animacion];
-  if (menos || fallo || !src) return <ZinniaAvatar className={className} parpadeo={false} alt={alt} />;
+  const animada = ANIMACIONES[animacion];
+  const src = menos || fallo || !animada ? rutaExpresion('normal') : animada;
   return <img src={src} alt={alt} className={className} draggable={false} onError={() => setFallo(true)} />;
 }
 
