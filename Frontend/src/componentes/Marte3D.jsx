@@ -42,6 +42,7 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
   const [verCuriosity, setVerCuriosity] = useState(true);
   const [girar, setGirar] = useState(false);
   const [error, setError] = useState(null);
+  const [capa2d, setCapa2d] = useState('optica'); // capa del mapa 2D de respaldo (sin WebGL)
 
   // ---------- motor (una vez) ----------
   useEffect(() => {
@@ -211,7 +212,7 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
     return (
       <div className="marte3d-sin-webgl">
         <p className="burbuja">Tu navegador no puede mostrar el 3D (no tiene WebGL activado). No pasa nada: aquí tienes el mapa 2D con los mismos datos reales.</p>
-        <MapaCompleto poi={poi} />
+        <MapaCompleto poi={poi} capa={capa2d} setCapa={setCapa2d} />
       </div>
     );
   }
