@@ -39,7 +39,7 @@
   },
   {
    "id": "termico",
-   "estado": "ok",
+   "estado": "oculta",
    "archivos": [
     "terreno_themis.png",
     "terreno_themis_region.png"
@@ -48,7 +48,9 @@
    "resolucion": "~81.4 m/px",
    "atribucion": "THEMIS IR noche · ~81 m/px · NASA/JPL/ASU (Mars Trek)",
    "fuente": "https://trek.nasa.gov/mars/",
-   "limitacion": "Un píxel mide unos 80 m: distingue zonas grandes de arena o roca, no crestas ni rocas sueltas. Su posición no se ajustó a HiRISE (a 80 m/px no hay detalle para alinearla)."
+   "limitacion": "Un píxel mide unos 80 m: distingue zonas grandes de arena o roca, no crestas ni rocas sueltas. Su posición no se ajustó a HiRISE (a 80 m/px no hay detalle para alinearla).",
+   "texto": "Capa Terreno (THEMIS) oculta: su alineación con la foto de HiRISE no está verificada",
+   "motivo": "Se comparó el infrarrojo de noche de THEMIS con la rugosidad y el brillo del CTX en 15 × 15 km, desplazándolo hasta ±10 píxeles (±815 m): los picos fueron débiles (1,6 a 2,4 σ), quedaron en el borde de la búsqueda y en direcciones distintas. El CTX de Mars Trek estaba corrido 834 m; THEMIS (del mismo portal) podría estarlo también."
   },
   {
    "id": "minerales",

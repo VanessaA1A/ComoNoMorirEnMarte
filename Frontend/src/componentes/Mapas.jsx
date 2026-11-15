@@ -9,7 +9,8 @@ import Recurso from './Recurso.jsx';
 import { MapaCompleto, Minimapa } from './MapaReal.jsx';
 
 // Parada donde está el jugador según el capítulo (si la escena no dice "poi").
-const POI_POR_CAPITULO = { 3: 'H', 4: 'P1', 5: 'P2', 6: 'D1', 7: 'P3', 8: 'P4', 9: 'P4', 10: 'H' };
+// Capítulo 9: la alerta solar llega ya de regreso, en D2 (ruta_real.json); con el mirador alto, en P5.
+const POI_POR_CAPITULO = { 3: 'H', 4: 'P1', 5: 'P2', 6: 'D1', 7: 'P3', 8: 'P4', 9: 'D2', 10: 'H' };
 export function poiActual(partida) {
   if (!partida) return null;
   if (partida.capitulo === 9 && partida.flags?.mirador_alto) return 'P5';

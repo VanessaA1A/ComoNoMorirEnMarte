@@ -48,8 +48,14 @@ ok(['H', 'P1', 'P2', 'D1', 'P3', 'DEP', 'D2', 'P4', 'P5'].every((i) => ids.inclu
 ok(RUTA.puntos.every((p) => p.lat <= L0.norte && p.lat >= L0.sur && p.lon >= 0 && p.lon < 360 && p.lon >= L0.oeste && p.lon <= L0.este), 'ruta: lat planetocéntrica y lon Este 0–360 dentro de la zona');
 ok(RUTA.puntos.every((p) => p.fuentes?.length && p.fuentes.every(url) && p.terreno && p.criterio), 'ruta: cada punto tiene terreno, criterio y fuentes');
 const POIS = JSON.parse(fs.readFileSync(path.join(raiz, 'src/data/pois.json'), 'utf8'));
-ok(POIS.every((p) => ids.includes(p.id)), 'ruta: cada parada del guion (pois.json) tiene coordenadas reales');
-for (const t of ['H-P1', 'P1-P2', 'P2-D1', 'D1-P3 (camino firme)', 'P3-DEP (desvío)', 'P4-H (regreso)']) {
+// Las zonas Z_ de pois.json (tormenta, percloratos) son tarjetas de peligro, no paradas de la ruta
+ok(POIS.filter((p) => !p.id.startsWith('Z_')).every((p) => ids.includes(p.id)), 'ruta: cada parada del guion (pois.json) tiene coordenadas reales');
+// Orden de la historia: cada parada en su capítulo y en el orden del guion
+const capDe = Object.fromEntries(RUTA.puntos.map((p) => [p.id, p.capitulos]));
+ok(['H', 'P1', 'P2', 'D1', 'P3', 'P4', 'D2'].every((id, i, a) => !i || Math.min(...capDe[id]) >= Math.min(...capDe[a[i - 1]])) && capDe.D2.includes(9) && capDe.P5.includes(9) && capDe.REF?.includes(9),
+  'orden de la historia: H(3) P1(4) P2(5) D1(6) P3(7) P4(8) D2(9) y desde D2 el refugio o P5');
+ok(['P2', 'P3', 'P4'].every((id) => RUTA.puntos.find((p) => p.id === id)?.por_que_el_nombre && RUTA.puntos.find((p) => p.id === id).fuentes.some((u) => /curiosity-blog|jpl.nasa.gov/.test(u))), 'fichas P2, P3 y P4: nombre real y por qué se llaman así, con fuente de NASA/JPL');
+for (const t of ['H-P1', 'P1-P2', 'P2-D1', 'D1-P3 (camino firme)', 'P3-DEP (desvío)', 'D2-H (regresar ya)', 'REF-H (regreso tras el refugio)']) {
   const x = RUTA.tramos[t];
   ok(x && x.pendiente_p90 < 15 && x.pendiente_max < 23 && x.perfil.length > 2, `tramo a pie ${t}: ${x?.largo_m} m, pendiente p90 ${x?.pendiente_p90}° (< 15°), máx ${x?.pendiente_max}° (< 23°), con perfil`);
 }
