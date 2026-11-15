@@ -109,6 +109,22 @@ ok(CHISTES.every((x) => !emoji.test(x.texto)), 'chistes sin emojis');
 const pr = (p) => chat.respaldo('¿Cuándo vuelvo a casa?', partida({ pronombre: p })).texto;
 ok(/viv[oa e]|vive/.test(pr('elle')) ? pr('elle').includes('vive') : true, 'respuestas fijas con el pronombre de la partida (vivo/viva/vive)');
 
+// Indicador "IA en vivo": verde solo si hay key Y la última respuesta del servidor no fue "sin IA"
+const { iaDisponible } = await import('../src/api.js');
+const conEstado = (estado, salud = { zinnia: { ia: true } }) => {
+  globalThis.fetch = async (url) => (String(url).endsWith('/zinnia/estado')
+    ? (estado ? { ok: true, status: 200, json: async () => estado } : { ok: false, status: 404, json: async () => ({}) })
+    : { ok: true, status: 200, json: async () => salud });
+};
+conEstado({ ia: true, ultima_respuesta: { modo: 'ia' } });
+ok(await iaDisponible() === true, 'indicador: key y última respuesta con IA → "IA en vivo"');
+conEstado({ ia: true, ultima_respuesta: { modo: 'sin_ia', motivo: 'api_401_authentication_error' } });
+ok(await iaDisponible() === false, 'indicador: key inválida o sin saldo (última respuesta "sin IA") → "Modo sin conexión"');
+conEstado({ ia: false, ultima_respuesta: { modo: null } });
+ok(await iaDisponible() === false, 'indicador: sin key → "Modo sin conexión"');
+conEstado(null, { zinnia: { ia: true } });
+ok(await iaDisponible() === true, 'indicador: API anterior sin /zinnia/estado → usa /salud');
+
 if (fallos) { console.log(`\n❌ ${fallos} prueba(s) del chat fallaron`); process.exit(1); }
 console.log('\n✅ Chat de Zinn-IA: IA, respaldo, chistes y límites en orden');
 process.exit(0); // los AbortSignal.timeout de las peticiones simuladas no deben mantener vivo el proceso
