@@ -168,5 +168,34 @@ const bloqueo = fs.readFileSync(path.join(raiz, 'src/componentes/SoloComputadora
 ok(bloqueo.includes('¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.') && bloqueo.includes('href="/guia.html"') && !emoji.test(bloqueo), 'pantalla de bloqueo: texto de Zinn-IA, enlace a guia.html y sin emojis');
 ok(!fs.readFileSync(path.join(raiz, 'public/guia.html'), 'utf8').includes('puedeJugar'), 'guia.html no usa el bloqueo');
 
+// Guion 1.0: escenas narrativas "La tormenta de polvo" (c06_01) y "La nevada que no llega" (c07_01).
+// Solo texto: sin efecto en barras ni reloj, con una línea distinta según se revisó el clima en el mirador (clima_revisado).
+{
+  const { lineasVisibles } = await import('../src/engine/motor.js');
+  const { formatear: fmt } = await import('../src/engine/texto.js');
+  const conClima = { ...estadoInicial(), flags: { clima_revisado: true } };
+  const sinClima = { ...estadoInicial(), flags: {} };
+  const textos = (id, s) => lineasVisibles(ESCENAS.get(id), s).map((l) => l.texto).join(' ');
+  for (const [id, claves, nombre] of [['c06_01', ['nube de polvo', 'Opportunity', '10,8', 'menos del 1 %'], 'tormenta de polvo'], ['c07_01', ['nieve', 'Phoenix', 'Viking 2', 'escarcha'], 'nevada que no llega']]) {
+    const e = ESCENAS.get(id);
+    const variantes = (e.lineas ?? []).filter((l) => l.requiere?.flag === 'clima_revisado' || l.requiere?.noFlag === 'clima_revisado');
+    ok(claves.every((c) => textos(id, conClima).includes(c)) && !e.efecto, `${id}: escena narrativa "${nombre}" sin efecto en barras ni reloj`);
+    ok(variantes.length === 2 && lineasVisibles(e, conClima).filter((l) => variantes.includes(l)).length === 1 && lineasVisibles(e, sinClima).filter((l) => variantes.includes(l)).length === 1
+      && textos(id, conClima) !== textos(id, sinClima), `${id}: una línea distinta según se revisó el clima (clima_revisado)`);
+  }
+  const c06 = ESCENAS.get('c06_01');
+  ok(c06.capa !== 'termico' && !(c06.lineas ?? []).some((l) => /THEMIS/.test(l.texto) || l.capa === 'termico') && textos('c06_01', sinClima).includes('HiRISE'),
+    'c06_01: la hondonada se lee en la foto de HiRISE (la capa THEMIS está oculta en el mapa)');
+  const tranquil = c06.lineas.find((l) => /^Tranquil/.test(l.texto))?.texto ?? '';
+  ok(['el', 'ella', 'elle'].map((pr) => fmt(tranquil, { pronombre: pr, escena: 'c06_01', nombre: 'Alex' }).split(':')[0]).join('/') === 'Tranquilo/Tranquila/Tranquile',
+    'tormenta: "Tranquil{o|a|e}" concuerda con los 3 pronombres');
+  ok(textos('c04_03a', conClima).includes('remolinos térmicos'), 'c04_03a: al revisar el clima Zinn-IA ve actividad en el Sol y remolinos térmicos');
+  const fuentesDe = (n) => leer(`src/data/capitulos/cap0${n}.json`).fuentes ?? [];
+  ok(['six-things-about-opportunitys-recovery-efforts', 'mission/mer-opportunity', 'planetary/factsheet/marsfact'].every((u) => fuentesDe(6).some((f) => f.includes(u)))
+    && ['nasa-mars-lander-sees-falling-snow', 'dry-ice-snowfall-on-mars', 'frost-on-utopia-planitia'].every((u) => fuentesDe(7).some((f) => f.includes(u))),
+    'fuentes NASA/JPL de la tormenta (cap. 6) y de la nevada (cap. 7) en las fuentes del capítulo');
+  ok(![...lineasVisibles(c06, conClima), ...lineasVisibles(ESCENAS.get('c07_01'), conClima)].some((l) => /99 ?%/.test(l.texto)), 'tormenta: sin el "99 %" que no tiene fuente');
+}
+
 if (fallos) { console.log(`\n❌ ${fallos} prueba(s) fallaron`); process.exit(1); }
 console.log('\n✅ Zinn-IA: textos y lógica en orden');

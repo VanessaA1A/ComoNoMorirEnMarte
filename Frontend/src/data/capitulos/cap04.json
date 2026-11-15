@@ -34,7 +34,7 @@
       "abrirTablet": true, "capa": "radiacion",
       "lineas": [
         { "quien": "Zinn-IA", "texto": "Temperatura bajo cero, como casi siempre aquí. La radiación de fondo está normal: unos 0,64 mSv por día." },
-        { "quien": "Zinn-IA", "texto": "Pero veo actividad en el Sol. Si lanza partículas, te avisaré con tiempo extra.", "expresion": "seria" }
+        { "quien": "Zinn-IA", "texto": "Pero veo actividad en el Sol y remolinos térmicos en la planicie. Si el Sol lanza partículas, te avisaré con tiempo extra.", "expresion": "seria" }
       ],
       "ir": "c04_04"
     },
