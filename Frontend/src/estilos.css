@@ -493,7 +493,14 @@ a.boton.boton-grande { color: var(--texto); text-decoration: none; box-sizing: b
 .mapa-marte svg { width: 100%; height: auto; display: block; border-radius: .6em; border: 2px solid var(--aurora-2); }
 .mapa-marte .pin { cursor: pointer; }
 .mapa-marte .pin:focus-visible { outline: none; }
-.mapa-marte .pin:focus-visible circle { stroke: var(--lima); stroke-width: 4; }
+.mapa-marte .pin:focus-visible image, .mapa-marte .pin.elegido image { filter: drop-shadow(0 0 3px var(--lima)) drop-shadow(0 0 2px var(--lima)); }
+.mapa-marte-barra { display: flex; justify-content: flex-end; margin-bottom: .4em; }
+.mapa-marte .zona { cursor: pointer; }
+.mapa-marte .zona :is(ellipse, rect) { fill: rgba(202, 255, 149, .10); stroke: rgba(255, 229, 201, .75); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.mapa-marte .zona:hover :is(ellipse, rect), .mapa-marte .zona.elegida :is(ellipse, rect) { fill: rgba(202, 255, 149, .22); stroke: var(--lima); stroke-dasharray: none; }
+.mapa-marte .zona:focus-visible { outline: none; }
+.mapa-marte .zona:focus-visible :is(ellipse, rect) { stroke: var(--lima); stroke-width: 3; }
+.mapa-marte .zona text { font-size: 12px; fill: #FFE5C9; stroke: #24073F; stroke-width: 3.5px; paint-order: stroke; pointer-events: none; }
 
 /* ===== Imágenes del equipo (public/img/logos, fondos, zinnia, astronauta, ui) ===== */
 .personaje-zinnia { width: 10%; aspect-ratio: 420 / 594; } /* la misma caja hable o no: no se mueve al cambiar de expresión */

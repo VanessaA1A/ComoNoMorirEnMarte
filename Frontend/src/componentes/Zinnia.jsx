@@ -38,7 +38,7 @@ export function sugeridas(p) {
 }
 
 // ---------- Chat con Zinn-IA ----------
-const LUGARES_MARTE = new Set([...MARTE.destinos, ...MARTE.aterrizajes].filter(visible).map((x) => x.id)); // sin pendientes
+const LUGARES_MARTE = new Set([...MARTE.destinos, ...MARTE.aterrizajes, ...(MARTE.zonas ?? [])].filter(visible).map((x) => x.id)); // sin pendientes
 const ETIQUETA_ACCION = { abrir_capa: 'Ver capa', marcar_poi: 'Ver en el mapa', mostrar_ficha: 'Ver ficha', abrir_3d: 'Ver en 3D' };
 
 /** Ejecuta una acción del agente con lo que ya existe en el juego. Ids desconocidos: se ignoran. */
@@ -46,7 +46,7 @@ export function ejecutarAccion(j, a) {
   if (a?.tipo === 'abrir_capa' && j.catalogo.capas.some((c) => c.id === a.id)) { j.setCapa(a.id); j.abrir('mapaRuta'); return true; }
   if (a?.tipo === 'marcar_poi' && PARADAS_REALES.has(a.id)) { j.abrir('mapaRuta', { poi: a.id }); return true; } // el mapa completo se abre con ese punto seleccionado
   if (a?.tipo === 'abrir_3d' && ['globo', 'region'].includes(a.id)) { j.abrir('marte3d', { vista: a.id }); return true; }
-  if (a?.tipo === 'marcar_poi' && LUGARES_MARTE.has(a.id)) { j.abrir('mapaMarte'); return true; }
+  if (a?.tipo === 'marcar_poi' && LUGARES_MARTE.has(a.id)) { j.abrir('mapaMarte', { lugar: a.id }); return true; } // abre el Mapa de Marte con la ficha de ese lugar
   if (a?.tipo === 'mostrar_ficha' && j.catalogo.datos.some((d) => d.id === a.id)) { j.abrir('guia', { pestana: 'Fichas' }); return true; }
   return false;
 }

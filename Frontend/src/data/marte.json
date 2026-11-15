@@ -1,24 +1,570 @@
 {
-  "nota": "Coordenadas en latitud planetocéntrica y longitud Este 0–360°. Solo se muestran al jugador los puntos con \"fuente\"; los marcados \"pendiente\": true esperan una coordenada oficial y no se muestran.",
+  "nota": "Coordenadas en latitud planetocéntrica y longitud Este 0–360° (los límites de las zonas pueden venir en −180°…180°, como en el Gazetteer). Todo lo que se muestra tiene \"fuente\". Zonas: Gazetteer of Planetary Nomenclature (IAU/USGS): centro, diámetro y límites. Los destinos marcados \"pendiente\": true no se muestran.",
+  "zonas": [
+    {
+      "id": "tharsis",
+      "nombre": "Tharsis Montes",
+      "nombre_oficial": "Tharsis Montes",
+      "tipo": "Mons/Montes: monte o cadena de montes",
+      "lat": 1.5703,
+      "lon": 247.4165,
+      "diametro_km": 2059,
+      "limites": {
+        "lat": [
+          -11.621,
+          15.7123
+        ],
+        "lon": [
+          236.3638,
+          258.9829
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Región de Tharsis: el Gazetteer registra \"Tharsis\" solo como rasgo de albedo, sin extensión; aquí se dibujan los Tharsis Montes, los volcanes de la región.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/5948",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Tharsis Montes"
+    },
+    {
+      "id": "olympus",
+      "nombre": "Olympus Mons",
+      "nombre_oficial": "Olympus Mons",
+      "tipo": "Mons/Montes: monte o cadena de montes",
+      "lat": 18.6528,
+      "lon": 226.1975,
+      "diametro_km": 610,
+      "limites": {
+        "lat": [
+          13.4818,
+          23.676
+        ],
+        "lon": [
+          220.7567,
+          232.1984
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Su cima está unos 21,2 km sobre la altura cero de Marte: es el punto más alto del planeta.",
+      "guia": "[43]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/4453",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Olympus Mons"
+    },
+    {
+      "id": "valles",
+      "nombre": "Valles Marineris",
+      "nombre_oficial": "Valles Marineris",
+      "tipo": "Vallis/Valles: valle o sistema de valles",
+      "lat": -14.0059,
+      "lon": 301.4123,
+      "diametro_km": 3761,
+      "limites": {
+        "lat": [
+          -18.3293,
+          -2.7768
+        ],
+        "lon": [
+          267.5958,
+          331.1543
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "General name of the system of canyons honoring the scientific team of the Mariner 9 program.",
+      "dato": "Más de 4.000 km de largo (una quinta parte de la vuelta a Marte) y hasta 7 km de profundidad.",
+      "guia": "[42]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/6288",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Valles Marineris"
+    },
+    {
+      "id": "hellas",
+      "nombre": "Hellas Planitia",
+      "nombre_oficial": "Hellas Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": -42.4301,
+      "lon": 70.5025,
+      "diametro_km": 2299,
+      "limites": {
+        "lat": [
+          -55.4167,
+          -27.863
+        ],
+        "lon": [
+          45.5822,
+          96.1171
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "El fondo de la cuenca Hellas está unos 8,2 km bajo la altura cero: es el punto más bajo de Marte.",
+      "guia": "[43]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/2432",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Hellas Planitia"
+    },
+    {
+      "id": "argyre",
+      "nombre": "Argyre Planitia",
+      "nombre_oficial": "Argyre Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": -49.8406,
+      "lon": 316.6902,
+      "diametro_km": 893,
+      "limites": {
+        "lat": [
+          -57.2918,
+          -42.4359
+        ],
+        "lon": [
+          306.1232,
+          326.6159
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Planitia de unos 893 km de diámetro según el Gazetteer.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/371",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Argyre Planitia"
+    },
+    {
+      "id": "utopia",
+      "nombre": "Utopia Planitia",
+      "nombre_oficial": "Utopia Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": 46.7363,
+      "lon": 117.5168,
+      "diametro_km": 3560,
+      "limites": {
+        "lat": [
+          12.9159,
+          73.1699
+        ],
+        "lon": [
+          71.8562,
+          164.8869
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Aquí aterrizaron Viking 2 (1976) y Zhurong (2021).",
+      "guia": "[57][58]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/6260",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Utopia Planitia"
+    },
+    {
+      "id": "elysium",
+      "nombre": "Elysium Planitia",
+      "nombre_oficial": "Elysium Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": 2.979,
+      "lon": 154.7372,
+      "diametro_km": 3001,
+      "limites": {
+        "lat": [
+          -7.7709,
+          11.4038
+        ],
+        "lon": [
+          128.256,
+          179.1131
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Aquí aterrizó InSight (2018).",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/1784",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Elysium Planitia"
+    },
+    {
+      "id": "arabia",
+      "nombre": "Arabia Terra",
+      "nombre_oficial": "Arabia Terra",
+      "tipo": "Terra: gran extensión de tierra alta",
+      "lat": 21.249,
+      "lon": 5.7185,
+      "diametro_km": 4852,
+      "limites": {
+        "lat": [
+          -18.0714,
+          45.3642
+        ],
+        "lon": [
+          -29.6896,
+          49.4356
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Terra de unos 4852 km de diámetro según el Gazetteer.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/336",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Arabia Terra"
+    },
+    {
+      "id": "syrtis",
+      "nombre": "Syrtis Major Planum",
+      "nombre_oficial": "Syrtis Major Planum",
+      "tipo": "Planum: meseta o llanura alta",
+      "lat": 9.2007,
+      "lon": 67.103,
+      "diametro_km": 1215,
+      "limites": {
+        "lat": [
+          -1.3707,
+          19.4087
+        ],
+        "lon": [
+          58.8824,
+          76.6443
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Albedo feature name; changed from Planitia to Planum.",
+      "dato": "Planum de unos 1215 km de diámetro según el Gazetteer.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/5796",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Syrtis Major Planum"
+    },
+    {
+      "id": "isidis",
+      "nombre": "Isidis Planitia",
+      "nombre_oficial": "Isidis Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": 13.9357,
+      "lon": 88.3772,
+      "diametro_km": 1225,
+      "limites": {
+        "lat": [
+          3.1974,
+          22.5902
+        ],
+        "lon": [
+          77.6228,
+          98.9085
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Planitia de unos 1225 km de diámetro según el Gazetteer.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/2735",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Isidis Planitia"
+    },
+    {
+      "id": "chryse",
+      "nombre": "Chryse Planitia",
+      "nombre_oficial": "Chryse Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": 28.4333,
+      "lon": 319.6927,
+      "diametro_km": 1542,
+      "limites": {
+        "lat": [
+          14.8495,
+          39.6114
+        ],
+        "lon": [
+          305.2344,
+          333.9328
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Aquí aterrizó Viking 1 (1976).",
+      "guia": "[57]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/1203",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Chryse Planitia"
+    },
+    {
+      "id": "acidalia",
+      "nombre": "Acidalia Planitia",
+      "nombre_oficial": "Acidalia Planitia",
+      "tipo": "Planitia: llanura baja",
+      "lat": 49.76,
+      "lon": 339.26,
+      "diametro_km": 3505,
+      "limites": {
+        "lat": [
+          14.7609,
+          68.6724
+        ],
+        "lon": [
+          -55.5532,
+          16.145
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "From classical albedo feature at 44N, 21W.",
+      "dato": "Planitia de unos 3505 km de diámetro según el Gazetteer.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/38",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Acidalia Planitia"
+    },
+    {
+      "id": "meridiani",
+      "nombre": "Meridiani Planum",
+      "nombre_oficial": "Meridiani Planum",
+      "tipo": "Planum: meseta o llanura alta",
+      "lat": -0.04,
+      "lon": 356.86,
+      "diametro_km": 1059,
+      "limites": {
+        "lat": [
+          -3.9998,
+          8.7808
+        ],
+        "lon": [
+          -10.8178,
+          7.038
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Aquí aterrizó Opportunity (2004), que encontró pruebas de agua líquida en el pasado de Marte.",
+      "guia": "[56][48]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/3854",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Meridiani Planum"
+    },
+    {
+      "id": "gale",
+      "nombre": "Cráter Gale",
+      "nombre_oficial": "Gale",
+      "tipo": "Cráter",
+      "lat": -5.3672,
+      "lon": 137.811,
+      "diametro_km": 154,
+      "limites": {
+        "lat": [
+          -6.6671,
+          -4.0675
+        ],
+        "lon": [
+          136.5078,
+          139.1188
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Walter F.; Australian astronomer (1865-1945).",
+      "dato": "Cráter de la región de Aeolis. Aquí aterrizó Curiosity (2012) y aquí es tu misión: en su centro se alza Mount Sharp (Aeolis Mons).",
+      "guia": "[49]",
+      "jugable": true,
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/2071",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Gale"
+    },
+    {
+      "id": "boreum",
+      "nombre": "Planum Boreum",
+      "nombre_oficial": "Planum Boreum",
+      "tipo": "Planum: meseta o llanura alta",
+      "lat": 87.32,
+      "lon": 54.96,
+      "diametro_km": 355,
+      "limites": {
+        "lat": [
+          80.5878,
+          90
+        ],
+        "lon": [
+          -180,
+          180
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature name.",
+      "dato": "Casquete del polo norte.",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/4754",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Planum Boreum"
+    },
+    {
+      "id": "australe",
+      "nombre": "Planum Australe",
+      "nombre_oficial": "Planum Australe",
+      "tipo": "Planum: meseta o llanura alta",
+      "lat": -83.35,
+      "lon": 157.7,
+      "diametro_km": 1430,
+      "limites": {
+        "lat": [
+          -90,
+          -71.7272
+        ],
+        "lon": [
+          -180,
+          180
+        ]
+      },
+      "extension_aproximada": false,
+      "origen_nombre": "Classical albedo feature.",
+      "dato": "Casquete del polo sur. Si se derritiera su hielo, cubriría Marte con un océano de unos 11 m.",
+      "guia": "[40]",
+      "fuente": "https://planetarynames.wr.usgs.gov/Feature/4753",
+      "fuente_nombre": "Gazetteer of Planetary Nomenclature (IAU/USGS), Planum Australe"
+    }
+  ],
   "aterrizajes": [
-    { "id": "viking1", "anio": 1976, "mision": "Viking 1 (NASA)", "lugar": "Chryse Planitia", "lat": 22.48, "lon": 310.03, "pendiente": true, "dato": "Primer aterrizaje exitoso de una misión de EE. UU. en Marte." },
-    { "id": "viking2", "anio": 1976, "mision": "Viking 2 (NASA)", "lugar": "Utopia Planitia", "lat": 47.6673, "lon": 134.2809, "dato": "Segundo módulo Viking.", "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C", "fuente_nombre": "NSSDC/NASA, Viking 2 Lander" },
-    { "id": "pathfinder", "anio": 1997, "mision": "Mars Pathfinder + Sojourner (NASA)", "lugar": "Ares Vallis", "lat": 19.33, "lon": 326.45, "pendiente": true, "dato": "Primer rover en Marte; aterrizó con bolsas de aire." },
-    { "id": "spirit", "anio": 2004, "mision": "Spirit (NASA)", "lugar": "Cráter Gusev", "lat": -14.57, "lon": 175.48, "pendiente": true, "dato": "Exploró 6 años." },
-    { "id": "opportunity", "anio": 2004, "mision": "Opportunity (NASA)", "lugar": "Meridiani Planum", "lat": -1.95, "lon": 354.47, "pendiente": true, "dato": "Trabajó 15 años (60 veces lo previsto); la tormenta de 2018 lo apagó." },
-    { "id": "phoenix", "anio": 2008, "mision": "Phoenix (NASA)", "lugar": "Llanuras árticas", "lat": 68.22, "lon": 234.25, "pendiente": true, "dato": "Descubrió los percloratos." },
-    { "id": "curiosity", "anio": 2012, "mision": "Curiosity (NASA)", "lugar": "Cráter Gale (Bradbury Landing)", "lat": -4.5895, "lon": 137.4416, "jugable": true, "dato": "Nuestra base: aquí está la Base Aurora y la ruta del Marswalk.", "fuente": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_places/data_localizations/localized_pos.csv", "fuente_nombre": "NASA/JPL, PDS PLACES de MSL (sitio 1), doi:10.17189/1520397" },
-    { "id": "insight", "anio": 2018, "mision": "InSight (NASA)", "lugar": "Elysium Planitia", "lat": 4.5, "lon": 135.62, "pendiente": true, "dato": "Módulo fijo; trabajó hasta diciembre de 2022." },
-    { "id": "perseverance", "anio": 2021, "mision": "Perseverance + Ingenuity (NASA)", "lugar": "Cráter Jezero (Octavia E. Butler Landing)", "lat": 18.4446, "lon": 77.4509, "dato": "Encontró la roca Cheyava Falls (posible biofirma).", "galeria": "https://mars.nasa.gov/mars2020/multimedia/raw-images/", "imagen": "img/marte/jezero_perseverance.jpg", "fuente": "https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json", "fuente_nombre": "NASA/JPL, posiciones de Perseverance (sitio 3, sol 13)" },
-    { "id": "zhurong", "anio": 2021, "mision": "Zhurong (China)", "lugar": "Utopia Planitia", "lat": 25, "lon": 110, "pendiente": true, "dato": "Primer rover chino en Marte." }
+    {
+      "id": "viking1",
+      "anio": 1976,
+      "mision": "Viking 1 (NASA)",
+      "lugar": "Chryse Planitia",
+      "lat": 22.27,
+      "lon": 312.05,
+      "que": "Módulo de aterrizaje fijo",
+      "dato": "Primer módulo Viking. Los dos Viking funcionaron mucho más que los 90 días previstos.",
+      "guia": "[57]",
+      "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-075C",
+      "fuente_nombre": "NSSDC/NASA, Viking 1 Lander (22,27° N, 312,05° E)"
+    },
+    {
+      "id": "viking2",
+      "anio": 1976,
+      "mision": "Viking 2 (NASA)",
+      "lugar": "Utopia Planitia",
+      "lat": 47.64,
+      "lon": 134.29,
+      "que": "Módulo de aterrizaje fijo",
+      "dato": "El módulo de Viking 2 trabajó siete años.",
+      "guia": "[57]",
+      "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      "fuente_nombre": "NSSDC/NASA, Viking 2 Lander"
+    },
+    {
+      "id": "pathfinder",
+      "anio": 1997,
+      "mision": "Mars Pathfinder + Sojourner (NASA)",
+      "lugar": "Ares Vallis",
+      "lat": 19.33,
+      "lon": 326.45,
+      "que": "Módulo de aterrizaje con un pequeño rover",
+      "dato": "Bajó envuelto en bolsas de aire, que se desinflaron y se recogieron después de tocar el suelo. El módulo se llama Sagan Memorial Station.",
+      "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-068A",
+      "fuente_nombre": "NSSDC/NASA, Mars Pathfinder (19,33° N, 33,55° O = 326,45° E)"
+    },
+    {
+      "id": "spirit",
+      "anio": 2004,
+      "mision": "Spirit (NASA)",
+      "lugar": "Cráter Gusev",
+      "lat": -14.572,
+      "lon": 175.478,
+      "que": "Rover",
+      "dato": "Bajó con retrocohetes y bolsas de aire; después abrió sus pétalos y desplegó los paneles solares.",
+      "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-027A",
+      "fuente_nombre": "NSSDC/NASA, Mars Exploration Rover A (Spirit)"
+    },
+    {
+      "id": "opportunity",
+      "anio": 2004,
+      "mision": "Opportunity (NASA)",
+      "lugar": "Meridiani Planum",
+      "lat": -1.946,
+      "lon": 354.473,
+      "que": "Rover",
+      "dato": "Encontró pruebas de agua líquida en el pasado de Marte y trabajó unos 15 años. Quedó dentro de un cráter de 20 m.",
+      "guia": "[56][48]",
+      "fuente": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A",
+      "fuente_nombre": "NSSDC/NASA, Mars Exploration Rover B (Opportunity)"
+    },
+    {
+      "id": "phoenix",
+      "anio": 2008,
+      "mision": "Phoenix (NASA)",
+      "lugar": "Llanuras árticas del norte",
+      "lat": 68.2,
+      "lon": 234.2,
+      "que": "Módulo de aterrizaje fijo",
+      "dato": "Descubrió los percloratos del suelo. Su última señal llegó el 2 de noviembre de 2008.",
+      "guia": "[34]",
+      "fuente": "https://www.jpl.nasa.gov/images/pia11202-phoenix-landing-site-indicated-on-global-view/",
+      "fuente_nombre": "NASA/JPL, PIA11202 (68,2° N, 234,2° E)"
+    },
+    {
+      "id": "curiosity",
+      "anio": 2012,
+      "mision": "Curiosity (NASA)",
+      "lugar": "Cráter Gale (Bradbury Landing)",
+      "lat": -4.5895,
+      "lon": 137.4416,
+      "jugable": true,
+      "dato": "Aquí es tu misión: la Base Aurora y la ruta del Marswalk. Curiosity sigue subiendo Mount Sharp.",
+      "fuente": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_places/data_localizations/localized_pos.csv",
+      "fuente_nombre": "NASA/JPL, PDS PLACES de MSL (sitio 1), doi:10.17189/1520397",
+      "que": "Rover",
+      "guia": "[49]"
+    },
+    {
+      "id": "insight",
+      "anio": 2018,
+      "mision": "InSight (NASA)",
+      "lugar": "Elysium Planitia",
+      "lat": 4.5,
+      "lon": 135.9,
+      "que": "Módulo de aterrizaje fijo (sismómetro)",
+      "dato": "Estudió los sismos de Marte y su interior; trabajó en la superficie hasta diciembre de 2022. Coordenada: centro del sitio de aterrizaje elegido.",
+      "fuente": "https://www.jpl.nasa.gov/news/press_kits/insight/landing/mission/landing-site",
+      "fuente_nombre": "NASA/JPL, kit de prensa de InSight: sitio de aterrizaje (4,5° N, 135,9° E)"
+    },
+    {
+      "id": "perseverance",
+      "anio": 2021,
+      "mision": "Perseverance + Ingenuity (NASA)",
+      "lugar": "Cráter Jezero (Octavia E. Butler Landing)",
+      "lat": 18.4447,
+      "lon": 77.4508,
+      "dato": "Estudia rocas de hasta 3.600 millones de años y encontró la roca Cheyava Falls (posible biofirma).",
+      "galeria": "https://mars.nasa.gov/mars2020/multimedia/raw-images/",
+      "imagen": "img/marte/jezero_perseverance.jpg",
+      "fuente": "https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json",
+      "fuente_nombre": "NASA/JPL, posiciones de Perseverance (sitio 3, sol 13)",
+      "que": "Rover (con el helicóptero Ingenuity)",
+      "guia": "[8][57][36]"
+    },
+    {
+      "id": "zhurong",
+      "anio": 2021,
+      "mision": "Zhurong (China)",
+      "lugar": "Utopia Planitia",
+      "lat": 25.066,
+      "lon": 109.925,
+      "que": "Rover",
+      "dato": "El primer rover chino en Marte, en la misma gran llanura donde bajó Viking 2.",
+      "guia": "[58]",
+      "fuente": "https://doi.org/10.1038/s41550-021-01519-5",
+      "fuente_nombre": "Nature Astronomy (2021), posición de Zhurong con imágenes HiRIC (25,066° N, 109,925° E)"
+    }
   ],
   "destinos": [
-    { "id": "olympus", "nombre": "Olympus Mons", "lat": 18.6, "lon": 226, "pendiente": true, "ficha": "D15", "dato": "Volcán más alto del Sistema Solar: su cima está a 21,2 km sobre la altura cero." },
-    { "id": "valles", "nombre": "Valles Marineris", "lat": -12, "lon": 295, "pendiente": true, "ficha": "D16", "dato": "Cañones de más de 4.000 km y hasta 7 km de profundidad; se formaron sobre todo por fallas, no por un río." },
-    { "id": "hellas", "nombre": "Cuenca Hellas", "lat": -42, "lon": 70, "pendiente": true, "ficha": "D15", "dato": "Cráter de impacto gigante: su fondo está 8,2 km bajo la altura cero, el punto más bajo de Marte." },
-    { "id": "polos", "nombre": "Polo sur", "lat": -84, "lon": 0, "pendiente": true, "ficha": "D26", "dato": "Casquetes de hielo de agua y dióxido de carbono que crecen y se encogen con las estaciones." },
-    { "id": "jezero", "nombre": "Cráter Jezero", "lat": 18.4, "lon": 77.5, "pendiente": true, "ficha": "D22", "dato": "Antiguo lago y delta de río; aquí está la roca Cheyava Falls.", "galeria": "https://mars.nasa.gov/mars2020/multimedia/raw-images/", "imagen": "img/marte/jezero_perseverance.jpg" },
-    { "id": "gediz", "nombre": "Gediz Vallis", "lat": -5.2, "lon": 137.8, "pendiente": true, "ficha": "D18", "dato": "Canal en Mount Sharp con piedras de azufre puro." },
-    { "id": "airy0", "nombre": "Airy-0", "lat": -5.1, "lon": 0, "pendiente": true, "ficha": "D14", "dato": "Cráter que marca el meridiano 0° de Marte." }
+    {
+      "id": "polos",
+      "nombre": "Polo sur",
+      "lat": -84,
+      "lon": 0,
+      "pendiente": true,
+      "ficha": "D26",
+      "dato": "Casquetes de hielo de agua y dióxido de carbono que crecen y se encogen con las estaciones."
+    },
+    {
+      "id": "jezero",
+      "nombre": "Cráter Jezero",
+      "lat": 18.4,
+      "lon": 77.5,
+      "pendiente": true,
+      "ficha": "D22",
+      "dato": "Antiguo lago y delta de río; aquí está la roca Cheyava Falls.",
+      "galeria": "https://mars.nasa.gov/mars2020/multimedia/raw-images/",
+      "imagen": "img/marte/jezero_perseverance.jpg"
+    },
+    {
+      "id": "gediz",
+      "nombre": "Gediz Vallis",
+      "lat": -5.2,
+      "lon": 137.8,
+      "pendiente": true,
+      "ficha": "D18",
+      "dato": "Canal en Mount Sharp con piedras de azufre puro."
+    },
+    {
+      "id": "airy0",
+      "nombre": "Airy-0",
+      "lat": -5.1,
+      "lon": 0,
+      "pendiente": true,
+      "ficha": "D14",
+      "dato": "Cráter que marca el meridiano 0° de Marte."
+    }
   ]
 }

@@ -33,7 +33,7 @@ function Overlay() {
     case 'mapaMarte':
       return (
         <Modal titulo="Mapa de Marte" onCerrar={j.cerrarOverlay} ancho>
-          <MapaMarte fichas={j.fichas} enMarte={Boolean(enJuego && enJuego.capitulo >= 3)} onGale={() => j.abrir('mapaRuta')} />
+          <MapaMarte fichas={j.fichas} enMarte={Boolean(enJuego && enJuego.capitulo >= 3)} onGale={() => j.abrir('mapaRuta')} seleccion={j.overlay.lugar ?? null} />
         </Modal>
       );
     case 'marte3d':

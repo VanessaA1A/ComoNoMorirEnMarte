@@ -20,8 +20,8 @@ const sinPendientes = (lista) => lista.filter((x) => !x.pendiente);
 export const POIS = sinPendientes(leer(DATA, 'pois.json'));
 export const RECURSOS = leer(DATA, 'recursos_nasa.json');
 export const CHISTES = leer(DATA, 'chistes.json');
-const MARTE_TODO = leer(DATA, 'marte.json', { aterrizajes: [], destinos: [] });
-export const MARTE = { aterrizajes: sinPendientes(MARTE_TODO.aterrizajes ?? []), destinos: sinPendientes(MARTE_TODO.destinos ?? []) };
+const MARTE_TODO = leer(DATA, 'marte.json', { zonas: [], aterrizajes: [], destinos: [] });
+export const MARTE = { zonas: sinPendientes(MARTE_TODO.zonas ?? []), aterrizajes: sinPendientes(MARTE_TODO.aterrizajes ?? []), destinos: sinPendientes(MARTE_TODO.destinos ?? []) };
 export const GUIA = leer(PUBLICO, 'guia_supervivencia.json', { secciones: [] });
 
 const fuenteDe = (idDato) => DATOS.find((d) => d.id === idDato)?.fuente ?? null;
@@ -31,7 +31,7 @@ const limpiar = (t) => String(t ?? '').replace(/\*\*?/g, '').replace(/\{([^{}|]*
 export const IDS = {
   capas: CAPAS.map((c) => c.id),
   fichas: DATOS.map((d) => d.id),
-  pois: [...POIS.map((p) => p.id), ...MARTE.destinos.map((d) => d.id), ...MARTE.aterrizajes.map((a) => a.id)],
+  pois: [...POIS.map((p) => p.id), ...MARTE.destinos.map((d) => d.id), ...MARTE.aterrizajes.map((a) => a.id), ...MARTE.zonas.map((z) => z.id)],
 };
 
 /** Todas las entradas buscables: { id, tipo, titulo, texto, fuente } */
@@ -45,6 +45,7 @@ export const ENTRADAS = [
   })),
   ...POIS.map((p) => ({ id: `poi:${p.id}`, tipo: 'poi', titulo: p.nombre, texto: `${p.nombre} (parada de la ruta en el cráter Gale): ${p.dato ?? ''}. ${p.nota ?? ''} Misión: ${p.mision ?? ''}`, fuente: p.fuente })),
   ...MARTE.destinos.map((d) => ({ id: `poi:${d.id}`, tipo: 'lugar', titulo: d.nombre, texto: `${d.nombre} (Mapa de Marte): ${d.dato}`, fuente: fuenteDe(d.ficha) })),
+  ...MARTE.zonas.map((z) => ({ id: `poi:${z.id}`, tipo: 'lugar', titulo: z.nombre, texto: `${z.nombre} (Mapa de Marte, zona del Gazetteer: ${z.tipo}): ${z.dato}`, fuente: z.fuente })),
   ...MARTE.aterrizajes.map((a) => ({ id: `poi:${a.id}`, tipo: 'aterrizaje', titulo: a.mision, texto: `${a.mision} aterrizó en ${a.lugar} en ${a.anio}. ${a.dato}`, fuente: a.fuente ?? a.galeria ?? null })),
   ...RECURSOS.map((r) => ({ id: `recurso:${r.id}`, tipo: 'recurso', titulo: r.nombre, texto: `${r.nombre}: ${r.que_es}`, fuente: r.url })),
   ...CHISTES.map((c) => ({ id: c.id, tipo: 'chiste', titulo: 'chiste', texto: c.texto, fuente: c.dato ? fuenteDe(c.dato) : null, ficha: c.dato })),
