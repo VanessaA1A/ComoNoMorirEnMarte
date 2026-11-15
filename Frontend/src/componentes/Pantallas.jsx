@@ -6,7 +6,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { RANURAS, leerRanura } from '../juego/partidas.js';
 import { Modal } from './Modal.jsx';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
-import Icono from './Iconostemp.jsx';
+import Icono from './Iconos.jsx';
 import { ETIQUETA, formatoReloj } from './HUD.jsx';
 import { Enlace } from './Mapas.jsx';
 import FuentesCartografia from './FuentesCartografia.jsx';
