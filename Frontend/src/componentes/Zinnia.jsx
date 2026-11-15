@@ -32,7 +32,7 @@ export function sugeridas(p) {
   const cap = p?.capitulo;
   const delCap = cap ? RESPUESTAS.filter((r) => r.capitulos.includes(cap)) : [];
   const generales = ['guardar', 'ganar', 'capas'].map((id) => RESPUESTAS.find((r) => r.id === id));
-  return [...new Set([...delCap, ...generales])].slice(0, 3);
+  return [...new Set([...delCap, ...generales].filter(Boolean))].slice(0, 3); // filter: por si falta una pregunta (PR #4)
 }
 
 // ---------- Chat con Zinn-IA ----------
@@ -254,7 +254,7 @@ export function SinConexion() {
   if (!apiActiva || j.conectado || j.sinConexionDescartado) return null;
   return (
     <div className="sin-conexion">
-      <Modal titulo="Sin señal con la Tierra">
+      <Modal titulo="Sin señal con la Tierra" onCerrar={j.descartarSinConexion}>
         <Recurso src="/img/zinnia/sin_conexion.gif" alt="Zinn-IA sin conexión"
           respaldo={<ZinniaHablando />} />
         <p>{formatear('Perdimos la señal con la Tierra. Tranquil{o|a|e}: tu partida se guarda aquí y la mando cuando vuelva la conexión.', j.partida ?? {})}</p>
