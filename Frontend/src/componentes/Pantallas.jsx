@@ -39,6 +39,7 @@ export function MenuJuego() {
         <button className="boton" onClick={() => j.abrir('guia')}>Guía de supervivencia</button>
         <button className="boton" onClick={() => j.abrir('mapaRuta')} disabled={j.partida?.capitulo < 3}>Mapa de la ruta</button>
         <button className="boton" onClick={() => j.abrir('mapaMarte')}>Mapa de Marte</button>
+        <button className="boton" onClick={() => j.abrir('marte3d', { vista: j.partida?.capitulo >= 3 ? 'region' : 'globo' })}>Ver en 3D</button>
         <button className="boton" onClick={() => j.abrir('historial')}>Historial</button>
         <button className="boton secundario" onClick={j.volverInicio}>Volver al inicio</button>
       </div>

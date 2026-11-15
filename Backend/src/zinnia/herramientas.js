@@ -47,9 +47,20 @@ export const HERRAMIENTAS = [
       additionalProperties: false,
     },
   },
+  {
+    name: 'abrir_3d',
+    description: 'Abre Marte en 3D con datos reales: "globo" (Marte entero con el mosaico Viking y los aterrizajes) o "region" (terreno 3D real de la zona boxwork de Gale con la ruta). Úsala cuando el jugador pida verlo en 3D.',
+    strict: true,
+    input_schema: {
+      type: 'object',
+      properties: { vista: { type: 'string', enum: ['globo', 'region'] } },
+      required: ['vista'],
+      additionalProperties: false,
+    },
+  },
 ];
 
-const ACCION = { abrir_capa: ['capa_id', IDS.capas], mostrar_ficha: ['ficha_id', IDS.fichas], marcar_poi: ['poi_id', IDS.pois] };
+const ACCION = { abrir_capa: ['capa_id', IDS.capas], mostrar_ficha: ['ficha_id', IDS.fichas], marcar_poi: ['poi_id', IDS.pois], abrir_3d: ['vista', ['globo', 'region']] };
 
 /**
  * Ejecuta una herramienta. Devuelve { resultado (texto para el modelo), accion (para el frontend o null) }.

@@ -12,8 +12,10 @@
     "preparar-hooks": "git config core.hooksPath .githooks && echo Hook pre-push instalado: cada push corre npm run probar"
   },
   "dependencies": {
+    "leaflet": "1.9.4",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "three": "0.170.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.4.1",

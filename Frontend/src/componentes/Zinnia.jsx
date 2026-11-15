@@ -14,6 +14,8 @@ import { ZinnIA, ZinniaHablando } from './Personajes.jsx';
 import { Cajon, Modal, useFocoAtrapado } from './Modal.jsx';
 import { Enlace, visible } from './Mapas.jsx';
 import Recurso from './Recurso.jsx';
+import { PARADAS } from '../juego/cartografia.js';
+const PARADAS_REALES = new Set(PARADAS.map((p) => p.id));
 import PISTAS from '../data/pistas.json';
 import RESPUESTAS from '../data/zinnia_respuestas.json';
 
@@ -37,17 +39,19 @@ export function sugeridas(p) {
 
 // ---------- Chat con Zinn-IA ----------
 const LUGARES_MARTE = new Set([...MARTE.destinos, ...MARTE.aterrizajes].filter(visible).map((x) => x.id)); // sin pendientes
-const ETIQUETA_ACCION = { abrir_capa: 'Ver capa', marcar_poi: 'Ver en el mapa', mostrar_ficha: 'Ver ficha' };
+const ETIQUETA_ACCION = { abrir_capa: 'Ver capa', marcar_poi: 'Ver en el mapa', mostrar_ficha: 'Ver ficha', abrir_3d: 'Ver en 3D' };
 
 /** Ejecuta una acción del agente con lo que ya existe en el juego. Ids desconocidos: se ignoran. */
 export function ejecutarAccion(j, a) {
   if (a?.tipo === 'abrir_capa' && j.catalogo.capas.some((c) => c.id === a.id)) { j.setCapa(a.id); j.abrir('mapaRuta'); return true; }
-  if (a?.tipo === 'marcar_poi' && j.catalogo.pois.some((x) => x.id === a.id && visible(x))) { j.abrir('mapaRuta'); return true; }
+  if (a?.tipo === 'marcar_poi' && PARADAS_REALES.has(a.id)) { j.abrir('mapaRuta', { poi: a.id }); return true; } // el mapa completo se abre con ese punto seleccionado
+  if (a?.tipo === 'abrir_3d' && ['globo', 'region'].includes(a.id)) { j.abrir('marte3d', { vista: a.id }); return true; }
   if (a?.tipo === 'marcar_poi' && LUGARES_MARTE.has(a.id)) { j.abrir('mapaMarte'); return true; }
   if (a?.tipo === 'mostrar_ficha' && j.catalogo.datos.some((d) => d.id === a.id)) { j.abrir('guia', { pestana: 'Fichas' }); return true; }
   return false;
 }
-const accionValida = (j, a) => ['abrir_capa', 'marcar_poi', 'mostrar_ficha'].includes(a?.tipo) && (
+const accionValida = (j, a) => (a?.tipo === 'abrir_3d' && ['globo', 'region'].includes(a.id)) || ['abrir_capa', 'marcar_poi', 'mostrar_ficha'].includes(a?.tipo) && (
+  PARADAS_REALES.has(a.id) ||
   j.catalogo.capas.some((c) => c.id === a.id) || j.catalogo.pois.some((x) => x.id === a.id && visible(x)) || LUGARES_MARTE.has(a.id) || j.catalogo.datos.some((d) => d.id === a.id));
 
 /** Punto verde "IA en vivo" o gris "modo sin conexión": según la última respuesta o, antes de la primera, según /salud. */

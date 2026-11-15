@@ -9,6 +9,10 @@ import { MapaRuta, MapaMarte, poiActual } from './componentes/Mapas.jsx';
 import { Modal } from './componentes/Modal.jsx';
 import { PanelZinnia, Tutorial, SinConexion, Avisos } from './componentes/Zinnia.jsx';
 import { usePuedeJugar, PantallaSoloComputadora } from './componentes/SoloComputadora.jsx';
+import { lazy, Suspense } from 'react';
+
+// three.js solo se descarga cuando se abre el 3D
+const Marte3D = lazy(() => import('./componentes/Marte3D.jsx'));
 
 function Overlay() {
   const j = useJuego();
@@ -23,13 +27,21 @@ function Overlay() {
       return (
         <Modal titulo="Mapa de la ruta · tablet de Zinn-IA" onCerrar={j.cerrarOverlay} ancho>
           <MapaRuta modo="completo" capa={j.capa} setCapa={j.setCapa} capas={j.catalogo.capas} pois={j.catalogo.pois}
-            poi={poiActual(enJuego)} apagado={Boolean(enJuego && enJuego.bateria <= 0)} />
+            poi={poiActual(enJuego)} seleccion={j.overlay.poi} apagado={Boolean(enJuego && enJuego.bateria <= 0)} />
         </Modal>
       );
     case 'mapaMarte':
       return (
         <Modal titulo="Mapa de Marte" onCerrar={j.cerrarOverlay} ancho>
           <MapaMarte fichas={j.fichas} enMarte={Boolean(enJuego && enJuego.capitulo >= 3)} onGale={() => j.abrir('mapaRuta')} />
+        </Modal>
+      );
+    case 'marte3d':
+      return (
+        <Modal titulo="Marte en 3D · datos reales" onCerrar={j.cerrarOverlay} ancho>
+          <Suspense fallback={<p className="provisional">Cargando el 3D…</p>}>
+            <Marte3D vistaInicial={j.overlay.vista ?? (enJuego && enJuego.capitulo >= 3 ? 'region' : 'globo')} poi={poiActual(enJuego)} />
+          </Suspense>
         </Modal>
       );
     default: return null;
