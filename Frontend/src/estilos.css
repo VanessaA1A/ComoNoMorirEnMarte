@@ -1009,3 +1009,109 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
 .guia-paso small { display: block; font-size: .78em; opacity: .65; }
 .guia-paso:hover { border-color: var(--aurora-1); background: rgba(82, 64, 148, .55); }
 .guia-paso .icono { color: var(--aurora-1); font-size: 1.2em; }
+
+/* ===== Panel de Zinn-IA (rediseño) ===== */
+.cajon.panel-zinnia { width: min(100%, 32em); }
+.panel-zinnia .cajon-cuerpo { display: flex; flex-direction: column; gap: .9em; padding: 1em 1.1em 5.5em; font-family: var(--fuente-ui); }
+.panel-zinnia .cajon-cuerpo > section { margin: 0; }
+.zp-titulo {
+  display: flex; align-items: center; gap: .45em; margin: 0 0 .5em;
+  font-family: var(--fuente-texto); font-size: .95em; color: var(--zinnia-petalo); letter-spacing: .03em;
+}
+.zp-sub { margin: -.2em 0 .5em; font-size: .75em; opacity: .65; }
+.zp-tarjeta { padding: .85em .95em; border-radius: .8em; background: rgba(82, 64, 148, .22); border: 1px solid rgba(250, 147, 46, .28); }
+
+/* Chat */
+.panel-zinnia .chat-zinnia { padding: .85em .95em; border-radius: .8em; background: rgba(36, 7, 63, .6); border: 1px solid rgba(250, 147, 46, .45); }
+.zp-encabezado { display: flex; align-items: center; justify-content: space-between; gap: .6em; margin-bottom: .5em; }
+.zp-encabezado .zp-titulo { margin: 0; }
+.panel-zinnia .indicador-ia { margin: 0; padding: .2em .65em; border-radius: 1em; background: rgba(244, 246, 255, .07); font-size: .72em; }
+.panel-zinnia .chat-historial { max-height: 16em; gap: .5em; padding: .2em .2em .4em 0; }
+.panel-zinnia .chat-zinnia-msg {
+  position: relative; margin: 0; padding: .55em .8em .6em; border-radius: .2em .9em .9em .9em; font-size: .9em; line-height: 1.45; max-width: 90%;
+}
+.chat-quien { display: block; margin-bottom: .15em; font-family: var(--fuente-texto); font-size: .72em; color: var(--zinnia-centro); }
+.panel-zinnia .chat-yo {
+  margin: 0; padding: .5em .8em; border-radius: .9em .2em .9em .9em; font-size: .9em; line-height: 1.4;
+  background: var(--aurora-4); border: 1px solid var(--aurora-2);
+}
+.panel-zinnia .chat-sugerencias { gap: .35em; margin: .6em 0; }
+.panel-zinnia .chat-sugerencias .chat-sugerencia {
+  margin: 0; padding: .3em .75em; border-radius: 1em; font-size: .76em;
+  background: rgba(1, 203, 174, .08); border: 1px solid rgba(1, 203, 174, .45); color: var(--texto);
+}
+.panel-zinnia .chat-sugerencias .chat-sugerencia:hover:not(:disabled) { background: rgba(1, 203, 174, .22); border-color: var(--aurora-1); }
+.panel-zinnia .chat-sugerencias .chat-sugerencia:last-child { border-color: rgba(250, 147, 46, .7); background: rgba(250, 147, 46, .1); }
+.panel-zinnia .chat-campo { gap: .4em; padding: .3em; border-radius: 2em; background: rgba(36, 7, 63, .9); border: 1px solid var(--aurora-3); }
+.panel-zinnia .chat-campo:focus-within { border-color: var(--aurora-1); box-shadow: 0 0 0 2px rgba(1, 239, 172, .2); }
+.panel-zinnia .chat-campo input { border: 0; background: transparent; padding: .45em .8em; font-size: .9em; outline: none; }
+.chat-enviar { display: grid; place-items: center; width: 2.4em; height: 2.4em; padding: 0; border-radius: 50%; font-size: .95em; }
+
+/* ¿Cómo voy? */
+.zp-lectura { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .35em; font-size: .88em; line-height: 1.4; }
+.zp-lectura li { position: relative; padding-left: 1.1em; }
+.zp-lectura li::before { content: ""; position: absolute; left: .1em; top: .55em; width: .45em; height: .45em; border-radius: 50%; background: var(--aurora-1); }
+
+/* Pista */
+.zp-tarjeta.zp-pista { background: rgba(250, 147, 46, .12); border-color: var(--zinnia-petalo); }
+.zp-pista .zp-titulo .icono { font-size: 1.15em; }
+.zp-pista-texto { font-size: .9em; line-height: 1.45; }
+
+/* Preguntas frecuentes */
+.panel-zinnia .pregunta {
+  margin: .3em 0; padding: .45em .7em; border-radius: .55em; font-size: .85em; font-family: var(--fuente-ui);
+  background: rgba(36, 7, 63, .5); border: 1px solid rgba(82, 64, 148, .9);
+}
+.panel-zinnia .pregunta:hover { border-color: var(--aurora-2); }
+.panel-zinnia .pregunta + .burbuja { margin: 0 0 .5em; font-size: .86em; line-height: 1.45; }
+.zp-categoria { margin-top: .4em; border-top: 1px solid rgba(82, 64, 148, .7); }
+.zp-categoria summary {
+  display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: .55em .2em; list-style: none;
+  font-size: .85em; letter-spacing: .02em;
+}
+.zp-categoria summary::-webkit-details-marker { display: none; }
+.zp-categoria summary::after { content: "+"; font-family: var(--fuente-texto); color: var(--aurora-1); margin-left: .5em; }
+.zp-categoria[open] summary::after { content: "−"; }
+.zp-cuenta { margin-left: auto; font-size: .78em; padding: .05em .5em; border-radius: 1em; background: rgba(1, 203, 174, .15); color: var(--aurora-1); }
+
+/* Accesos */
+.zp-accesos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .45em; }
+.zp-acceso {
+  display: flex; flex-direction: column; align-items: center; gap: .35em; padding: .7em .3em .6em; border-radius: .7em;
+  background: rgba(82, 64, 148, .28); border: 1px solid rgba(1, 203, 174, .4); color: var(--texto); font-family: var(--fuente-ui); font-size: .75em;
+}
+.zp-acceso .icono { font-size: 1.7em; color: var(--aurora-1); }
+.zp-acceso:hover { border-color: var(--aurora-1); background: rgba(82, 64, 148, .6); transform: translateY(-2px); }
+.zp-tutorial {
+  align-self: center; display: inline-flex; align-items: center; gap: .4em; padding: .3em .6em; border: 0; background: transparent;
+  font-family: var(--fuente-ui); font-size: .78em; color: var(--aurora-2); opacity: .85;
+}
+.zp-tutorial:hover { opacity: 1; text-decoration: underline; }
+
+/* Tema oscuro aurora (igual que la Guía y el menú): pisa el tema crema anterior del panel */
+.cajon.panel-zinnia { background: var(--noche); color: var(--texto); font-family: var(--fuente-ui); border-left: 3px solid var(--zinnia-petalo); }
+.cajon.panel-zinnia .cajon-cabecera { background: linear-gradient(90deg, var(--aurora-5), var(--noche)); border-bottom: 2px solid var(--zinnia-petalo); }
+.cajon.panel-zinnia .cajon-cabecera h2 { color: var(--lima); }
+.cajon.panel-zinnia .cajon-cabecera .boton-icono { color: var(--texto); border-color: var(--aurora-2); }
+.cajon.panel-zinnia .cajon-cuerpo { background: var(--noche); color: var(--texto); }
+.cajon.panel-zinnia h3.zp-titulo { color: var(--lima); border: 0; padding: 0; font-size: .95em; }
+.cajon.panel-zinnia .zp-pista h3.zp-titulo { color: var(--zinnia-petalo); }
+.cajon.panel-zinnia .zp-tarjeta { background: rgba(82, 64, 148, .25); border: 1px solid rgba(1, 203, 174, .3); }
+.cajon.panel-zinnia .zp-tarjeta.zp-pista { background: rgba(250, 147, 46, .1); border-color: rgba(250, 147, 46, .6); }
+.cajon.panel-zinnia .chat-zinnia { background: rgba(82, 64, 148, .18); border: 1px solid rgba(1, 203, 174, .35); }
+.cajon.panel-zinnia .indicador-ia { color: var(--texto); background: rgba(244, 246, 255, .08); }
+/* Burbujas: Zinn-IA en crema (su color), tú en morado aurora */
+.cajon.panel-zinnia .burbuja { background: var(--zinnia-crema); color: var(--zinnia-contorno); border: 0; }
+.cajon.panel-zinnia .burbuja a { color: var(--zinnia-centro); }
+.cajon.panel-zinnia .chat-yo { background: var(--aurora-4); border: 1px solid var(--aurora-2); color: var(--texto); }
+.cajon.panel-zinnia .chat-sugerencias .chat-sugerencia { color: var(--texto); background: rgba(1, 203, 174, .08); border: 1px solid rgba(1, 203, 174, .45); }
+.cajon.panel-zinnia .chat-sugerencias .chat-sugerencia:last-child { background: rgba(250, 147, 46, .1); border-color: rgba(250, 147, 46, .7); }
+.cajon.panel-zinnia .chat-campo { background: rgba(36, 7, 63, .95); border: 1px solid var(--aurora-3); }
+.cajon.panel-zinnia .chat-campo input { background: transparent; color: var(--texto); border: 0; }
+.cajon.panel-zinnia .chat-campo input::placeholder { color: rgba(244, 246, 255, .45); }
+.cajon.panel-zinnia .pregunta { color: var(--texto); background: rgba(36, 7, 63, .6); border: 1px solid rgba(82, 64, 148, .95); }
+.cajon.panel-zinnia .pregunta:hover, .cajon.panel-zinnia .pregunta[aria-expanded="true"] { border-color: var(--aurora-2); }
+.cajon.panel-zinnia .zp-sub, .cajon.panel-zinnia .provisional { color: var(--texto); opacity: .6; }
+.cajon.panel-zinnia .zp-categoria { border-top-color: rgba(82, 64, 148, .8); }
+.cajon.panel-zinnia a { color: var(--aurora-2); }
+.cajon.panel-zinnia .pregunta:focus-visible, .cajon.panel-zinnia .boton:focus-visible, .cajon.panel-zinnia input:focus-visible { outline: 3px solid var(--lima); }

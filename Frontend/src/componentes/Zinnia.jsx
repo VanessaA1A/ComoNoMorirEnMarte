@@ -12,6 +12,7 @@ import { expresionPanel } from '../juego/expresiones.js';
 import { fichasDe } from '../juego/fichas.js';
 import { apiActiva, iaDisponible } from '../api.js';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
+import Icono from './Iconos.jsx';
 import { Cajon, Modal, useFocoAtrapado } from './Modal.jsx';
 import { Enlace, visible } from './Mapas.jsx';
 import { PARADAS } from '../juego/cartografia.js';
@@ -88,13 +89,16 @@ function ChatZinnia({ p }) {
 
   return (
     <section aria-labelledby="chat-zinnia" className="chat-zinnia">
-      <h3 id="chat-zinnia">Pregúntame lo que quieras</h3>
-      <IndicadorIA modo={modo} iaSalud={iaSalud} />
+      <header className="zp-encabezado">
+        <h3 id="chat-zinnia" className="zp-titulo">Chat</h3>
+        <IndicadorIA modo={modo} iaSalud={iaSalud} />
+      </header>
       <div className="chat-historial" ref={lista} aria-live="polite" aria-label="Conversación con Zinn-IA">
-        {!mensajes.length && <div className="burbuja">¡Hola! Sé de Marte, del mapa y de tus barras. Pregúntame, o pídeme un chiste malo.</div>}
+        {!mensajes.length && <div className="burbuja chat-zinnia-msg"><span className="chat-quien" aria-hidden="true">Zinn-IA</span>¡Hola! Sé de Marte, del mapa y de tus barras. Pregúntame, o pídeme un chiste malo.</div>}
         {mensajes.map((m) => (
           <div key={m.id} className={m.rol === 'usuario' ? 'chat-yo' : 'burbuja chat-zinnia-msg'}>
             {m.rol === 'usuario' && <span className="oculto-lector">Tú: </span>}
+            {m.rol !== 'usuario' && <span className="chat-quien" aria-hidden="true">Zinn-IA</span>}
             {m.texto}
             {m.fuente && /^https?:/.test(m.fuente) && <div className="fuente">Fuente: <Enlace url={m.fuente} /></div>}
             {m.chiste?.ficha && (
@@ -122,7 +126,7 @@ function ChatZinnia({ p }) {
       <form className="chat-campo" onSubmit={(e) => { e.preventDefault(); mandar(texto); }}>
         <label className="oculto-lector" htmlFor="chat-texto">Mensaje para Zinn-IA (máximo {MAX_TEXTO} caracteres)</label>
         <input id="chat-texto" ref={campo} value={texto} maxLength={MAX_TEXTO} onChange={(e) => setTexto(e.target.value)} placeholder="Escribe cualquier pregunta" autoComplete="off" />
-        <button className="boton principal" disabled={pensando || !texto.trim()}>Enviar</button>
+        <button className="boton principal chat-enviar" disabled={pensando || !texto.trim()} aria-label="Enviar"><Icono nombre="enviar" /></button>
       </form>
       {texto.length > MAX_TEXTO - 50 && <p className="provisional">{texto.length}/{MAX_TEXTO}</p>}
     </section>
@@ -191,18 +195,18 @@ export function PanelZinnia() {
         <div className="cajon-cuerpo" id="panel-zinnia">
           {emergencia ? <Semilla /> : <ChatZinnia p={p} />}
 
-          {!emergencia && <section aria-labelledby="como-voy">
-            <h3 id="como-voy">¿Cómo voy?</h3>
-            <div className="burbuja"><ul>{lectura.map((t) => <li key={t}>{t}</li>)}</ul></div>
+          {!emergencia && <section aria-labelledby="como-voy" className="zp-tarjeta">
+            <h3 id="como-voy" className="zp-titulo">¿Cómo voy?</h3>
+            <ul className="zp-lectura">{lectura.map((t) => <li key={t}>{t}</li>)}</ul>
           </section>}
 
           {!emergencia && (
             <>
               {ops.length > 0 && (
-                <section aria-labelledby="pista">
-                  <h3 id="pista">Pista para esta decisión</h3>
+                <section aria-labelledby="pista" className="zp-tarjeta zp-pista">
+                  <h3 id="pista" className="zp-titulo"><Icono nombre="pista" /> Pista para esta decisión</h3>
                   {pista ? (
-                    <div className="burbuja">
+                    <div className="zp-pista-texto">
                       {formatear(pista.texto, p)}
                       {pista.capa && p.capitulo >= 3 && (
                         <div style={{ marginTop: '.5em' }}>
@@ -210,29 +214,29 @@ export function PanelZinnia() {
                         </div>
                       )}
                     </div>
-                  ) : <div className="burbuja">Aquí no tengo una pista especial: mira cómo vas arriba y decide con eso.</div>}
+                  ) : <div className="zp-pista-texto">Aquí no tengo una pista especial: mira cómo vas arriba y decide con eso.</div>}
                 </section>
               )}
 
-              <section aria-labelledby="preguntas">
-                <h3 id="preguntas">Pregúntale a Zinn-IA</h3>
-                <p className="provisional">Sugeridas para este momento:</p>
+              <section aria-labelledby="preguntas" className="zp-tarjeta">
+                <h3 id="preguntas" className="zp-titulo">Preguntas frecuentes</h3>
+                <p className="zp-sub">Sugeridas para este momento</p>
                 {sugeridas(p).map((r) => <Pregunta key={`s-${r.id}`} r={r} p={p} />)}
                 {CATEGORIAS.map((c) => (
-                  <details key={c}>
-                    <summary>{c}</summary>
+                  <details key={c} className="zp-categoria">
+                    <summary>{c}<span className="zp-cuenta">{RESPUESTAS.filter((r) => r.categoria === c).length}</span></summary>
                     {RESPUESTAS.filter((r) => r.categoria === c).map((r) => <Pregunta key={r.id} r={r} p={p} />)}
                   </details>
                 ))}
               </section>
 
-              <section aria-label="Accesos rápidos" className="accesos">
-                <button className="boton" onClick={() => j.abrir('guia')}>Guía de supervivencia</button>
-                <button className="boton" onClick={() => j.abrir('mapaRuta')}>Mapa de la ruta</button>
-                <button className="boton" onClick={() => j.abrir('mapaMarte')}>Mapa de Marte</button>
-                <button className="boton" onClick={() => j.abrir('guia', { pestana: 'Fichas' })}>Fichas ({j.fichas.length}/{totalFichas})</button>
-                <button className="boton secundario" onClick={j.repetirTutorial}>Repetir tutorial</button>
+              <section aria-label="Accesos rápidos" className="zp-accesos">
+                <button className="zp-acceso" onClick={() => j.abrir('guia')}><Icono nombre="guia" /><span>Guía</span></button>
+                <button className="zp-acceso" onClick={() => j.abrir('mapaRuta')}><Icono nombre="ruta" /><span>Ruta</span></button>
+                <button className="zp-acceso" onClick={() => j.abrir('mapaMarte')}><Icono nombre="marte" /><span>Marte</span></button>
+                <button className="zp-acceso" onClick={() => j.abrir('guia', { pestana: 'Fichas' })}><Icono nombre="ficha" /><span>Fichas {j.fichas.length}/{totalFichas}</span></button>
               </section>
+              <button className="zp-tutorial" onClick={j.repetirTutorial}><Icono nombre="repetir" /> Repetir tutorial</button>
             </>
           )}
         </div>
