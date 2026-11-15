@@ -5,3 +5,6 @@
 .env
 .env.*
 !.env.example
+
+# Cartografía: caché local de descargas y entorno de Python (nunca al repo)
+tools/cache/
