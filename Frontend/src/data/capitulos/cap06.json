@@ -4,7 +4,10 @@
   "inicio": "c06_01",
   "dato": "THEMIS (Mars Odyssey) mide cómo se calienta y se enfría el suelo. La arena suelta tiene baja inercia térmica: se enfría rápido.",
   "fuentes": [
-    "https://trek.nasa.gov/mars/"
+    "https://trek.nasa.gov/mars/",
+    "https://www.jpl.nasa.gov/news/six-things-about-opportunitys-recovery-efforts/",
+    "https://science.nasa.gov/mission/mer-opportunity/",
+    "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html"
   ],
   "escenas": [
     {
@@ -14,16 +17,47 @@
       "zinnia": "alerta",
       "poi": "D1",
       "abrirTablet": true,
-      "capa": "termico",
+      "capa": "optica",
       "lineas": [
         {
           "quien": "Narración",
           "texto": "Frente a ti, una zona baja cubierta de arena rojiza. Al otro lado se ven las primeras crestas."
         },
         {
+          "quien": "Narración",
+          "texto": "De pronto, el horizonte se tiñe de ocre. Una nube de polvo fino avanza sobre la planicie y la luz del día se vuelve una penumbra rojiza."
+        },
+        {
           "quien": "Zinn-IA",
-          "texto": "Activo la capa Terreno, con datos de THEMIS: esta hondonada se enfría muy rápido de noche.",
+          "texto": "Tranquil{o|a|e}: el viento no te va a tumbar. El aire de Marte tiene menos del 1 % de la presión de la Tierra, así que casi no tiene fuerza para empujarte.",
           "expresion": "seria"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "El peligro de verdad es la oscuridad: sin luz no ves bien la ruta, y lo que funciona con el Sol se apaga.",
+          "expresion": "asustada"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "En 2018 una tormenta de polvo cubrió todo Marte. Sobre el rover Opportunity, la opacidad del cielo llegó a 10,8, cuando lo normal ahí es 0,5. Sus paneles solares se quedaron sin luz y su misión terminó.",
+          "expresion": "llorona"
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Ya lo había visto en el pronóstico del mirador. Enciende las luces del visor y sigue la ruta trazada.",
+          "requiere": { "flag": "clima_revisado" }
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Esta nube no estaba en tu radar. Sin pronóstico, la visibilidad cae en cuestión de minutos.",
+          "expresion": "asustada",
+          "requiere": { "noFlag": "clima_revisado" }
+        },
+        {
+          "quien": "Zinn-IA",
+          "texto": "Mira la foto de HiRISE: esta hondonada está más baja que su entorno y se ve lisa, como arena suelta. Con tanto polvo en el aire, cruzarla pide mucho cuidado.",
+          "expresion": "seria",
+          "capa": "optica"
         },
         {
           "quien": "Zinn-IA",

@@ -255,6 +255,7 @@ Para cada capítulo: qué pasa, cuál es el peligro real y qué preguntas hacert
 | Hielo del polo sur | Si se derritiera, cubriría Marte con un océano de unos 11 m. Los casquetes miden hasta 3,5 km de espesor | [40] |
 | Lunas | Fobos y Deimos. Fobos se acerca a Marte unos 1,8 m por siglo; en unos 50 millones de años chocará o se romperá en un anillo | [46] |
 | Color rojo | El polvo tiene óxidos de hierro. Un estudio de 2025 sugiere que el principal responsable del color es la **ferrihidrita**, un óxido de hierro que se forma con agua | [47] |
+| Color de la arena en Gale | No toda es roja. Las **dunas Bagnold**, un mar de arena activa al pie de Mount Sharp, son **oscuras**: están hechas de minerales basálticos como el olivino y el piroxeno. Desde órbita, en una imagen de falso color infrarrojo del espectrómetro CRISM, las dunas lineales de Mount Desert Island se ven marrón rojizo y las de Sands of Forvie, a 2,5 km, más oscuras: tienen granos de distinto tamaño y otra mezcla de minerales. Ese marrón rojizo es de la imagen infrarroja, no el color que verías con tus ojos | [64][65][66] |
 | Suelo | Percloratos de 0,5 a 1 %, tóxicos para la tiroides | [34] |
 
 ### Quiénes llegaron antes que tú
@@ -390,5 +391,10 @@ El equipo de Curiosity divide su mapa de Marte en **cuadrantes**. Cada cuadrante
 - [61] NASA Science, blog de Curiosity: *Sols 4709-4715: Drilling High and Low in the Boxwork Unit* (C. O'Connell-Cooper, noviembre de 2025). https://science.nasa.gov/blog/curiosity-blog-sols-4709-4715-drilling-high-and-low-in-the-boxwork-unit/
 - [62] NASA Science, blog de Curiosity: *Sols 4561-4562: Prepping to Drill at Altadena* (C. Hayes, 6 de junio de 2025). https://science.nasa.gov/blog/sols-4561-4562-prepping-to-drill-at-altadena/
 - [63] NASA/JPL: *NASA's Curiosity Mars Rover Starts Unpacking Boxwork Formations* (23 de junio de 2025). https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-starts-unpacking-boxwork-formations/
+
+**Color de la arena en Gale**
+- [64] NASA/JPL: *NASA's Curiosity Mars Rover Heads Toward Active Dunes* (16 de noviembre de 2015). https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-heads-toward-active-dunes/
+- [65] NASA Science: *Curiosity Rover Report (Dec. 15, 2015): First Visit to Martian Dunes*. https://science.nasa.gov/resource/curiosity-rover-report-dec-15-2015-first-visit-to-martian-dunes/
+- [66] Moreland y otros, *Journal of Geophysical Research: Planets* (2022): *Orbital and In Situ Investigation of the Bagnold Dunes and Sands of Forvie, Gale Crater, Mars*. https://doi.org/10.1029/2022JE007436
 
 *Las reglas de la Parte 1 salen del motor del juego (src/engine/reglas.js y motor.js) y fueron verificadas con un simulador que recorre las 154.197 rutas posibles.*

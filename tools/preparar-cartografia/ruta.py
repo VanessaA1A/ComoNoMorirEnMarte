@@ -327,7 +327,7 @@ salida = {
     "umbrales_pendiente": {"camina": 15, "peligro": 23, "fuente": F_PEND},
     "puntos": puntos, "tramos": info_tramos,
     "fuentes": {"recorrido": PLACES, "relieve": F_DEM, "ortofoto": F_ORTO, "doi_places": "10.17189/1520397"},
-    "estado": "propuesta automática pendiente de revisión (usuaria y Sefora)",
+    "estado": "revisada el 15 nov 2026: la historia manda en el orden de los puntos y el terreno real decide dónde queda cada uno",
 }
 with open(os.path.join(RAIZ, "Frontend", "src", "data", "ruta_real.json"), "w", encoding="utf-8") as f:
     json.dump(salida, f, ensure_ascii=False, indent=1)

@@ -80,7 +80,7 @@ export function MapaMarte({ fichas, enMarte, onGale }) {
           <p className="fuente">Fuente: {sel.fuente_nombre ? `${sel.fuente_nombre} · ` : ''}<Enlace url={sel.fuente} /></p>
           {sel.imagen && (
             <Recurso src={`/${sel.imagen.replace(/^\/+/, '')}`} alt={`Foto de Perseverance en ${sel.lugar ?? sel.nombre}`} className="foto-ficha"
-              respaldo={<div className="foto-ficha foto-pendiente">Foto pendiente: {sel.imagen}</div>} />
+              respaldo={null} />
           )}
           {sel.galeria && (
             <p><a className="boton secundario" href={sel.galeria} target="_blank" rel="noreferrer">Ver fotos de Perseverance ↗</a></p>
