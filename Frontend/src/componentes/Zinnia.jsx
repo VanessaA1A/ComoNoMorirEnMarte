@@ -176,7 +176,8 @@ export function PanelZinnia() {
   const totalFichas = fichasDe(j.catalogo.datos).length;
 
   const icono = (
-    <button className="icono-zinnia" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
+    // En el Inicio no se ve (la esquina queda limpia): ahí el chat se abre con la Zinn-IA de la consola o con la tecla Z.
+    <button className={`icono-zinnia${j.pantalla === 'inicio' && !j.panelZinnia ? ' oculto-en-inicio' : ''}`} data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
       aria-label={`Zinn-IA, tu asistente (tecla Z)${j.avisoZinnia ? ': tiene algo nuevo para ti' : ''}`} aria-expanded={j.panelZinnia}
       aria-controls="panel-zinnia" title="Zinn-IA (tecla Z)">
       <ZinniaAvatar expresion={cara.expresion} apagada={cara.apagada} recorte="cara" alt="" />

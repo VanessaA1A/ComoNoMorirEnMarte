@@ -209,6 +209,17 @@ export function JuegoProvider({ children, bloqueado = false }) {
     setPantalla('inicio'); setOverlay(null); setResumen(false); setTarjeta(null);
   }, []);
 
+  /** Tarjeta de capítulo (cap. 2 en adelante): guarda en el autoguardado (localStorage) y vuelve al Inicio.
+   *  Las fichas del capítulo se entregan antes de guardar, como si se hubiera cerrado la tarjeta. */
+  const guardarYCerrar = useCallback(() => {
+    if (partida) {
+      desbloquear(partida.capitulo);
+      autoguardar(partida, linea);
+      avisar('Partida guardada. Puedes seguir con "Continuar".');
+    }
+    volverInicio();
+  }, [partida, linea, desbloquear, autoguardar, avisar, volverInicio]);
+
   const abrir = useCallback((tipo, extra = {}) => {
     setPanelZinnia(false);
     setOverlay({ tipo, ...extra });
@@ -265,12 +276,12 @@ export function JuegoProvider({ children, bloqueado = false }) {
   const valor = useMemo(() => ({
     pantalla, setPantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, setCapa, guiaAbiertaEn, responder,
     fichas, fichasNuevas, avisos, avisoZinnia, colaTutorial, catalogo, conectado, sinConexionDescartado, pausado, modoDemo,
-    empezar, avanzar, ponerNombre, elegir, opcionesEnPantalla, cerrarTarjeta, guardar, cargar, volverInicio,
+    empezar, avanzar, ponerNombre, elegir, opcionesEnPantalla, cerrarTarjeta, guardarYCerrar, guardar, cargar, volverInicio,
     abrir, cerrarOverlay, abrirPanelZinnia, setResumen, marcarFichasVistas, disparar,
     cerrarPasoTutorial, saltarTutorial, repetirTutorial, descartarSinConexion,
   }), [pantalla, partida, linea, tarjeta, resumen, overlay, panelZinnia, historial, capa, guiaAbiertaEn, responder, fichas, fichasNuevas, avisos,
     avisoZinnia, colaTutorial, catalogo, conectado, sinConexionDescartado, pausado,
-    empezar, avanzar, ponerNombre, elegir, opcionesEnPantalla, cerrarTarjeta, guardar, cargar, volverInicio,
+    empezar, avanzar, ponerNombre, elegir, opcionesEnPantalla, cerrarTarjeta, guardarYCerrar, guardar, cargar, volverInicio,
     abrir, cerrarOverlay, abrirPanelZinnia, marcarFichasVistas, disparar, cerrarPasoTutorial, saltarTutorial,
     repetirTutorial, descartarSinConexion]);
 

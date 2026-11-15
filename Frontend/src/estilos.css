@@ -1136,3 +1136,89 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
 .despedida-zinnia { width: 7em; height: 10em; }
 .despedida h2 { font-family: var(--fuente-titulo); font-weight: normal; font-size: 2.6em; color: var(--lima); margin: 0; }
 .despedida p { margin: 0 0 .6em; opacity: .85; }
+/* ===================================================================
+   Ajustes finales: Inicio, tarjeta de capítulo, diálogos con imagen,
+   escala de personajes por lugar, HUD grande y campo del nombre.
+   (Va al final para ganar a las reglas anteriores sin !important.)
+   =================================================================== */
+
+/* ----- Inicio: el astronauta es el protagonista; Zinn-IA, pequeña, es el botón de su chat ----- */
+.icono-zinnia.oculto-en-inicio { display: none; } /* esquina inferior derecha limpia en el Inicio */
+.inicio-pie { padding-right: 3em; }
+.consola-escena { justify-content: center; align-items: flex-end; gap: 0; }
+.consola .astronauta-inicio { order: 2; width: 64%; height: 100%; }
+.inicio .consola .zinnia-inicio {
+  order: 1; flex: none; align-self: flex-end; width: 22%; height: 40%; margin-right: -2%;
+  padding: 0; border: 0; background: none; cursor: pointer; border-radius: .6em;
+  transition: transform .15s, filter .2s;
+}
+.inicio .consola .zinnia-inicio:hover, .inicio .consola .zinnia-inicio:focus-visible { transform: translateY(-3px) scale(1.05); filter: drop-shadow(0 0 .6em rgba(250, 147, 46, .65)); }
+.inicio .consola .zinnia-inicio:focus-visible { outline: 2px solid var(--zinnia-petalo); outline-offset: 3px; }
+.consola .zinnia-inicio .zinnia-principal { width: 100%; height: 100%; max-width: none; object-fit: contain; object-position: 50% 100%; }
+
+/* ----- Tarjeta de capítulo: sin temporizador, el jugador elige ----- */
+.tarjeta-capitulo { cursor: default; }
+.tarjeta-botones { display: flex; gap: 1em; justify-content: center; flex-wrap: wrap; margin-top: 1.4em; }
+.tarjeta-botones .boton { font-size: 1.3em; padding: .7em 1.6em; min-width: 9em; }
+.tarjeta-botones.solo .tarjeta-continuar { font-size: 1.7em; padding: .75em 3.2em; box-shadow: 0 0 1.4em rgba(1, 239, 172, .4); }
+.tarjeta-guardar { background: rgba(36, 7, 63, .85); }
+.carga-pie { right: 1em; }
+.zinnia-estatica { height: 10em; width: auto; image-rendering: pixelated; filter: drop-shadow(0 .3em .5em rgba(36, 7, 63, .9)); }
+
+/* ----- Diálogos con las imágenes del equipo (public/img/ui/dialogo_*.png, 1600×364) -----
+   Las imágenes se ensancharon solo por columnas lisas (Frontend/tools/generar-dialogos.py), así que el cuadro
+   mantiene su proporción y los bordes pixel art no se deforman. El padding va en % del ancho: sigue a la imagen. */
+.escena .zona-dialogo { left: 11%; right: 6%; bottom: 1.5%; gap: .5em; } /* a la derecha queda el ícono de Zinn-IA */
+.escena .dialogo.dialogo-imagen {
+  width: 100%; max-width: none; min-height: 0; aspect-ratio: 1600 / 364;
+  border: 0; border-radius: 0; background: center / 100% 100% no-repeat;
+  font-size: 1.5em; line-height: 1.45; font-style: normal;
+  color: #fff;
+  text-shadow: -1px -1px 0 #24073f, 1px -1px 0 #24073f, -1px 1px 0 #24073f, 1px 1px 0 #24073f, 0 .08em .35em rgba(10, 2, 20, .85);
+}
+/* Zinn-IA: cuadro naranja claro → texto oscuro con un halo claro */
+.escena .dialogo.dialogo-imagen.zinnia-habla {
+  background-image: url('/img/ui/dialogo_zinnia.png'); padding: 6.2% 6% 4.6% 6%;
+  color: #2b1006; text-shadow: 0 1px 0 rgba(255, 236, 210, .6), 0 0 .3em rgba(255, 226, 185, .55);
+}
+/* Jugador ("TÚ"): turquesa → texto claro con contorno violeta */
+.escena .dialogo.dialogo-imagen.jugador-habla { background-image: url('/img/ui/dialogo_usuario.png'); padding: 6.2% 4.5% 2.8% 4.5%; }
+/* Narración y otras voces (Control de misión) */
+.escena .dialogo.dialogo-imagen.narracion,
+.escena .dialogo.dialogo-imagen.otro-habla { background-image: url('/img/ui/dialogo_narracion.png'); padding: 3.2% 4.5% 3.2% 4.5%; }
+.escena .dialogo.dialogo-imagen.narracion { font-style: italic; }
+.escena .dialogo.dialogo-imagen .quien { top: -1.1em; left: 4%; text-shadow: none; }
+.escena .dialogo.dialogo-imagen .seguir { right: 3.5%; bottom: 7%; font-size: .7em; }
+.escena .dialogo.dialogo-imagen.zinnia-habla .seguir { bottom: 16%; }
+/* Con la tablet abierta el cuadro es más angosto: letra un poco menor */
+.escena.con-tablet .dialogo.dialogo-imagen { font-size: 1.15em; }
+.escena .opcion { font-size: clamp(15px, 1.4vw, 21px); }
+
+/* ----- Campo del nombre: la "g" (y la "j", "p", "y") no se recorta por abajo ----- */
+.campo-nombre input {
+  line-height: 1.5; height: auto; padding-top: .45em; padding-bottom: calc(.45em + 5px); overflow: visible;
+}
+
+/* ----- Personajes con la escala de cada fondo (el diálogo ocupa ~35 % de abajo y queda por delante) ----- */
+.escena .personaje-astro { z-index: 1; }
+/* Cap. 1, cabina: de espaldas, cerca de la cámara, a la derecha, mirando la ventanilla */
+.escena.lugar-cabina .personaje-astro { left: auto; right: 4%; bottom: 15%; width: 26%; height: 76%; }
+/* Cap. 2 y Marte: al centro, para que las opciones (a la izquierda) no lo tapen */
+.escena.lugar-nave .personaje-astro { left: 44%; bottom: 12%; width: 21%; height: 70%; }
+.escena.lugar-marte .personaje-astro { left: 44%; bottom: 18%; width: 17%; height: 58%; }
+.escena.con-tablet .personaje-astro { left: 13%; width: 14%; height: 50%; }
+.escena .personaje-zinnia, .escena .personaje-zinnia.hablando { width: 10.5%; }
+.escena.lugar-marte .personaje-zinnia, .escena.lugar-marte .personaje-zinnia.hablando { width: 9.5%; }
+
+/* ----- HUD más grande ----- */
+.barra-superior { top: .8em; left: 1em; right: 1em; gap: 1em; align-items: center; }
+.botones-juego { gap: .55em; }
+.botones-juego .boton-icono { width: 3.2em; height: 3.2em; border-width: 2px; }
+.botones-juego .boton-icono .icono { font-size: 1.55em; }
+.hud { gap: .7em 1.1em; padding: .65em 1.1em; border-radius: .8em; border-width: 2px; }
+.barra { width: 8.6em; font-size: 1em; }
+.barra .etiqueta { font-size: .95em; }
+.barra .riel { height: 1em; border-radius: .5em; margin-top: .3em; }
+.reloj { font-size: 1.3em; padding: .55em .9em; border-radius: .6em; }
+.reloj .icono { font-size: 1.15em; }
+.minimapa { top: 6.4em; }

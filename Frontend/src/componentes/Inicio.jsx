@@ -1,4 +1,4 @@
-// Pantalla de Inicio (ZA-12): logo arriba, partida a la izquierda, tripulación al centro,
+// Pantalla de Inicio (ZA-12): título arriba, partida a la izquierda, tripulación al centro (astronauta grande, Zinn-IA pequeña),
 // exploración a la derecha y franja del hackathon abajo. Navegación por estado (JuegoContext).
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -77,8 +77,13 @@ export default function Inicio() {
             <span className="luz" /><span className="luz" /><span className="luz" />
             <span className="consola-etiqueta">Tripulación · Aurora-1</span>
           </div>
+          {/* El astronauta es el protagonista; Zinn-IA, pequeña, es el botón que abre su chat
+              (en el Inicio reemplaza al ícono flotante de la esquina inferior derecha). */}
           <div className="consola-escena">
-            <img src="/img/zinnia_multiexpresion.webp" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
+            <button type="button" className="zinnia-inicio" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
+              aria-label="Hablar con Zinn-IA (tecla Z)" aria-expanded={j.panelZinnia} aria-controls="panel-zinnia" title="Zinn-IA (tecla Z)">
+              <img src="/img/zinnia_multiexpresion.webp" alt="" className="pixel zinnia-principal" draggable={false} />
+            </button>
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">
@@ -101,7 +106,7 @@ export default function Inicio() {
 
       <footer className="inicio-pie">
         <div className="estado-sistema" role="status">
-          {/* Luz de estado (verde = en línea, naranja = modo local). Zinn-IA ya está en la consola y en el botón flotante. */}
+          {/* Luz de estado (verde = en línea, naranja = modo local). Zinn-IA ya está en la consola (es el botón de su chat). */}
           <span className={`led-estado${j.conectado ? '' : ' apagado'}`} aria-hidden="true" />
           <span>{j.conectado ? 'Sistema en línea' : 'Sin señal con la Tierra · modo local'}</span>
         </div>
