@@ -20,13 +20,27 @@ export const CAPAS_MAPA = [
   { id: 'optica', corto: 'Óptica', nombre: 'Óptica: ortofoto HiRISE (25 cm en la ruta, 1 m en la zona)', fuente: 'optica' },
   { id: 'relieve', corto: 'Relieve', nombre: 'Relieve: sombreado y curvas cada 5 m (DEM HiRISE)', fuente: 'relieve' },
   { id: 'pendiente', corto: 'Pendiente', nombre: 'Pendiente: menos de 15°, 15–23° y más de 23° (umbrales de Curiosity)', fuente: 'relieve' },
-  { id: 'termico', corto: 'Terreno', nombre: 'Terreno: THEMIS infrarrojo de noche', fuente: 'termico' },
   { id: 'contexto', corto: 'CTX', nombre: 'Contexto regional: CTX (15 × 15 km)', fuente: 'contexto' },
   { id: 'minerales', corto: 'Minerales', nombre: 'Minerales: CRISM', fuente: 'minerales' },
   { id: 'geologia', corto: 'Geología', nombre: 'Geología: mapa geológico de Marte (USGS SIM 3292)', fuente: 'geologia' },
   { id: 'radiacion', corto: 'Radiación', nombre: 'Radiación y clima: RAD y REMS (un punto) + regla del juego', fuente: 'radiacion' },
 ];
 const COLOR_PUNTO = { base: '#01EFAC', parada: '#0CD3B6', muestra: '#CAFF95', deposito: '#FA932E', peligro: '#DD2811' };
+// Pin sobre cada punto de la ruta (public/img/ui/pin.png, 64 × 96 px): la punta de abajo toca el punto.
+const PIN = '/img/ui/pin.png';
+const iconoPin = (L, alto) => {
+  const ancho = Math.round((alto * 64) / 96);
+  return L.icon({ iconUrl: PIN, iconSize: [ancho, alto], iconAnchor: [ancho / 2, alto], tooltipAnchor: [0, -alto], popupAnchor: [0, -alto], className: 'pin-punto' });
+};
+// Capas que se dibujan como una sola imagen: se piden en segundo plano al abrir el mapa, así al tocarlas ya están
+const IMAGENES_CAPAS = ['sombreado.png', 'curvas.png', 'pendiente.png', 'contexto_ctx.jpg', 'radiacion_reglas.png'];
+let capasPrecargadas = false;
+function precargarCapas() {
+  if (capasPrecargadas || typeof window === 'undefined') return;
+  capasPrecargadas = true;
+  const pedir = () => IMAGENES_CAPAS.forEach((a) => { const i = new Image(); i.decoding = 'async'; i.src = `${C.BASE}/${a}`; });
+  (window.requestIdleCallback ?? ((fn) => setTimeout(fn, 1500)))(pedir);
+}
 const ESTILO_TRAMO = {
   principal: { color: '#01EFAC', weight: 4, opacity: 0.95 },
   alternativa: { color: '#FA932E', weight: 3, opacity: 0.95, dashArray: '8 6' },
@@ -61,6 +75,7 @@ function fichaHtml(p) {
   return `<div class="ficha-punto"><strong>${esc(p.id)} · ${esc(p.nombre)}</strong>
     <p>${esc(p.nota ?? '')}</p>
     <p><em>En el terreno real:</em> ${esc(p.terreno)}</p>
+    ${p.por_que_el_nombre ? `<p><em>¿Por qué se llama ${esc(p.nombre_real)}?</em> ${esc(p.por_que_el_nombre)}</p>` : ''}
     <p>${esc(C.fmtLat(p.lat))}, ${esc(C.fmtLon(p.lon))} · ${esc(p.elevacion_m)} m · pendiente ${esc(p.pendiente_grados)}°</p>
     ${p.ficcion ? `<p><em>${esc(p.ficcion)}</em></p>` : ''}
     <p class="fuente">Fuentes: ${fuentes}</p></div>`;
@@ -91,8 +106,8 @@ function construirCapa(L, id) {
       img('pendiente.png', { opacity: 0.85 });
       return { grupo, leyenda: '<span class="ley" style="background:#01EFAC"></span> menos de 15° · <span class="ley" style="background:#FAC82E"></span> 15–23° · <span class="ley" style="background:#DD2811"></span> más de 23°. Curiosity se desvió 150 m ante 23° para buscar menos de 15° (NASA/JPL, 2023).' };
     case 'termico':
-      img('terreno_themis_region.png', { opacity: 0.8, className: 'pixelado' });
-      return { grupo, leyenda: 'THEMIS IR de noche (~81 m por píxel): claro = se mantiene tibio (roca); oscuro = se enfría rápido (polvo o arena fina).', encuadre: C.limitesArchivo('terreno_themis_region.png') };
+      // THEMIS queda OCULTA al jugador: su alineación con HiRISE no se pudo verificar (ver capas_reales.json)
+      return { grupo, aviso: C.CAPA_REAL.termico?.texto ?? 'Capa Terreno (THEMIS) oculta: su alineación con la foto de HiRISE no está verificada' };
     case 'contexto':
       img('contexto_ctx.jpg', { opacity: 1 });
       return { grupo, leyenda: 'CTX (~10 m por píxel): 15 × 15 km alrededor de la zona. El recuadro es la zona del juego.', encuadre: C.limitesArchivo('contexto_ctx.jpg') };
@@ -172,19 +187,22 @@ export function MapaCompleto({ capa = 'optica', setCapa, poi = null, seleccion =
         .on('click', () => setTramoSel(t.id)).addTo(ruta);
     }
     const marcadores = {};
+    const pin = iconoPin(L, 30);
     for (const p of C.PARADAS) {
-      marcadores[p.id] = L.circleMarker(C.aMapa(p.lat, p.lon), { radius: 7, color: '#24073F', weight: 2, fillColor: COLOR_PUNTO[p.tipo] ?? '#fff', fillOpacity: 1 })
+      L.circleMarker(C.aMapa(p.lat, p.lon), { radius: 5, color: '#24073F', weight: 2, fillColor: COLOR_PUNTO[p.tipo] ?? '#fff', fillOpacity: 1, interactive: false }).addTo(ruta);
+      marcadores[p.id] = L.marker(C.aMapa(p.lat, p.lon), { icon: pin, title: `${p.id} · ${p.nombre}`, alt: `Punto ${p.id}: ${p.nombre}`, riseOnHover: true })
         .bindTooltip(`${p.id} · ${p.nombre}`).bindPopup(fichaHtml(p), { maxWidth: 320 }).addTo(ruta);
     }
     // recuadro de la zona del juego (se ve al alejarse o con CTX/geología)
     L.rectangle(C.ZONA, { color: '#01EFAC', weight: 1, fill: false, dashArray: '4 4', interactive: false }).addTo(map);
     const aqui = poi && C.parada(poi);
-    const jugador = aqui ? L.marker(C.aMapa(aqui.lat, aqui.lon), { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [18, 18] }), interactive: false }) : null;
+    const jugador = aqui ? L.marker(C.aMapa(aqui.lat, aqui.lon), { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [18, 18] }), interactive: false, zIndexOffset: 1000 }) : null;
     const elegido = seleccion && C.parada(seleccion);
     if (elegido) map.setView(C.aMapa(elegido.lat, elegido.lon), 0.5); else if (aqui) map.setView(C.aMapa(aqui.lat, aqui.lon), compacto ? -1.5 : -0.5); else map.fitBounds(C.ZONA);
     if (elegido) setTimeout(() => { ruta.addTo(map); marcadores[elegido.id].openPopup(); }, 50);
     map.setMaxBounds(C.limitesArchivo('contexto_ctx.jpg'));
     pintarEsquinas();
+    precargarCapas();
     return { map, ruta, curiosity, jugador, capa: null, leyenda: null };
   });
 
@@ -213,8 +231,8 @@ export function MapaCompleto({ capa = 'optica', setCapa, poi = null, seleccion =
         {CAPAS_MAPA.map((c) => (
           <button key={c.id} title={c.nombre} aria-label={c.nombre} aria-pressed={c.id === capaVisible} disabled={apagado && c.id !== 'optica'} onClick={() => setCapa?.(c.id)}>{c.corto}</button>
         ))}
-        <button title="Mostrar u ocultar la ruta del juego" aria-pressed={verRuta} onClick={() => setVerRuta(!verRuta)}>Ruta</button>
-        <button title="Mostrar u ocultar la ruta real de Curiosity (PDS PLACES)" aria-pressed={verCuriosity} onClick={() => setVerCuriosity(!verCuriosity)}>Curiosity</button>
+        <button title="Mostrar u ocultar la ruta del astronauta (la del juego)" aria-pressed={verRuta} onClick={() => setVerRuta(!verRuta)}>Ruta del astronauta</button>
+        <button title="Mostrar u ocultar el recorrido real del rover Curiosity (PDS PLACES): no es la ruta del astronauta" aria-pressed={verCuriosity} onClick={() => setVerCuriosity(!verCuriosity)}>Ruta real de Curiosity</button>
       </div>
       {apagado && <div className="mapa-sin-bateria">Sin batería: el mapa pierde sus capas</div>}
       {tramo && <Perfil tramo={tramo} onCerrar={() => setTramoSel(null)} />}
@@ -248,7 +266,7 @@ export function Perfil({ tramo, onCerrar }) {
 const ZOOM_MINI = Math.log2(260 / 150); // ~150 m de lado en 260 px
 
 function recorrido(poi) {
-  const k = C.ORDEN.indexOf(poi === 'P5' ? 'P4' : poi === 'DEP' ? 'P3' : poi);
+  const k = C.ORDEN.indexOf(poi === 'P5' || poi === 'REF' ? 'D2' : poi === 'DEP' ? 'P3' : poi);
   const hechos = k > 0 ? C.ORDEN.slice(1, k + 1).map((id) => C.TRAMO_HASTA[id]) : [];
   return { hechos, actual: hechos.at(-1) ?? null };
 }
@@ -262,7 +280,7 @@ export function Minimapa({ poi, apagado = false, onAbrir }) {
     L.control.scale({ imperial: false, position: 'bottomleft', maxWidth: 60 }).addTo(map);
     controlTexto(L, 'topright', 'mapa-norte mini', '<span>N</span>▲').addTo(map);
     const capaRuta = L.layerGroup().addTo(map);
-    const jugador = L.marker([0, 0], { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [14, 14] }), interactive: false });
+    const jugador = L.marker([0, 0], { icon: L.divIcon({ className: 'jugador-pulso', iconSize: [14, 14] }), interactive: false, zIndexOffset: 1000 });
     const p = C.parada(poi) ?? C.parada('H');
     map.setView(C.aMapa(p.lat, p.lon), ZOOM_MINI);
     return { map, capaRuta, jugador };
@@ -282,9 +300,10 @@ export function Minimapa({ poi, apagado = false, onAbrir }) {
             : { ...ESTILO_TRAMO[tipo], weight: 2, opacity: 0.55 };
         L.polyline(t.puntos, { ...estilo, interactive: false }).addTo(m.capaRuta);
       }
+      const pin = iconoPin(L, 20);
       for (const q of C.PARADAS) {
-        L.circleMarker(C.aMapa(q.lat, q.lon), { radius: 4, color: '#24073F', weight: 1.5, fillColor: COLOR_PUNTO[q.tipo] ?? '#fff', fillOpacity: 1 })
-          .bindTooltip(q.nombre, { direction: 'top' }).addTo(m.capaRuta);
+        L.circleMarker(C.aMapa(q.lat, q.lon), { radius: 3, color: '#24073F', weight: 1.5, fillColor: COLOR_PUNTO[q.tipo] ?? '#fff', fillOpacity: 1, interactive: false }).addTo(m.capaRuta);
+        L.marker(C.aMapa(q.lat, q.lon), { icon: pin, interactive: false, keyboard: false }).addTo(m.capaRuta);
       }
       m.jugador.setLatLng(C.aMapa(p.lat, p.lon)).addTo(m.capaRuta);
     }

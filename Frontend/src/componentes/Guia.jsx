@@ -44,6 +44,8 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
             </button>
           ))}
         </div>
+        {/* La misma guía como página aparte: para leerla o imprimirla (también funciona en celular) */}
+        <a className="guia-imprimir" href="/guia.html" target="_blank" rel="noopener">Versión para leer o imprimir (pestaña nueva)</a>
       </nav>
       <div className="cajon-cuerpo guia-cuerpo" role="tabpanel">
         {seccion === GUIA.secciones[0] && GUIA.intro && <p className="guia-nota"><TextoGuia texto={GUIA.intro} partida={j.partida} /></p>}
@@ -64,7 +66,7 @@ export default function Guia({ pestanaInicial = GUIA.secciones[0].id }) {
               {tiene ? (
                 <>
                   <strong>{d.id}{esDestacada(d) ? ' ★' : ''}</strong> {d.texto}
-                  <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · pendiente de revisión'}</p>
+                  <p className="fuente">Fuente: <Enlace url={d.fuente} />{d.verificado ? '' : ' · fuente por verificar'}</p>
                 </>
               ) : <span>{d.id} · Ficha bloqueada: {pista(d.capitulo)}</span>}
             </div>

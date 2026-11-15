@@ -14,8 +14,8 @@
     "capa": "minerales"
   },
   "c06_01": {
-    "texto": "La capa Terreno marca arena suelta en la hondonada. El atajo es rápido si no te hundes: hay 4 posibilidades en 10 de atascarte.",
-    "capa": "termico"
+    "texto": "La foto de HiRISE muestra arena suelta en la hondonada. El atajo es rápido si no te hundes: hay 4 posibilidades en 10 de atascarte.",
+    "capa": "optica"
   },
   "c06_04": {
     "texto": "Si tu alimentación está en amarillo o rojo, comer ahora te ahorra tiempo después: con poca energía caminas más lento."

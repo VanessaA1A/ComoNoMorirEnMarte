@@ -21,8 +21,24 @@ export function useMenosMovimiento() {
   return menos;
 }
 
-// Mientras falte el fondo exacto de una escena se usa el más cercano de la misma zona de la historia
-// (con la etiqueta "Fondo pendiente"), nunca un color sólido.
+// Mientras falte el fondo exacto de una escena se usa el fondo existente más parecido del MISMO lugar
+// (nave, base, Marswalk o final) con un desenfoque suave. En pantalla nunca se escribe que falta:
+// solo se avisa en la consola en modo desarrollo. Lista para ilustradores: docs/fondos_faltantes.md.
+// Cuando llegue el arte, basta con copiarlo a public/img/fondos/ con el nombre esperado.
+export const SUSTITUTO = {
+  // Marswalk: hondonada, tormenta, crestas, depósito y bajada a los carbonatos → zona de transición
+  bg_c06_hondonada: 'bg_c05_transicion.jpg', bg_c06_atasco: 'bg_c05_transicion.jpg', bg_tormenta_polvo: 'bg_c05_transicion.jpg',
+  bg_c07_crestas: 'bg_c05_transicion.jpg', bg_c07_deposito: 'bg_c05_transicion.jpg',
+  bg_c08_bajada: 'bg_c05_transicion.jpg', bg_c08_carbonatos: 'bg_c05_transicion.jpg',
+  // Marswalk de regreso: alerta solar, refugio y mirador alto → mirador
+  bg_c09_alerta: 'bg_c04_mirador.jpg', bg_c09_refugio: 'bg_c04_mirador.jpg', bg_c09_mirador_alto: 'bg_c04_mirador.jpg',
+  // Base Aurora
+  bg_c10_esclusa: 'bg_c03_base.jpg',
+  // Finales: el despegue (bueno) y quedarse en Marte (intermedio) pasan en la base; el malo, en la caminata
+  final_bueno: 'bg_c03_base.jpg', final_intermedio: 'bg_c03_base.jpg', final_malo: 'bg_c05_transicion.jpg',
+};
+const sinExtension = (archivo) => archivo.replace(/.[a-z0-9]+$/i, '');
+
 const SUPLENTE = {
   1: 'bg_c01_tierra.jpg', 2: 'bg_c02_nave.jpg', 3: 'bg_c03_base.jpg', 4: 'bg_c04_mirador.jpg', 5: 'bg_c05_transicion.jpg',
   6: 'bg_c05_transicion.jpg', 7: 'bg_c05_transicion.jpg', 8: 'bg_c05_transicion.jpg', 9: 'bg_c04_mirador.jpg', 10: 'bg_c03_base.jpg',
@@ -39,19 +55,19 @@ export function Fondo({ archivo, capitulo = 3, alternativas = [] }) {
 
 function FondoImagen({ archivo, capitulo, alternativas }) {
   const propios = archivo ? variantes(archivo) : [];
-  const candidatos = [...new Set([...propios, ...[...alternativas, SUPLENTE[capitulo] ?? SUPLENTE[10]].flatMap(variantes)])];
+  const sustituto = archivo ? SUSTITUTO[sinExtension(archivo)] : null;
+  const candidatos = [...new Set([...propios, ...[sustituto, ...alternativas, SUPLENTE[capitulo] ?? SUPLENTE[10]].filter(Boolean).flatMap(variantes)])];
   const [i, setI] = useState(0);
   const actual = candidatos[i];
-  const pendiente = archivo && i >= propios.length && <span className="etiqueta-pendiente">Fondo pendiente: {archivo}</span>;
+  const prestado = Boolean(archivo) && i >= propios.length; // se ve un fondo de otra escena del mismo lugar
+  useEffect(() => {
+    // Solo en desarrollo: el jugador nunca ve un aviso de arte faltante
+    if (prestado && import.meta.env?.DEV) console.info(`[fondos] falta ${archivo}; se muestra ${actual ?? 'el respaldo CSS'} (ver docs/fondos_faltantes.md)`);
+  }, [prestado, archivo, actual]);
   if (!actual) {
-    return <div className={`fondo-respaldo ${esViaje(capitulo) ? 'viaje' : 'marte'}`} aria-hidden="true">{pendiente}</div>;
+    return <div className={`fondo-respaldo ${esViaje(capitulo) ? 'viaje' : 'marte'}`} aria-hidden="true" />;
   }
-  return (
-    <>
-      <img src={`${IMG}/fondos/${actual}`} alt="" className="fondo" draggable={false} onError={() => setI((n) => n + 1)} />
-      {pendiente}
-    </>
-  );
+  return <img src={`${IMG}/fondos/${actual}`} alt="" className={`fondo${prestado ? ' fondo-prestado' : ''}`} draggable={false} onError={() => setI((n) => n + 1)} />;
 }
 
 // Zinn-IA ya no se dibuja aquí: usa ZinniaAvatar.jsx (un solo componente, sin logotipo de respaldo).

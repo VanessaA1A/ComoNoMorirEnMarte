@@ -96,16 +96,16 @@ ok(formatear('viv{o|a|e}', { pronombre: 'el', escena: 'c01_01' }) === 'vivo/a/e'
 ok(formatear('viv{o|a|e}', null) === 'vivo/a/e', 'sin partida también (vivo/a/e)');
 ok(['vivo', 'viva', 'vive'].every((v, i) => formatear('viv{o|a|e}', { pronombre: ['el', 'ella', 'elle'][i], escena: 'c03_01' }) === v), 'después de elegir: vivo / viva / vive');
 
-// Canción del tutorial (cap. 1): 8 versos con botón de UNA respuesta, luego "esperarGuia" y el cierre
+// Canción del tutorial (cap. 1, versión corta de Moises): 5 versos con botón de UNA respuesta, luego "esperarGuia" y el cierre
 const cancion = ESCENAS.get('c01_04');
 const versos = (cancion?.lineas || []).filter((l) => l.respuesta);
-ok(versos.length === 8 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 8 versos con respuesta, sin opciones ni efecto (no multiplica rutas)');
+ok(versos.length === 5 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 5 versos con respuesta, sin opciones ni efecto (no multiplica rutas)');
 ok(ESCENAS.get(cancion?.ir)?.accion === 'esperarGuia' && !ESCENAS.get(cancion.ir).opciones && !ESCENAS.get(cancion.ir).efecto, 'después de la canción viene "esperarGuia" (paso directo, sin efecto)');
 const cierre = ESCENAS.get(ESCENAS.get(cancion?.ir)?.ir);
-ok(cierre?.lineas?.at(-1)?.texto === 'Ahora sí: ¡motores encendidos!' && cierre.ir === 'c01_05' && !cierre.efecto, 'cierre: "Ahora sí: ¡motores encendidos!" y sigue a c01_05');
-const listo = (pr) => formatear(versos[0]?.respuesta, { pronombre: pr, escena: 'c01_04', nombre: 'Alex' });
-ok(listo('el') === '¡Listo!' && listo('ella') === '¡Lista!' && listo('elle') === '¡Liste!', `canción con los 3 pronombres: ${['el', 'ella', 'elle'].map(listo).join(' / ')}`);
-ok(formatear(versos[0]?.texto, { pronombre: 'elle', escena: 'c01_04', nombre: 'Alex' }).startsWith('¡Alto, Alex!') && formatear(versos[0]?.texto, { pronombre: 'elle', escena: 'c01_04', nombre: 'Alex' }).endsWith('¿Liste?'), 'canción: "¡Alto, {nombre}!… ¿List{o|a|e}?" se formatea bien');
+ok((cierre?.lineas?.at(-1)?.texto ?? '').endsWith('Ahora sí: ¡motores encendidos!') && cierre.ir === 'c01_05' && !cierre.efecto, 'cierre: termina en "Ahora sí: ¡motores encendidos!" y sigue a c01_05');
+const enTres = (t) => ['el', 'ella', 'elle'].map((pr) => formatear(t, { pronombre: pr, escena: 'c01_04', nombre: 'Alex' }));
+ok(versos.every((v) => [...enTres(v.texto), ...enTres(v.respuesta)].every((t) => !/[{}|]/.test(t))), 'canción: con los 3 pronombres no queda ningún marcador sin resolver');
+ok(enTres(versos[0]?.texto).every((t) => t.startsWith('¡Alto, Alex!')), 'canción: "¡Alto, {nombre}!" se formatea bien');
 const emoji = /\p{Extended_Pictographic}/u;
 const nuevosCancion = [...cancion.lineas, ...ESCENAS.get(cancion.ir).lineas, ...cierre.lineas].flatMap((l) => [l.texto, l.respuesta]).filter(Boolean);
 ok(nuevosCancion.every((t) => !emoji.test(t)), 'canción y esperarGuia sin emojis');
@@ -156,17 +156,60 @@ ok(txtGuia.includes('Raciones o el depósito'), 'guía = motor: la alimentación
 ok(aplicarEfecto({ ...base, integridad: 1 }, { integridad: -5 }).integridad === 0 && txtGuia.includes('**Menos de 30:** fuga en el traje'), 'guía = motor: integridad en 0 y fuga bajo 30');
 
 // Solo computadora: bloqueo en celular o ventana chica (guia.html y la API no se bloquean)
-const { puedeJugar, ANCHO_MINIMO } = await import('../src/juego/dispositivo.js');
-ok(ANCHO_MINIMO === 1024, 'ancho mínimo: 1024 px');
-ok(!puedeJugar({ ancho: 800, punteroFino: true }), 'a 800 px se bloquea');
-ok(puedeJugar({ ancho: 1280, punteroFino: true }), 'a 1280 px con mouse se juega');
-ok(!puedeJugar({ ancho: 1280, punteroFino: false }), 'pantalla grande sin puntero fino (tablet) se bloquea');
-ok(!puedeJugar({ ancho: 390, punteroFino: false }), 'celular se bloquea');
-ok(puedeJugar({ ancho: 390, punteroFino: false, buscar: '?forzar=1' }) && puedeJugar({ ancho: 390, punteroFino: false, buscar: '?demo=1&forzar=1' }), '?forzar=1 salta el bloqueo (solo pruebas)');
-ok(!puedeJugar({ ancho: 390, punteroFino: false, buscar: '?demo=1' }) && !puedeJugar({ ancho: 390, punteroFino: false, buscar: '?forzar=0' }), '?demo=1 o ?forzar=0 no saltan el bloqueo');
+const { puedeJugar } = await import('../src/juego/dispositivo.js');
+ok(puedeJugar({ punteroFino: true }), 'computadora con mouse o trackpad: se juega');
+ok(puedeJugar({ punteroFino: true, ancho: 800 }), 'computadora con la ventana angosta (DevTools, media pantalla, zoom o escala de Windows): se juega, sin aviso');
+ok(puedeJugar({ punteroFino: true, principalTactil: false }), 'laptop con pantalla táctil (puntero principal: trackpad): se juega');
+ok(!puedeJugar({ punteroFino: false, principalTactil: true }), 'celular se bloquea');
+ok(!puedeJugar({ punteroFino: false, principalTactil: true }), 'tablet (solo táctil) se bloquea');
+ok(!puedeJugar({ punteroFino: true, principalTactil: true }), 'celular con lápiz (puntero principal: el dedo) se bloquea');
+ok(puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?forzar=1' }) && puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?demo=1&forzar=1' }), '?forzar=1 salta el bloqueo (solo pruebas)');
+ok(!puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?demo=1' }) && !puedeJugar({ punteroFino: false, principalTactil: true, buscar: '?forzar=0' }), '?demo=1 o ?forzar=0 no saltan el bloqueo');
 const bloqueo = fs.readFileSync(path.join(raiz, 'src/componentes/SoloComputadora.jsx'), 'utf8');
 ok(bloqueo.includes('¡Uy! Este viaje a Marte necesita una pantalla más grande. Ábreme en una computadora para jugar.') && bloqueo.includes('href="/guia.html"') && !emoji.test(bloqueo), 'pantalla de bloqueo: texto de Zinn-IA, enlace a guia.html y sin emojis');
 ok(!fs.readFileSync(path.join(raiz, 'public/guia.html'), 'utf8').includes('puedeJugar'), 'guia.html no usa el bloqueo');
+
+// Una sola Guía de supervivencia en el Inicio; su versión para leer o imprimir (guia.html) se abre desde dentro de la Guía
+{
+  const inicio = fs.readFileSync(path.join(raiz, 'src/componentes/Inicio.jsx'), 'utf8');
+  const guiaJsx = fs.readFileSync(path.join(raiz, 'src/componentes/Guia.jsx'), 'utf8');
+  ok((inicio.match(/titulo="Guía[^"]*"/g) ?? []).length === 1 && inicio.includes('titulo="Guía de supervivencia"') && !inicio.includes('/guia.html') && guiaJsx.includes('href="/guia.html"'),
+    'Inicio: un solo botón "Guía de supervivencia"; la versión para imprimir se abre desde la Guía');
+}
+
+// Color de la arena en Gale: dunas Bagnold oscuras (basalto) y el marrón rojizo solo en falso color infrarrojo (CRISM)
+ok(nombres.includes('Color de la arena en Gale') && nombres.includes('falso color infrarrojo') && nombres.includes('olivino')
+  && (guia.referencias[64]?.url ?? '').includes('jpl.nasa.gov') && (guia.referencias[65]?.url ?? '').includes('science.nasa.gov') && (guia.referencias[66]?.url ?? '').includes('10.1029/2022JE007436'),
+  'guía: color de la arena en Gale con fuentes NASA/JPL y el artículo de JGR Planets [64]-[66]');
+
+// Guion 1.0: escenas narrativas "La tormenta de polvo" (c06_01) y "La nevada que no llega" (c07_01).
+// Solo texto: sin efecto en barras ni reloj, con una línea distinta según se revisó el clima en el mirador (clima_revisado).
+{
+  const { lineasVisibles } = await import('../src/engine/motor.js');
+  const { formatear: fmt } = await import('../src/engine/texto.js');
+  const conClima = { ...estadoInicial(), flags: { clima_revisado: true } };
+  const sinClima = { ...estadoInicial(), flags: {} };
+  const textos = (id, s) => lineasVisibles(ESCENAS.get(id), s).map((l) => l.texto).join(' ');
+  for (const [id, claves, nombre] of [['c06_01', ['nube de polvo', 'Opportunity', '10,8', 'menos del 1 %'], 'tormenta de polvo'], ['c07_01', ['nieve', 'Phoenix', 'Viking 2', 'escarcha'], 'nevada que no llega']]) {
+    const e = ESCENAS.get(id);
+    const variantes = (e.lineas ?? []).filter((l) => l.requiere?.flag === 'clima_revisado' || l.requiere?.noFlag === 'clima_revisado');
+    ok(claves.every((c) => textos(id, conClima).includes(c)) && !e.efecto, `${id}: escena narrativa "${nombre}" sin efecto en barras ni reloj`);
+    ok(variantes.length === 2 && lineasVisibles(e, conClima).filter((l) => variantes.includes(l)).length === 1 && lineasVisibles(e, sinClima).filter((l) => variantes.includes(l)).length === 1
+      && textos(id, conClima) !== textos(id, sinClima), `${id}: una línea distinta según se revisó el clima (clima_revisado)`);
+  }
+  const c06 = ESCENAS.get('c06_01');
+  ok(c06.capa !== 'termico' && !(c06.lineas ?? []).some((l) => /THEMIS/.test(l.texto) || l.capa === 'termico') && textos('c06_01', sinClima).includes('HiRISE'),
+    'c06_01: la hondonada se lee en la foto de HiRISE (la capa THEMIS está oculta en el mapa)');
+  const tranquil = c06.lineas.find((l) => /^Tranquil/.test(l.texto))?.texto ?? '';
+  ok(['el', 'ella', 'elle'].map((pr) => fmt(tranquil, { pronombre: pr, escena: 'c06_01', nombre: 'Alex' }).split(':')[0]).join('/') === 'Tranquilo/Tranquila/Tranquile',
+    'tormenta: "Tranquil{o|a|e}" concuerda con los 3 pronombres');
+  ok(textos('c04_03a', conClima).includes('remolinos térmicos'), 'c04_03a: al revisar el clima Zinn-IA ve actividad en el Sol y remolinos térmicos');
+  const fuentesDe = (n) => leer(`src/data/capitulos/cap0${n}.json`).fuentes ?? [];
+  ok(['six-things-about-opportunitys-recovery-efforts', 'mission/mer-opportunity', 'planetary/factsheet/marsfact'].every((u) => fuentesDe(6).some((f) => f.includes(u)))
+    && ['nasa-mars-lander-sees-falling-snow', 'dry-ice-snowfall-on-mars', 'frost-on-utopia-planitia'].every((u) => fuentesDe(7).some((f) => f.includes(u))),
+    'fuentes NASA/JPL de la tormenta (cap. 6) y de la nevada (cap. 7) en las fuentes del capítulo');
+  ok(![...lineasVisibles(c06, conClima), ...lineasVisibles(ESCENAS.get('c07_01'), conClima)].some((l) => /99 ?%/.test(l.texto)), 'tormenta: sin el "99 %" que no tiene fuente');
+}
 
 if (fallos) { console.log(`\n❌ ${fallos} prueba(s) fallaron`); process.exit(1); }
 console.log('\n✅ Zinn-IA: textos y lógica en orden');

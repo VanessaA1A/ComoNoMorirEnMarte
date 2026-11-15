@@ -9,7 +9,8 @@ import Recurso from './Recurso.jsx';
 import { MapaCompleto, Minimapa } from './MapaReal.jsx';
 
 // Parada donde está el jugador según el capítulo (si la escena no dice "poi").
-const POI_POR_CAPITULO = { 3: 'H', 4: 'P1', 5: 'P2', 6: 'D1', 7: 'P3', 8: 'P4', 9: 'P4', 10: 'H' };
+// Capítulo 9: la alerta solar llega ya de regreso, en D2 (ruta_real.json); con el mirador alto, en P5.
+const POI_POR_CAPITULO = { 3: 'H', 4: 'P1', 5: 'P2', 6: 'D1', 7: 'P3', 8: 'P4', 9: 'D2', 10: 'H' };
 export function poiActual(partida) {
   if (!partida) return null;
   if (partida.capitulo === 9 && partida.flags?.mirador_alto) return 'P5';
@@ -79,7 +80,7 @@ export function MapaMarte({ fichas, enMarte, onGale }) {
           <p className="fuente">Fuente: {sel.fuente_nombre ? `${sel.fuente_nombre} · ` : ''}<Enlace url={sel.fuente} /></p>
           {sel.imagen && (
             <Recurso src={`/${sel.imagen.replace(/^\/+/, '')}`} alt={`Foto de Perseverance en ${sel.lugar ?? sel.nombre}`} className="foto-ficha"
-              respaldo={<div className="foto-ficha foto-pendiente">Foto pendiente: {sel.imagen}</div>} />
+              respaldo={null} />
           )}
           {sel.galeria && (
             <p><a className="boton secundario" href={sel.galeria} target="_blank" rel="noreferrer">Ver fotos de Perseverance ↗</a></p>

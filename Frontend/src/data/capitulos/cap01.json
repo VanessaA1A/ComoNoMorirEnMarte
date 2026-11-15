@@ -209,7 +209,8 @@
       "lineas": [
         {
           "quien": "Zinn-IA",
-          "texto": "Próxima parada: el espacio profundo. Allá afuera la radiación es otra historia."
+          "texto": "Próxima parada: el espacio profundo. Allá afuera la radiación es otra historia.",
+          "expresion": "seria"
         }
       ],
       "siguienteCapitulo": 2
