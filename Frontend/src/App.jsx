@@ -36,7 +36,7 @@ function Overlay() {
   }
 }
 
-function Escenario() {
+export function Escenario() { // exportado también para tools/probar-ventana-zinnia.mjs
   const j = useJuego();
   const enJuego = j.pantalla === 'juego' && j.partida;
   return (

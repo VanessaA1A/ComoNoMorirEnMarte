@@ -2,14 +2,14 @@
 // El tutorial, las pistas y "Pregúntale a Zinn-IA" son texto PREESCRITO (src/data). El chat usa IA (Claude Haiku)
 // limitada a datos verificados, con respaldo preescrito sin conexión. Nada de esto cambia el estado ni las reglas del juego.
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { enviar, suscribir, leerChat, MAX_TEXTO, PEDIR_CHISTE } from '../juego/zinniaChat.js';
+import { enviar, suscribir, leerChat, MAX_TEXTO, PEDIR_CHISTE, SEMILLA, enSemilla } from '../juego/zinniaChat.js';
 import MARTE from '../data/marte.json';
 import { escena as escenaDe, lineasVisibles, opcionesVisibles } from '../engine/motor.js';
 import { formatear } from '../engine/texto.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
 import { comoVoy, expresionZinnia, comoRecuperoBateria } from '../juego/comoVoy.js';
 import { fichasDe } from '../juego/fichas.js';
-import { apiActiva } from '../api.js';
+import { apiActiva, iaDisponible } from '../api.js';
 import { ZinnIA, ZinniaHablando } from './Personajes.jsx';
 import { Cajon, Modal, useFocoAtrapado } from './Modal.jsx';
 import { Enlace } from './Mapas.jsx';
@@ -50,12 +50,27 @@ export function ejecutarAccion(j, a) {
 const accionValida = (j, a) => ['abrir_capa', 'marcar_poi', 'mostrar_ficha'].includes(a?.tipo) && (
   j.catalogo.capas.some((c) => c.id === a.id) || j.catalogo.pois.some((x) => x.id === a.id) || LUGARES_MARTE.has(a.id) || j.catalogo.datos.some((d) => d.id === a.id));
 
+/** Punto verde "IA en vivo" o gris "modo sin conexión": según la última respuesta o, antes de la primera, según /salud. */
+export function IndicadorIA({ modo, iaSalud }) {
+  const enVivo = modo === 'ia' || (modo === null && iaSalud === true);
+  return (
+    <p className={`indicador-ia ${enVivo ? 'ia-en-vivo' : 'ia-sin-conexion'}`} role="status">
+      <span className="punto-ia" aria-hidden="true" />{enVivo ? 'IA en vivo' : 'Modo sin conexión'}
+    </p>
+  );
+}
+
 function ChatZinnia({ p }) {
   const j = useJuego();
-  const { mensajes, pensando } = useSyncExternalStore(suscribir, leerChat, leerChat);
+  const { mensajes, pensando, modo } = useSyncExternalStore(suscribir, leerChat, leerChat);
   const [texto, setTexto] = useState('');
+  const [iaSalud, setIaSalud] = useState(null);
   const lista = useRef(null);
+  const campo = useRef(null);
   useEffect(() => { lista.current?.scrollTo?.({ top: lista.current.scrollHeight }); }, [mensajes.length, pensando]);
+  // Al abrir, el foco va al campo de texto (después de que el panel ponga su foco inicial)
+  useEffect(() => { const t = setTimeout(() => campo.current?.focus(), 0); return () => clearTimeout(t); }, []);
+  useEffect(() => { let vivo = true; iaDisponible().then((v) => vivo && setIaSalud(v)); return () => { vivo = false; }; }, []);
 
   const mandar = async (t) => {
     const r = await enviar(t, { partida: p, fichas: j.fichas });
@@ -70,7 +85,8 @@ function ChatZinnia({ p }) {
   return (
     <section aria-labelledby="chat-zinnia" className="chat-zinnia">
       <h3 id="chat-zinnia">Pregúntame lo que quieras</h3>
-      <div className="chat-historial" ref={lista} aria-live="polite">
+      <IndicadorIA modo={modo} iaSalud={iaSalud} />
+      <div className="chat-historial" ref={lista} aria-live="polite" aria-label="Conversación con Zinn-IA">
         {!mensajes.length && <div className="burbuja">¡Hola! Sé de Marte, del mapa y de tus barras. Pregúntame, o pídeme un chiste malo.</div>}
         {mensajes.map((m) => (
           <div key={m.id} className={m.rol === 'usuario' ? 'chat-yo' : 'burbuja chat-zinnia-msg'}>
@@ -96,12 +112,12 @@ function ChatZinnia({ p }) {
           </div>
         )}
       </div>
-      <div className="chat-sugerencias">
+      <div className="chat-sugerencias" role="group" aria-label="Preguntas sugeridas">
         {sugerencias.map((s) => <button key={s} className="pregunta chat-sugerencia" disabled={pensando} onClick={() => mandar(s)}>{s}</button>)}
       </div>
       <form className="chat-campo" onSubmit={(e) => { e.preventDefault(); mandar(texto); }}>
-        <label className="oculto-lector" htmlFor="chat-texto">Mensaje para Zinn-IA</label>
-        <input id="chat-texto" value={texto} maxLength={MAX_TEXTO} onChange={(e) => setTexto(e.target.value)} placeholder="Escribe tu pregunta" autoComplete="off" />
+        <label className="oculto-lector" htmlFor="chat-texto">Mensaje para Zinn-IA (máximo {MAX_TEXTO} caracteres)</label>
+        <input id="chat-texto" ref={campo} value={texto} maxLength={MAX_TEXTO} onChange={(e) => setTexto(e.target.value)} placeholder="Escribe cualquier pregunta" autoComplete="off" />
         <button className="boton principal" disabled={pensando || !texto.trim()}>Enviar</button>
       </form>
       {texto.length > MAX_TEXTO - 50 && <p className="provisional">{texto.length}/{MAX_TEXTO}</p>}
@@ -125,17 +141,43 @@ function Pregunta({ r, p }) {
   );
 }
 
+/** Expresión de la cabecera: semilla (batería 0), pensando, alerta (barra en rojo), contenta tras responder. */
+export function expresionPanel(p, { pensando, ultima } = {}) {
+  const base = expresionZinnia(p); // apagada | alerta | triste | feliz
+  if (base === 'apagada') return 'apagada';
+  if (pensando) return 'curiosa';
+  if (base === 'alerta') return 'alerta';
+  if (ultima?.rol === 'zinnia') return 'feliz';
+  return base;
+}
+
+/** Batería en 0: Zinn-IA "se apaga" (modo semilla). No responde preguntas libres; solo lleva a la Guía. */
+function Semilla() {
+  const j = useJuego();
+  const boton = useRef(null);
+  useEffect(() => { const t = setTimeout(() => boton.current?.focus(), 0); return () => clearTimeout(t); }, []);
+  return (
+    <section className="semilla" aria-labelledby="semilla-texto">
+      <div className="semilla-cara"><ZinnIA expresion="apagada" /></div>
+      <p id="semilla-texto" className="burbuja">{SEMILLA}</p>
+      <button ref={boton} className="boton principal" onClick={() => j.abrir('guia')}>Abrir la Guía</button>
+    </section>
+  );
+}
+
 export function PanelZinnia() {
   const j = useJuego();
   const p = j.pantalla === 'juego' ? j.partida : null;
   const expresion = expresionZinnia(p);
-  const emergencia = Boolean(p && p.bateria <= 0 && !p.final);
+  const emergencia = enSemilla(p);
+  const { pensando, mensajes } = useSyncExternalStore(suscribir, leerChat, leerChat);
+  const cara = expresionPanel(p, { pensando, ultima: mensajes.at(-1) });
   const totalFichas = fichasDe(j.catalogo.datos).length;
 
   const icono = (
     <button className="icono-zinnia" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
       aria-label={`Zinn-IA, tu asistente (tecla Z)${j.avisoZinnia ? ': tiene algo nuevo para ti' : ''}`} aria-expanded={j.panelZinnia}
-      title="Zinn-IA (tecla Z)">
+      aria-controls="panel-zinnia" title="Zinn-IA (tecla Z)">
       <img src="/img/zinnia_rostro.png" alt="" className={`pixel ${expresion === 'apagada' ? 'zinnia-apagada' : ''}`} draggable={false} />
       {j.avisoZinnia && <span className="punto" aria-hidden="true" />}
     </button>
@@ -145,26 +187,21 @@ export function PanelZinnia() {
   const ops = opcionesActuales(p, j.linea);
   const pista = ops.length ? PISTAS[p.escena] : null;
   const lectura = comoVoy(p).map((t) => formatear(t, p ?? {}));
-  const bateria = RESPUESTAS.find((r) => r.id === 'bateria');
 
   return (
     <>
       {icono}
-      <Cajon titulo={emergencia ? 'Zinn-IA · modo emergencia' : 'Zinn-IA'} onCerrar={() => j.abrirPanelZinnia(false)} className="panel-zinnia"
-        cabecera={<div className="cara">{expresion === 'apagada' ? <ZinnIA expresion="apagada" /> : <ZinniaHablando />}</div>}>
-        <div className="cajon-cuerpo">
-          {emergencia && <p className="emergencia">Batería en 0: casi no me queda energía. Solo puedo decirte cómo vas y cómo recuperarla.</p>}
+      <Cajon titulo={emergencia ? 'Zinn-IA · modo semilla' : 'Zinn-IA'} onCerrar={() => j.abrirPanelZinnia(false)} className="panel-zinnia"
+        cabecera={<div className={`cara cara-${cara}`}><ZinnIA expresion={cara} /></div>}>
+        <div className="cajon-cuerpo" id="panel-zinnia">
+          {emergencia ? <Semilla /> : <ChatZinnia p={p} />}
 
-          {!emergencia && <ChatZinnia p={p} />}
-
-          <section aria-labelledby="como-voy">
+          {!emergencia && <section aria-labelledby="como-voy">
             <h3 id="como-voy">¿Cómo voy?</h3>
             <div className="burbuja"><ul>{lectura.map((t) => <li key={t}>{t}</li>)}</ul></div>
-          </section>
+          </section>}
 
-          {emergencia ? (
-            <section><h3>¿Cómo recupero batería?</h3><Pregunta r={bateria} p={p} /></section>
-          ) : (
+          {!emergencia && (
             <>
               {ops.length > 0 && (
                 <section aria-labelledby="pista">

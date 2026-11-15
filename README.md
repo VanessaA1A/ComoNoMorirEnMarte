@@ -55,7 +55,16 @@ cd Frontend && npm install && npm run dev
 cd Backend && npm install && npm run db:schema && npm run db:seed && npm run dev
 ```
 
-Pruebas del juego: `cd Frontend && npm run probar` (motor: 154.197 rutas y 61,4 % de final bueno; Zinn-IA; guardado local; cola de sincronización; recorridos A, B y C; render de cada panel).
+Pruebas del juego: `cd Frontend && npm run probar` (motor: 154.197 rutas y 61,4 % de final bueno; Zinn-IA; chat y respaldo; guardado local; cola de sincronización; recorridos A, B y C; render de cada panel; ventana de Zinn-IA en cada pantalla).
+
+## Zinn-IA (agente)
+
+- **Siempre a mano:** ícono abajo a la derecha en todas las pantallas; tecla **Z** abre y cierra, **Esc** o la **X** cierran. Mientras está abierta la historia se pausa y el estado del juego no cambia.
+- **Con IA** (`POST /api/zinnia/chat`, Claude Haiku): responde cualquier pregunta apropiada para 13+. Lo de Marte, sus misiones y el juego sale **solo** de la Guía de supervivencia y las fichas, citando la fuente; el estado del jugador, del CONTEXTO; otros temas, de su conocimiento general. Nunca dice qué opción elegir. Límite: 20 mensajes cada 10 min; no se guarda el texto de los mensajes.
+- **Sin IA** (sin key, sin saldo, sin conexión o con el límite): responde con la Guía, el glosario, las fichas y chistes; si no tiene el dato lo dice y sugiere una parte de la Guía. Nunca muestra un error técnico.
+- **Indicador:** punto verde "IA en vivo" o gris "Modo sin conexión" en la ventana.
+- **Batería en 0:** modo semilla; no responde preguntas libres, solo lleva a la Guía (regla del juego).
+- **Key:** tiene que ser una API key de la Claude Console (empieza con `sk-ant-api`) **con saldo**; va solo en Render (`ANTHROPIC_API_KEY`). Prueba del agente: `cd Backend && npm run dev` y en otra terminal `npm run probar:zinnia`.
 
 ## Despliegue
 

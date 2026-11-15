@@ -5,7 +5,7 @@ import { buscar, IDS } from './conocimiento.js';
 export const HERRAMIENTAS = [
   {
     name: 'buscar_dato',
-    description: 'Busca en los datos verificados del juego (fichas con fuente NASA/USGS, glosario, capas del mapa, lugares, guía de supervivencia y chistes de Marte). Devuelve hasta 3 resultados con id, texto y fuente. Úsala antes de dar cualquier cifra o hecho científico, y para buscar un chiste.',
+    description: 'Busca en los datos verificados del juego (fichas con fuente NASA/USGS, glosario, capas del mapa, lugares, guía de supervivencia y chistes de Marte). Devuelve hasta 3 resultados con id, texto y fuente. Úsala antes de dar cualquier cifra o hecho sobre Marte, sus misiones o el juego, y para buscar un chiste. Para otros temas (ciencia general, la Tierra, matemáticas) no hace falta.',
     strict: true,
     input_schema: {
       type: 'object',

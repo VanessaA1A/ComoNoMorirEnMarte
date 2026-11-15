@@ -82,11 +82,17 @@ const COMO_VOY = chat.respaldo('¿Cómo voy?', partida({ oxigeno: 15 })).texto;
 ok(/oxígeno/i.test(COMO_VOY) && /rojo/.test(COMO_VOY), `"¿Cómo voy?" sin IA lee las barras: "${COMO_VOY.slice(0, 70)}…"`);
 // Fuera de tema, sin dato y tareas: siempre algo útil y amable, nunca un error
 const mundial = chat.respaldo('¿quién ganó el mundial?', partida());
-ok(mundial.fueraDeTema && /Marte/.test(mundial.texto) && mundial.fuente && !/error|no está en mis datos/i.test(mundial.texto), `fuera de tema → amable y de vuelta a Marte con un dato: "${mundial.texto.slice(0, 60)}…"`);
+ok(mundial.fueraDeTema && /necesita conexión|necesito conexión/.test(mundial.texto) && /Guía de supervivencia/.test(mundial.texto) && /«Parte \d/.test(mundial.texto) && !/error|no está en mis datos/i.test(mundial.texto), `otro tema sin IA → necesita conexión y sugiere partes de la Guía: "${mundial.texto.slice(0, 70)}…"`);
+for (const q of ['¿Cómo funciona la fotosíntesis?', '¿Cuánto es 15 × 12?', '¿Por qué el cielo de la Tierra es azul?', '¿Qué es un agujero negro?']) {
+  const r = chat.respaldo(q, partida());
+  ok(r.texto.length > 40 && /conexión/.test(r.texto) && /«Parte \d/.test(r.texto), `"${q}" sin IA → respuesta amable con partes de la Guía (nunca vacía)`);
+}
+const quien = chat.respaldo('¿Quién eres?', partida());
+ok(/Zinn-IA/.test(quien.texto) && /flor/.test(quien.texto), `"¿Quién eres?" sin IA → se presenta: "${quien.texto.slice(0, 50)}…"`);
 const granos = chat.respaldo('¿cuántos granos de arena hay en Gale?', partida());
 ok(granos.sinDato && /no está en mis datos verificados/.test(granos.texto) && /Guía de supervivencia/.test(granos.texto) && /«Parte \d/.test(granos.texto) && !/\d{2,}/.test(granos.texto),`sin dato → lo dice y sugiere una parte de la Guía: "${granos.texto.slice(0, 70)}…"`);
 const tarea = chat.respaldo('hazme la tarea de quimica organica avanzada', partida());
-ok(tarea.fueraDeTema && /tareas te las dejo/.test(tarea.texto), 'tarea escolar → no la hace y vuelve a Marte');
+ok(tarea.fueraDeTema && /paso a paso/.test(tarea.texto) && /conexión/.test(tarea.texto), 'tarea escolar sin IA → con conexión la explica paso a paso; sin ella, lo dice con amabilidad');
 // Datos de la Guía nueva, con su fuente
 for (const [q, re] of [['¿Qué le pasó a Spirit?', /Troy/], ['¿Cuál es el punto más alto de Marte?', /Olympus Mons/], ['¿Por qué Marte es rojo?', /ferrihidrita|óxidos de hierro/], ['¿Qué pasó el 20 de mayo de 2024?', /8\.100 microgray/], ['¿Cuántos rovers hay en Marte?', null], ['How long is a day on Mars?', /24 h 39 min/]]) {
   const r = chat.respaldo(q, partida());

@@ -22,12 +22,13 @@ export const SEMILLA = 'Batería en cero: no puedo pensar bien. Busca en la Guí
 export const enSemilla = (p) => Boolean(p?.hud && !p.final && p.bateria <= 0);
 
 // ---------- historial en memoria (sobrevive a cerrar y abrir el panel; no a recargar la página) ----------
-let estado = { mensajes: [], pensando: false };
+// modo: de dónde vino la última respuesta ('ia' = IA en vivo, 'respaldo' = sin conexión, null = todavía nada)
+let estado = { mensajes: [], pensando: false, modo: null };
 const oyentes = new Set();
 const cambiar = (c) => { estado = { ...estado, ...c }; oyentes.forEach((f) => f()); };
 export const suscribir = (f) => { oyentes.add(f); return () => oyentes.delete(f); };
 export const leerChat = () => estado;
-export const reiniciarChat = () => { estado = { mensajes: [], pensando: false }; ultimosChistes = []; fijas = 0; oyentes.forEach((f) => f()); };
+export const reiniciarChat = () => { estado = { mensajes: [], pensando: false, modo: null }; ultimosChistes = []; fijas = 0; oyentes.forEach((f) => f()); };
 let siguienteId = 1;
 
 // ---------- contexto para el agente (sale de la partida; sin datos personales más allá del nombre elegido) ----------
@@ -71,14 +72,12 @@ const DF = new Map();
 ENTRADAS.forEach((e) => e.bolsa.forEach((w) => DF.set(w, (DF.get(w) ?? 0) + 1)));
 const peso = (w) => Math.log((ENTRADAS.length + 1) / (1 + (DF.get(w) ?? 0)));
 const enBolsa = (e, w) => e.bolsa.some((b) => parecidas(b, w));
-// Palabra rara de los datos (aparece en 1 o 2 entradas): si la pregunta la trae, es de tema
-const rara = (w) => w.length >= 5 && [...DF.entries()].some(([b, n]) => n <= 2 && parecidas(b, w));
-
-// Vocabulario de Marte, el espacio y el juego: si la pregunta lo tiene, es "de tema" aunque falte el dato
-const TEMA = new RegExp(String.raw`\b(marte|mars|marcian\w*|planeta\w*|planet|espacio|espacial|space|nasa|esa|rover\w*|curiosity|perseverance|opportunity|spirit|zhurong|viking|gale|jezero`
-  + String.raw`|crater\w*|monte|mount|sharp|olympus|valles|roca\w*|arena|polvo|piedra\w*|mineral\w*|suelo|hielo|agua|atmosfera|aire|oxigeno|radiacion|bateria|traje`
-  + String.raw`|barras?|reloj|mapas?|capas?|mision\w*|astronaut\w*|nave|cohete|orbita\w*|satelite\w*|sol|solar|tierra|luna|lunas|fobos|deimos|estrellas?|galaxia|universo`
-  + String.raw`|tormentas?|viento|temperatura|frio|gravedad|vida|biofirma\w*|zinn-ia|zinnia|juego|final|finales|capitulo|muestras?|guia|fichas?|base|modulo|despegue|aterriz\w*)\b`);
+// Vocabulario SOLO de Marte, sus misiones y el juego: si la pregunta lo tiene y no hay dato, se dice
+// "eso no está en mis datos verificados". Cualquier otro tema (la Tierra, el espacio en general, ciencia,
+// matemáticas…) se responde con IA; sin IA, Zinn-IA dice con amabilidad que esa pregunta necesita conexión.
+const TEMA = new RegExp(String.raw`\b(marte|mars|marcian\w*|nasa|rover\w*|curiosity|perseverance|opportunity|spirit|zhurong|viking|phoenix|gale|jezero`
+  + String.raw`|mount sharp|aeolis|olympus|valles marineris|hellas|boxwork|cresta\w*|hondonada\w*|perclorat\w*|fobos|deimos|areoide|hirise|mola|themis|crism|rad|rems`
+  + String.raw`|oxigeno|radiacion|bateria|traje|barras?|reloj|mapas?|capas?|zinn-ia|zinnia|capitulo|muestras?|guia|fichas?|base aurora|aurora-1|modulo de regreso|deposito)\b`);
 const TAREA = /\b(tarea|tareas|deberes|homework|examen|ecuacion|resuelve|resolver)\b/;
 // Preguntas de cantidad ("¿cuántos…?"): el dato tiene que tener TODAS las palabras, si no se inventaría una cifra
 const CANTIDAD = /\b(cuant[oa]s?|how (many|much))\b/;
@@ -104,12 +103,15 @@ export function buscarRespaldo(pregunta) {
 }
 
 export const SIN_DATO = 'Eso no está en mis datos verificados';
+export const NECESITA_CONEXION = 'necesita conexión';
+// Otros temas sin IA: con amabilidad, dice que esa pregunta necesita conexión (con IA sí la responde) y sugiere la Guía
 const FUERA_DE_TEMA = [
-  '¡Uy, de eso no sé nada! Mi memoria es de puro Marte, rocas y rovers.',
-  'Jiji, eso se me escapa de los pétalos: solo tengo datos de Marte y de tu misión.',
-  'Ay, ahí me pierdo: soy una flor muy marciana y solo sé de Marte.',
+  '¡Qué buena pregunta! Para pensarla bien necesito conexión con la Tierra, y ahora no la tengo.',
+  'Jiji, esa pregunta necesita conexión: sin señal solo me queda mi memoria de Marte.',
+  'Ay, me encantaría responderte, pero esa pregunta necesita conexión con la Tierra.',
 ];
-const datoAlAzar = (azar) => DATOS[Math.floor(azar() * DATOS.length)] ?? DATOS[0];
+const PRESENTACION = 'Soy Zinn-IA, una inteligencia artificial con forma de flor. Te acompaño en tu caminata por Marte: leo tus barras, te explico el mapa y te cuento datos verificados de la NASA. Y chistes malos, muy malos.';
+const PARTES_GENERALES = ['Parte 5 · Para mentes científicas: qué buscar', 'Parte 4 · Marte en datos'];
 
 // Remates bobos cortos (1 de cada 3 respuestas fijas). Blanco: Marte, los rovers o Zinn-IA. Sin género hacia el jugador.
 export const REMATES = [
@@ -136,21 +138,22 @@ export function respaldo(pregunta, p, azar = Math.random) {
   const t = normalizar(pregunta);
   let r;
   if (/como voy|me alcanza|cuanto (tiempo|me queda)|como estoy|how am i/.test(t)) r = { texto: comoVoy(p).map((x) => formatear(x, p ?? null)).join(' ') };
+  else if (/quien eres|que eres|como te llamas|who are you/.test(t)) r = { texto: PRESENTACION };
   else {
     const { entrada, parcial, palabras: q } = buscarRespaldo(pregunta);
     const tarea = TAREA.test(t);
     if (entrada && !tarea) r = { texto: formatear(entrada.texto, p ?? null), fuente: entrada.fuente, ficha: entrada.ficha ?? null };
-    else if (!tarea && (TEMA.test(t) || q.some(rara))) {
+    else if (!tarea && TEMA.test(t)) {
       // De Marte, pero sin dato verificado: lo dice y sugiere dónde buscar en la Guía
       const donde = parcial?.parte ?? 'Parte 4 · Marte en datos';
       r = { texto: `${SIN_DATO}, así que no te voy a inventar una cifra. Busca en la Guía de supervivencia (ícono del libro), en «${donde}», o pregúntame por las barras, las capas del mapa o los peligros de Marte.`, sinDato: true };
     } else {
-      // Fuera de tema: con cariño, en su personalidad, y de vuelta a Marte con un dato verificado
-      const d = datoAlAzar(azar);
-      r = {
-        texto: `${FUERA_DE_TEMA[Math.floor(azar() * FUERA_DE_TEMA.length)]}${tarea ? ' Las tareas te las dejo a ti, que te van a salir mejor.' : ''} Mejor te cuento algo de Marte: ${d.texto}`,
-        fuente: d.fuente, ficha: d.id, fueraDeTema: true,
-      };
+      // Otro tema (o una tarea) sin IA: con cariño, dice que necesita conexión y sugiere partes de la Guía relacionadas
+      const partes = [...new Set([parcial?.parte, ...PARTES_GENERALES].filter(Boolean))].slice(0, 2);
+      const inicio = tarea
+        ? 'Me encantaría explicarte esa tarea paso a paso, pero para eso necesito conexión con la Tierra.'
+        : FUERA_DE_TEMA[Math.floor(azar() * FUERA_DE_TEMA.length)];
+      r = { texto: `${inicio} Mientras tanto, en la Guía de supervivencia (ícono del libro) tienes «${partes.join('» y «')}».`, fueraDeTema: true };
     }
   }
   fijas += 1;
@@ -178,6 +181,6 @@ export async function enviar(texto, { partida = null, fichas = [] } = {}) {
     const nota = r.motivo === 'limite' ? (r.error || 'Mis pétalos necesitan recargar, ¡pregúntame en un ratito!') : MOTIVO[r.motivo] ?? SIN_CONEXION;
     respuesta = { id: siguienteId++, rol: 'zinnia', texto: r.motivo === 'limite' ? `${nota} Mientras tanto: ${f.texto}` : `${f.texto} ${nota}`, fuente: f.fuente ?? null, chiste: f.chiste ?? null, acciones: [], modo: 'respaldo' };
   }
-  cambiar({ mensajes: [...estado.mensajes, respuesta], pensando: false });
+  cambiar({ mensajes: [...estado.mensajes, respuesta], pensando: false, modo: respuesta.modo === 'semilla' ? estado.modo : respuesta.modo });
   return respuesta;
 }

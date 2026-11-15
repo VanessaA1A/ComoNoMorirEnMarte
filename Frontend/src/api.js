@@ -217,6 +217,18 @@ if (apiActiva) {
 // ---------- Zinn-IA (chat con IA) ----------
 // No pasa por la cola: si no hay conexión, la API dice 503/429 o algo falla, el chat usa el RESPALDO local.
 // Devuelve { modo: 'ia', texto, acciones } o { modo: 'respaldo', motivo: 'sin_api' | 'sin_conexion' | 'sin_ia' | 'limite' | 'error', error? }.
+
+/** ¿La API tiene la IA configurada? (GET /salud → zinnia.ia). Solo para el indicador del panel; ante cualquier duda, false. */
+export async function iaDisponible() {
+  if (!apiActiva || !enLinea || globalThis.navigator?.onLine === false) return false;
+  try {
+    const r = await fetch(`${API}/salud`, { signal: AbortSignal.timeout(8000) });
+    return Boolean((await r.json())?.zinnia?.ia);
+  } catch {
+    return false;
+  }
+}
+
 export async function chatZinnia({ mensajes, contexto }) {
   if (!apiActiva) return { modo: 'respaldo', motivo: 'sin_api' };
   if (!enLinea || globalThis.navigator?.onLine === false) return { modo: 'respaldo', motivo: 'sin_conexion' };
