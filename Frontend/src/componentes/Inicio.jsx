@@ -75,12 +75,8 @@ export default function Inicio() {
           <p className="inicio-col-titulo" aria-hidden="true">Explorar</p>
           <BotonGrande className="secundario-borde" titulo="Mapa de Marte" detalle="Aterrizajes reales y destinos" onClick={() => j.abrir('mapaMarte')} />
           <BotonGrande className="secundario-borde" titulo="Explorar Marte en 3D" detalle="Globo y terreno real de Gale" onClick={() => j.abrir('marte3d', { vista: 'globo' })} />
-          <BotonGrande className="secundario-borde" titulo="Guía" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
-          {/* Página independiente: se lee e imprime en cualquier pantalla, también en celular */}
-          <a className="boton boton-grande secundario-borde" href="/guia.html" target="_blank" rel="noopener">
-            <span className="boton-titulo">Guía de supervivencia</span>
-            <span className="boton-detalle">Para leer o imprimir · pestaña nueva</span>
-          </a>
+          {/* Una sola Guía de supervivencia. Su versión para leer o imprimir (guia.html) se abre desde dentro de la Guía. */}
+          <BotonGrande className="secundario-borde" titulo="Guía de supervivencia" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
           <BotonGrande className="secundario-borde" titulo="Créditos" detalle="Equipo y fuentes NASA/JPL" onClick={() => j.setPantalla('creditos')} />
         </nav>
       </div>

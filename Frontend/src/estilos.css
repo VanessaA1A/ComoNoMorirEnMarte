@@ -680,3 +680,6 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
   background: var(--aurora-1); box-shadow: 0 0 .6em var(--aurora-1); animation: pulso 2s ease-in-out infinite;
 }
 .led-estado.apagado { background: var(--zinnia-petalo); box-shadow: 0 0 .6em var(--zinnia-petalo); }
+
+/* Guía: enlace a la versión para leer o imprimir (la misma guía, public/guia.html) */
+.guia-imprimir { display: inline-block; margin: .35em 0 .1em 1rem; font-size: .85em; color: var(--aurora-1); }
