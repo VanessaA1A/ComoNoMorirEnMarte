@@ -46,6 +46,7 @@ export default function Inicio() {
 
       <div className="inicio-cuerpo">
         <nav className="inicio-col partida" aria-label="Partida">
+          <p className="inicio-col-titulo" aria-hidden="true">Misión</p>
           <BotonGrande className="principal" titulo="Empezar" detalle="Nueva misión desde el despegue" onClick={alEmpezar} autoFocus />
           <BotonGrande
             titulo="Continuar"
@@ -71,6 +72,7 @@ export default function Inicio() {
         </figure>
 
         <nav className="inicio-col explorar" aria-label="Explorar">
+          <p className="inicio-col-titulo" aria-hidden="true">Explorar</p>
           <BotonGrande className="secundario-borde" titulo="Mapa de Marte" detalle="Aterrizajes reales y destinos" onClick={() => j.abrir('mapaMarte')} />
           <BotonGrande className="secundario-borde" titulo="Explorar Marte en 3D" detalle="Globo y terreno real de Gale" onClick={() => j.abrir('marte3d', { vista: 'globo' })} />
           <BotonGrande className="secundario-borde" titulo="Guía" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
@@ -85,7 +87,8 @@ export default function Inicio() {
 
       <footer className="inicio-pie">
         <div className="estado-sistema" role="status">
-          <ZinniaAvatar className="zinnia-estatica" expresion={j.conectado ? 'normal' : 'seria'} alt="" />
+          {/* Luz de estado (verde = en línea, naranja = modo local). Zinn-IA ya está en la consola y en el botón flotante. */}
+          <span className={`led-estado${j.conectado ? '' : ' apagado'}`} aria-hidden="true" />
           <span>{j.conectado ? 'Sistema en línea' : 'Sin señal con la Tierra · modo local'}</span>
         </div>
         <div className="pie-textos">

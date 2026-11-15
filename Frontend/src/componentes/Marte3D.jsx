@@ -247,6 +247,7 @@ export default function Marte3D({ vistaInicial = 'globo', poi = null }) {
           {ficha.lugar && <p>{ficha.lugar}</p>}
           <p>{C.fmtLat(ficha.lat)}, {C.fmtLon(ficha.lon)}</p>
           <p>{ficha.terreno ?? ficha.dato}</p>
+          {ficha.por_que_el_nombre && <p><em>¿Por qué se llama {ficha.nombre_real}?</em> {ficha.por_que_el_nombre}</p>}
           <p className="fuente">Fuente: {(ficha.fuentes ?? [ficha.fuente]).filter(Boolean).map((u) => <a key={u} href={u} target="_blank" rel="noreferrer">{u.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]} </a>)}</p>
         </div>
       )}

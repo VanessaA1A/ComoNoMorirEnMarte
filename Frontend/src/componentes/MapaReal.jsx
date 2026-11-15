@@ -20,7 +20,6 @@ export const CAPAS_MAPA = [
   { id: 'optica', corto: 'Óptica', nombre: 'Óptica: ortofoto HiRISE (25 cm en la ruta, 1 m en la zona)', fuente: 'optica' },
   { id: 'relieve', corto: 'Relieve', nombre: 'Relieve: sombreado y curvas cada 5 m (DEM HiRISE)', fuente: 'relieve' },
   { id: 'pendiente', corto: 'Pendiente', nombre: 'Pendiente: menos de 15°, 15–23° y más de 23° (umbrales de Curiosity)', fuente: 'relieve' },
-  { id: 'termico', corto: 'Terreno', nombre: 'Terreno: THEMIS infrarrojo de noche', fuente: 'termico' },
   { id: 'contexto', corto: 'CTX', nombre: 'Contexto regional: CTX (15 × 15 km)', fuente: 'contexto' },
   { id: 'minerales', corto: 'Minerales', nombre: 'Minerales: CRISM', fuente: 'minerales' },
   { id: 'geologia', corto: 'Geología', nombre: 'Geología: mapa geológico de Marte (USGS SIM 3292)', fuente: 'geologia' },
@@ -61,6 +60,7 @@ function fichaHtml(p) {
   return `<div class="ficha-punto"><strong>${esc(p.id)} · ${esc(p.nombre)}</strong>
     <p>${esc(p.nota ?? '')}</p>
     <p><em>En el terreno real:</em> ${esc(p.terreno)}</p>
+    ${p.por_que_el_nombre ? `<p><em>¿Por qué se llama ${esc(p.nombre_real)}?</em> ${esc(p.por_que_el_nombre)}</p>` : ''}
     <p>${esc(C.fmtLat(p.lat))}, ${esc(C.fmtLon(p.lon))} · ${esc(p.elevacion_m)} m · pendiente ${esc(p.pendiente_grados)}°</p>
     ${p.ficcion ? `<p><em>${esc(p.ficcion)}</em></p>` : ''}
     <p class="fuente">Fuentes: ${fuentes}</p></div>`;
@@ -91,8 +91,8 @@ function construirCapa(L, id) {
       img('pendiente.png', { opacity: 0.85 });
       return { grupo, leyenda: '<span class="ley" style="background:#01EFAC"></span> menos de 15° · <span class="ley" style="background:#FAC82E"></span> 15–23° · <span class="ley" style="background:#DD2811"></span> más de 23°. Curiosity se desvió 150 m ante 23° para buscar menos de 15° (NASA/JPL, 2023).' };
     case 'termico':
-      img('terreno_themis_region.png', { opacity: 0.8, className: 'pixelado' });
-      return { grupo, leyenda: 'THEMIS IR de noche (~81 m por píxel): claro = se mantiene tibio (roca); oscuro = se enfría rápido (polvo o arena fina).', encuadre: C.limitesArchivo('terreno_themis_region.png') };
+      // THEMIS queda OCULTA al jugador: su alineación con HiRISE no se pudo verificar (ver capas_reales.json)
+      return { grupo, aviso: C.CAPA_REAL.termico?.texto ?? 'Capa Terreno (THEMIS) oculta: su alineación con la foto de HiRISE no está verificada' };
     case 'contexto':
       img('contexto_ctx.jpg', { opacity: 1 });
       return { grupo, leyenda: 'CTX (~10 m por píxel): 15 × 15 km alrededor de la zona. El recuadro es la zona del juego.', encuadre: C.limitesArchivo('contexto_ctx.jpg') };
@@ -248,7 +248,7 @@ export function Perfil({ tramo, onCerrar }) {
 const ZOOM_MINI = Math.log2(260 / 150); // ~150 m de lado en 260 px
 
 function recorrido(poi) {
-  const k = C.ORDEN.indexOf(poi === 'P5' ? 'P4' : poi === 'DEP' ? 'P3' : poi);
+  const k = C.ORDEN.indexOf(poi === 'P5' || poi === 'REF' ? 'D2' : poi === 'DEP' ? 'P3' : poi);
   const hechos = k > 0 ? C.ORDEN.slice(1, k + 1).map((id) => C.TRAMO_HASTA[id]) : [];
   return { hechos, actual: hechos.at(-1) ?? null };
 }

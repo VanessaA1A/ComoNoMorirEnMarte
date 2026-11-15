@@ -44,17 +44,22 @@ export function hayMosaico(nivel, x, y) {
 export const NIVEL_MAX = Math.max(...TILES.niveles.map((n) => n.nivel));
 
 // ---------------------------------------------------------------- ruta del juego
-const NOMBRE_EXTRA = { D2: { nombre: 'Bajar la cresta', tipo: 'parada', nota: 'Decisión: bajar la cresta de frente o rodearla.' } };
+const NOMBRE_EXTRA = {
+  D2: { nombre: 'Alerta solar', tipo: 'parada', nota: 'Capítulo 9, ya de regreso: regresar ya, refugiarse junto a una cresta o subir al mirador alto.' },
+  REF: { nombre: 'Refugio junto a la cresta', tipo: 'parada', nota: 'Capítulo 9: la pared de roca tapa una parte del cielo (regla del juego).' },
+};
 /** Paradas del juego: lo narrativo de pois.json + las coordenadas reales de ruta_real.json. */
 export const PARADAS = RUTA.puntos.map((r) => ({ ...(POIS.find((p) => p.id === r.id) ?? NOMBRE_EXTRA[r.id] ?? { nombre: r.id }), ...r, pendiente: false }));
 export const parada = (id) => PARADAS.find((p) => p.id === id) ?? null;
 export const TRAMOS = Object.entries(RUTA.tramos).map(([id, t]) => ({ id, ...t, puntos: t.linea.map(([lon, lat]) => aMapa(lat, lon)) }));
 /** Recorrido principal en orden (ida y regreso). Las alternativas se dibujan punteadas. */
-export const PRINCIPAL = ['H-P1', 'P1-P2', 'P2-D1', 'D1-P3 (camino firme)', 'P3-D2', 'D2-P4 (rodear)', 'P4-H (regreso)'];
-export const tipoTramo = (id) => (PRINCIPAL.includes(id) ? 'principal' : /P5/.test(id) ? 'peligro' : 'alternativa');
+// Orden de la historia: cap. 3 H · 4 P1 · 5 P2 · 6 D1 · 7 P3 (+ DEP) · 8 P3 → P4 · 9 D2 (+ refugio o P5) · 10 H
+export const PRINCIPAL = ['H-P1', 'P1-P2', 'P2-D1', 'D1-P3 (camino firme)', 'P3-P4 (rodear la cresta)', 'P4-D2', 'D2-H (regresar ya)'];
+const ARRIESGADOS = ['D1-P3 (atajo por la arena)', 'P3-P4 (bajar de frente)', 'D2-P5 (subir al mirador alto)'];
+export const tipoTramo = (id) => (PRINCIPAL.includes(id) ? 'principal' : ARRIESGADOS.includes(id) ? 'peligro' : 'alternativa');
 /** Orden de las paradas en la ida: sirve para saber qué parte de la ruta ya se recorrió. */
-export const ORDEN = ['H', 'P1', 'P2', 'D1', 'P3', 'D2', 'P4'];
-export const TRAMO_HASTA = { P1: 'H-P1', P2: 'P1-P2', D1: 'P2-D1', P3: 'D1-P3 (camino firme)', D2: 'P3-D2', P4: 'D2-P4 (rodear)' };
+export const ORDEN = ['H', 'P1', 'P2', 'D1', 'P3', 'P4', 'D2'];
+export const TRAMO_HASTA = { P1: 'H-P1', P2: 'P1-P2', D1: 'P2-D1', P3: 'D1-P3 (camino firme)', P4: 'P3-P4 (rodear la cresta)', D2: 'P4-D2' };
 export const RUTA_REAL = RUTA;
 
 // ---------------------------------------------------------------- capas y fuentes

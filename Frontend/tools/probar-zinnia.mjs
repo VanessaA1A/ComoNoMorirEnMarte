@@ -96,16 +96,16 @@ ok(formatear('viv{o|a|e}', { pronombre: 'el', escena: 'c01_01' }) === 'vivo/a/e'
 ok(formatear('viv{o|a|e}', null) === 'vivo/a/e', 'sin partida también (vivo/a/e)');
 ok(['vivo', 'viva', 'vive'].every((v, i) => formatear('viv{o|a|e}', { pronombre: ['el', 'ella', 'elle'][i], escena: 'c03_01' }) === v), 'después de elegir: vivo / viva / vive');
 
-// Canción del tutorial (cap. 1): 8 versos con botón de UNA respuesta, luego "esperarGuia" y el cierre
+// Canción del tutorial (cap. 1, versión corta de Moises): 5 versos con botón de UNA respuesta, luego "esperarGuia" y el cierre
 const cancion = ESCENAS.get('c01_04');
 const versos = (cancion?.lineas || []).filter((l) => l.respuesta);
-ok(versos.length === 8 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 8 versos con respuesta, sin opciones ni efecto (no multiplica rutas)');
+ok(versos.length === 5 && cancion.accion === 'mostrarHUD' && !cancion.opciones && !cancion.efecto, 'canción: 5 versos con respuesta, sin opciones ni efecto (no multiplica rutas)');
 ok(ESCENAS.get(cancion?.ir)?.accion === 'esperarGuia' && !ESCENAS.get(cancion.ir).opciones && !ESCENAS.get(cancion.ir).efecto, 'después de la canción viene "esperarGuia" (paso directo, sin efecto)');
 const cierre = ESCENAS.get(ESCENAS.get(cancion?.ir)?.ir);
-ok(cierre?.lineas?.at(-1)?.texto === 'Ahora sí: ¡motores encendidos!' && cierre.ir === 'c01_05' && !cierre.efecto, 'cierre: "Ahora sí: ¡motores encendidos!" y sigue a c01_05');
-const listo = (pr) => formatear(versos[0]?.respuesta, { pronombre: pr, escena: 'c01_04', nombre: 'Alex' });
-ok(listo('el') === '¡Listo!' && listo('ella') === '¡Lista!' && listo('elle') === '¡Liste!', `canción con los 3 pronombres: ${['el', 'ella', 'elle'].map(listo).join(' / ')}`);
-ok(formatear(versos[0]?.texto, { pronombre: 'elle', escena: 'c01_04', nombre: 'Alex' }).startsWith('¡Alto, Alex!') && formatear(versos[0]?.texto, { pronombre: 'elle', escena: 'c01_04', nombre: 'Alex' }).endsWith('¿Liste?'), 'canción: "¡Alto, {nombre}!… ¿List{o|a|e}?" se formatea bien');
+ok((cierre?.lineas?.at(-1)?.texto ?? '').endsWith('Ahora sí: ¡motores encendidos!') && cierre.ir === 'c01_05' && !cierre.efecto, 'cierre: termina en "Ahora sí: ¡motores encendidos!" y sigue a c01_05');
+const enTres = (t) => ['el', 'ella', 'elle'].map((pr) => formatear(t, { pronombre: pr, escena: 'c01_04', nombre: 'Alex' }));
+ok(versos.every((v) => [...enTres(v.texto), ...enTres(v.respuesta)].every((t) => !/[{}|]/.test(t))), 'canción: con los 3 pronombres no queda ningún marcador sin resolver');
+ok(enTres(versos[0]?.texto).every((t) => t.startsWith('¡Alto, Alex!')), 'canción: "¡Alto, {nombre}!" se formatea bien');
 const emoji = /\p{Extended_Pictographic}/u;
 const nuevosCancion = [...cancion.lineas, ...ESCENAS.get(cancion.ir).lineas, ...cierre.lineas].flatMap((l) => [l.texto, l.respuesta]).filter(Boolean);
 ok(nuevosCancion.every((t) => !emoji.test(t)), 'canción y esperarGuia sin emojis');
