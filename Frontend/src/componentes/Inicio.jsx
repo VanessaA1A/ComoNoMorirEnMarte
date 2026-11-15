@@ -6,7 +6,7 @@ import { useJuego } from '../juego/JuegoContext.jsx';
 import { leerRanura } from '../juego/partidas.js';
 import Recurso from './Recurso.jsx';
 import { Astronauta } from './Personajes.jsx';
-import ZinniaAvatar from './ZinniaAvatar.jsx';
+import ZinniaAvatar, { ZinniaAnimada } from './ZinniaAvatar.jsx';
 import Icono from './Iconos.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
@@ -82,7 +82,7 @@ export default function Inicio() {
           <div className="consola-escena">
             <button type="button" className="zinnia-inicio" data-tutorial="icono-zinnia" onClick={() => j.abrirPanelZinnia(!j.panelZinnia)}
               aria-label="Hablar con Zinn-IA (tecla Z)" aria-expanded={j.panelZinnia} aria-controls="panel-zinnia" title="Zinn-IA (tecla Z)">
-              <img src="/img/zinnia_multiexpresion.webp" alt="" className="pixel zinnia-principal" draggable={false} />
+              <ZinniaAnimada animacion="multiexpresion" className="pixel zinnia-principal" />
             </button>
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
@@ -94,12 +94,9 @@ export default function Inicio() {
         <nav className="inicio-col explorar" aria-label="Explorar">
           <p className="inicio-col-titulo" aria-hidden="true">Explorar</p>
           <BotonGrande className="secundario-borde" titulo="Mapa de Marte" detalle="Aterrizajes reales y destinos" onClick={() => j.abrir('mapaMarte')} />
-          <BotonGrande className="secundario-borde" titulo="Guía" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
-          {/* Página independiente: se lee e imprime en cualquier pantalla, también en celular */}
-          <a className="boton boton-grande secundario-borde" href="/guia.html" target="_blank" rel="noopener">
-            <span className="boton-titulo">Guía de supervivencia</span>
-            <span className="boton-detalle">Para leer o imprimir · pestaña nueva</span>
-          </a>
+          <BotonGrande className="secundario-borde" titulo="Explorar Marte en 3D" detalle="Globo y terreno real de Gale" onClick={() => j.abrir('marte3d', { vista: 'globo' })} />
+          {/* Una sola Guía de supervivencia. Su versión para leer o imprimir (guia.html) se abre desde dentro de la Guía. */}
+          <BotonGrande className="secundario-borde" titulo="Guía de supervivencia" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
           <BotonGrande className="secundario-borde" titulo="Créditos" detalle="Equipo y fuentes NASA/JPL" onClick={() => j.setPantalla('creditos')} />
         </nav>
       </div>

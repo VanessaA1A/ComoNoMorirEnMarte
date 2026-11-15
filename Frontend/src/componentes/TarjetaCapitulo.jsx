@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { infoCapitulo } from '../engine/guion.js';
 import { useJuego } from '../juego/JuegoContext.jsx';
-import ZinniaAvatar from './ZinniaAvatar.jsx';
+import ZinniaAvatar, { ZinniaAnimada } from './ZinniaAvatar.jsx';
 
 /** Pantalla de carga del capítulo: número + título sobre el fondo "cargando" y un dato de pantalla de carga (uso C).
  *  No se cierra sola: el jugador decide.
@@ -31,7 +31,7 @@ export default function TarjetaCapitulo({ numero }) {
       <div className="carga-pie" aria-hidden="true">
         <div className="carga-zinnia">
           {primero
-            ? <img src="/img/zinnia_estatica.gif" alt="" className="zinnia-estatica" draggable={false} />
+            ? <ZinniaAnimada animacion="estatica" className="zinnia-estatica" />
             : <ZinniaAvatar className="zinnia-onda" alt="" />}
           <span>{primero ? 'Te damos la bienvenida a bordo' : 'Capítulo listo'}</span>
         </div>
