@@ -2,12 +2,25 @@ import { useEffect, useRef } from 'react';
 
 const ENFOCABLES = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-/** Atrapa el foco dentro del contenedor (Tab y Shift+Tab) y lo devuelve al cerrar. */
+/**
+ * ¿Al cerrar, el foco vuelve a donde estaba? Sí, salvo en plena escena: ahí Espacio y Enter avanzan el diálogo,
+ * y si el foco volviera al botón que abrió la ventana (minimapa, ☰, 📖, 🌍, ícono de Zinn-IA), Espacio la
+ * volvería a abrir y el jugador quedaría atrapado sin poder jugar. Si la ventana se abrió desde otra ventana
+ * (p. ej. desde el menú), el foco sí vuelve a esa ventana.
+ */
+export function debeVolverFoco(previo) {
+  if (!previo || previo === document.body) return false;
+  return !(document.querySelector('.escena') && !previo.closest?.('[role="dialog"]'));
+}
+
+/** Atrapa el foco dentro del contenedor (Tab y Shift+Tab) y lo devuelve al cerrar (ver debeVolverFoco). */
 export function useFocoAtrapado(activo = true) {
   const ref = useRef(null);
   useEffect(() => {
     if (!activo || !ref.current) return;
     const previo = document.activeElement;
+    const volver = debeVolverFoco(previo);
+    if (!volver) previo?.blur?.(); // el botón que abrió la ventana suelta el foco desde ya
     const nodo = ref.current;
     const lista = () => [...nodo.querySelectorAll(ENFOCABLES)].filter((el) => el.offsetParent !== null);
     (lista()[0] ?? nodo).focus();
@@ -20,10 +33,11 @@ export function useFocoAtrapado(activo = true) {
       else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
     };
     nodo.addEventListener('keydown', alTab);
-    return () => { nodo.removeEventListener('keydown', alTab); previo?.focus?.(); };
+    return () => { nodo.removeEventListener('keydown', alTab); if (volver && previo.isConnected) previo.focus?.(); };
   }, [activo]);
   return ref;
 }
+
 
 /** Ventana centrada sobre un velo oscuro. */
 export function Modal({ titulo, onCerrar, children, ancho = false, className = '' }) {
