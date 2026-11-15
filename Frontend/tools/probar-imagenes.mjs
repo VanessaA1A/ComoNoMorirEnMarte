@@ -72,6 +72,10 @@ ok(expresionEscena({ partida: { ...p, bateria: 0 }, escena: {}, linea: null }).a
 ok(expresionEscena({ partida: { ...p, oxigeno: 10 }, escena: { zinnia: 'feliz' }, linea: { quien: 'Narración' } }).expresion === 'asustada', 'escena: barra en rojo → asustada');
 ok(expresionEscena({ partida: { ...p, oxigeno: 40 }, escena: { zinnia: 'feliz' }, linea: { quien: 'Narración' } }).expresion === 'seria', 'escena: barra en amarillo → seria');
 ok(expresionEscena({ partida: p, escena: {}, linea: { quien: 'Zinn-IA', expresion: 'enojada' } }).expresion === 'enojada', 'escena: la línea de Zinn-IA manda');
+ok(expresionEscena({ partida: p, escena: {}, linea: { quien: 'Zinn-IA', expresion: 'enojada' }, reaccion: 'llorona' }).expresion === 'enojada', 'escena: la línea escrita en el guion gana a la reacción breve');
+const escenaJsx = fs.readFileSync(path.join(raiz, 'src/componentes/Escena.jsx'), 'utf8');
+ok(/onClick=\{\(\) => j\.elegir\(o\)\}/.test(escenaJsx) && !/enojada|RIESGO_ALTO|reaccionar/.test(escenaJsx),
+  'al ELEGIR una opción Zinn-IA no cambia de cara (no revela cuál era la peligrosa antes de la consecuencia)');
 ok(expresionPanel(p, { pensando: true }).expresion === 'ojos-cerrados', 'panel: pensando → ojos cerrados');
 ok(expresionRespaldo('Ojo: revisa la radiación', { p }) === 'seria' && expresionRespaldo('¿Qué hace un rover?', { chiste: true, p }) === 'normal', 'respaldo: advertencia → seria; chiste → normal');
 

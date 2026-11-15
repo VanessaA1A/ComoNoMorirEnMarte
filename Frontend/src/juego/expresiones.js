@@ -36,18 +36,17 @@ const masGrave = (a, b) => (GRAVEDAD[b] > GRAVEDAD[a] ? b : a);
 /**
  * Expresión en una escena del guion.
  * - Batería en 0: modo semilla (ojos cerrados, apagada).
- * - Reacción del momento (riesgo elegido, pérdida de recurso) si la hay.
- * - Si Zinn-IA habla: el campo "expresion" de su línea (o normal; con una barra en rojo, asustada).
+ * - Si Zinn-IA habla y su línea trae "expresion" (la consecuencia escrita en el guion): esa, siempre.
+ * - Reacción del momento (pérdida de un recurso al mostrarse la consecuencia) si la hay.
+ * - Si Zinn-IA habla sin "expresion": normal (con una barra en rojo, asustada).
  * - Si habla otro o es narración: la de la escena y la de los recursos, la más grave.
  */
 export function expresionEscena({ partida, escena, linea, reaccion }) {
   if (partida?.bateria <= 0) return { expresion: 'ojos-cerrados', apagada: true };
+  if (linea?.quien === 'Zinn-IA' && linea.expresion) return { expresion: expresionValida(linea.expresion), apagada: false };
   if (reaccion) return { expresion: expresionValida(reaccion), apagada: false };
   const recursos = escena?.esFinal ? POR_DEFECTO : porRecursos(partida);
-  if (linea?.quien === 'Zinn-IA') {
-    const propia = linea.expresion ? expresionValida(linea.expresion) : null;
-    return { expresion: propia ?? (recursos === 'asustada' ? 'asustada' : POR_DEFECTO), apagada: false };
-  }
+  if (linea?.quien === 'Zinn-IA') return { expresion: recursos === 'asustada' ? 'asustada' : POR_DEFECTO, apagada: false };
   return { expresion: masGrave(expresionValida(escena?.zinnia), recursos), apagada: false };
 }
 

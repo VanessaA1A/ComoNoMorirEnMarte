@@ -580,6 +580,7 @@ span.zinnia-avatar > img.capa:not(.base) { opacity: 0; transition: opacity .2s e
 span.zinnia-avatar > img.capa.visible { opacity: 1; }
 span.zinnia-avatar[data-base="normal"] > img.capa-ojos-cerrados { transition-duration: 40ms; } /* parpadeo */
 span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
+@media (prefers-reduced-motion: reduce) { span.zinnia-avatar > img.capa { transition: none; } } /* menos movimiento: cambio instantáneo */
 .zinnia-avatar-apagada { filter: grayscale(1) brightness(.45); }
 .icono-zinnia .zinnia-avatar-cara { border-radius: 50%; }
 .chat-pensando-cara { display: inline-block; width: 1.8em; height: 1.8em; vertical-align: middle; }
