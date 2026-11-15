@@ -1115,3 +1115,24 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
 .cajon.panel-zinnia .zp-categoria { border-top-color: rgba(82, 64, 148, .8); }
 .cajon.panel-zinnia a { color: var(--aurora-2); }
 .cajon.panel-zinnia .pregunta:focus-visible, .cajon.panel-zinnia .boton:focus-visible, .cajon.panel-zinnia input:focus-visible { outline: 3px solid var(--lima); }
+/* ===== Botón Salir (inicio) y despedida ===== */
+.inicio > .inicio-salir {
+  position: absolute !important; top: 1em; right: 1.2em; z-index: 3 !important;
+  display: inline-flex; align-items: center; gap: .45em; padding: .45em .9em; border-radius: 2em;
+  font-family: var(--fuente-ui); font-size: .82em; color: var(--texto);
+  background: rgba(36, 7, 63, .6); border: 1px solid rgba(1, 203, 174, .45);
+  backdrop-filter: blur(3px); transition: background .2s, border-color .2s;
+}
+.inicio > .inicio-salir .icono { font-size: 1.15em; color: var(--aurora-1); }
+.inicio > .inicio-salir:hover { background: rgba(221, 40, 17, .2); border-color: var(--zinnia-mejilla); }
+.inicio > .inicio-salir:hover .icono { color: var(--zinnia-petalo); }
+.salir-caja h2 { padding-right: 0; }
+.salir-botones { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; margin-top: 1em; }
+.despedida {
+  position: fixed; inset: 0; z-index: 1100; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .8em; padding: 1em; text-align: center; font-size: clamp(14px, 1.3vw, 19px);
+  background: radial-gradient(circle at 50% 35%, var(--aurora-5), var(--noche) 70%); color: var(--texto);
+}
+.despedida-zinnia { width: 7em; height: 10em; }
+.despedida h2 { font-family: var(--fuente-titulo); font-weight: normal; font-size: 2.6em; color: var(--lima); margin: 0; }
+.despedida p { margin: 0 0 .6em; opacity: .85; }

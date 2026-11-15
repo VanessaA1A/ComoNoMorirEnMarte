@@ -7,6 +7,7 @@ import { leerRanura } from '../juego/partidas.js';
 import Recurso from './Recurso.jsx';
 import { Astronauta } from './Personajes.jsx';
 import ZinniaAvatar from './ZinniaAvatar.jsx';
+import Icono from './Iconos.jsx';
 
 function BotonGrande({ titulo, detalle, className = '', ...resto }) {
   return (
@@ -20,6 +21,8 @@ function BotonGrande({ titulo, detalle, className = '', ...resto }) {
 export default function Inicio() {
   const j = useJuego();
   const [confirmar, setConfirmar] = useState(false);
+  const [salir, setSalir] = useState(false);       // confirmación de "Salir"
+  const [despedida, setDespedida] = useState(false); // pantalla de despedida si el navegador no deja cerrar la pestaña
   const auto = leerRanura(0);
 
   // Empezar: si ya hay autoguardado, pedir confirmación antes de reemplazarlo.
@@ -27,14 +30,26 @@ export default function Inicio() {
 
   // Cerrar la confirmación con la tecla Escape.
   useEffect(() => {
-    if (!confirmar) return;
-    const alTeclear = (e) => { if (e.key === 'Escape') setConfirmar(false); };
+    if (!confirmar && !salir) return;
+    const alTeclear = (e) => { if (e.key === 'Escape') { setConfirmar(false); setSalir(false); } };
     window.addEventListener('keydown', alTeclear);
     return () => window.removeEventListener('keydown', alTeclear);
-  }, [confirmar]);
+  }, [confirmar, salir]);
+
+  // Salir: los navegadores solo dejan cerrar pestañas abiertas por el propio juego.
+  // Se intenta cerrar; si no se puede, se muestra una despedida con la indicación de cerrar la pestaña.
+  const alSalir = () => {
+    setSalir(false);
+    window.close();
+    setTimeout(() => { if (!window.closed) setDespedida(true); }, 150);
+  };
 
   return (
     <div className="inicio">
+      <button className="inicio-salir" onClick={() => setSalir(true)} title="Salir del juego">
+        <Icono nombre="salir" /> Salir
+      </button>
+
       <header className="inicio-cabecera">
         <Recurso
           src="/img/NombrePaginaTitulo.png"
@@ -63,7 +78,7 @@ export default function Inicio() {
             <span className="consola-etiqueta">Tripulación · Aurora-1</span>
           </div>
           <div className="consola-escena">
-            <ZinniaAvatar className="zinnia-principal" alt="Zinn-IA, tu guía de supervivencia" />
+            <img src="/img/zinnia_multiexpresion.webp" alt="Zinn-IA, tu guía de supervivencia" className="pixel zinnia-principal" draggable={false} />
             <Astronauta pose="saludando" className="pixel astronauta-inicio" />
           </div>
           <div className="consola-teclas" aria-hidden="true">
@@ -74,9 +89,12 @@ export default function Inicio() {
         <nav className="inicio-col explorar" aria-label="Explorar">
           <p className="inicio-col-titulo" aria-hidden="true">Explorar</p>
           <BotonGrande className="secundario-borde" titulo="Mapa de Marte" detalle="Aterrizajes reales y destinos" onClick={() => j.abrir('mapaMarte')} />
-          <BotonGrande className="secundario-borde" titulo="Explorar Marte en 3D" detalle="Globo y terreno real de Gale" onClick={() => j.abrir('marte3d', { vista: 'globo' })} />
-          {/* Una sola Guía de supervivencia. Su versión para leer o imprimir (guia.html) se abre desde dentro de la Guía. */}
-          <BotonGrande className="secundario-borde" titulo="Guía de supervivencia" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
+          <BotonGrande className="secundario-borde" titulo="Guía" detalle="Reglas, capas, fichas y fuentes" onClick={() => j.abrir('guia')} />
+          {/* Página independiente: se lee e imprime en cualquier pantalla, también en celular */}
+          <a className="boton boton-grande secundario-borde" href="/guia.html" target="_blank" rel="noopener">
+            <span className="boton-titulo">Guía de supervivencia</span>
+            <span className="boton-detalle">Para leer o imprimir · pestaña nueva</span>
+          </a>
           <BotonGrande className="secundario-borde" titulo="Créditos" detalle="Equipo y fuentes NASA/JPL" onClick={() => j.setPantalla('creditos')} />
         </nav>
       </div>
@@ -123,6 +141,33 @@ export default function Inicio() {
               <button className="boton" onClick={() => setConfirmar(false)}>Cancelar</button>
             </div>
           </div>
+        </div>,
+        document.body
+      )}
+
+      {salir && createPortal(
+        <div className="confirmar-velo" onClick={() => setSalir(false)}
+          style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'grid', placeItems: 'center', padding: '1em',
+            background: 'rgba(10, 2, 20, .55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', fontSize: 'clamp(13px, 1.25vw, 18px)' }}>
+          <div className="modal confirmar-caja salir-caja" style={{ width: 'min(92%, 30em)' }} role="dialog" aria-modal="true"
+            aria-labelledby="titulo-salir" onClick={(e) => e.stopPropagation()}>
+            <h2 id="titulo-salir">¿Salir del juego?</h2>
+            <p className="texto-ui">Tu partida queda guardada. La próxima vez puedes seguir con <strong>Continuar</strong>.</p>
+            <div className="salir-botones">
+              <button className="boton" onClick={() => setSalir(false)} autoFocus>No, quedarme</button>
+              <button className="boton principal" onClick={alSalir}>Sí, salir</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {despedida && createPortal(
+        <div className="despedida" role="dialog" aria-modal="true" aria-labelledby="titulo-despedida">
+          <div className="despedida-zinnia"><ZinniaAvatar expresion="normal" alt="" /></div>
+          <h2 id="titulo-despedida">¡Hasta pronto!</h2>
+          <p className="texto-ui">Gracias por jugar. Ya puedes cerrar esta pestaña.</p>
+          <button className="boton" onClick={() => setDespedida(false)} autoFocus>Volver al juego</button>
         </div>,
         document.body
       )}
