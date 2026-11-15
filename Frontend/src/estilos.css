@@ -1222,3 +1222,22 @@ span.zinnia-avatar.sin-fundido > img.capa { transition: none; }
 .reloj { font-size: 1.3em; padding: .55em .9em; border-radius: .6em; }
 .reloj .icono { font-size: 1.15em; }
 .minimapa { top: 6.4em; }
+
+/* ===== Pantalla completa, minimapa fijo y diálogo único (arreglo de diseño) =====
+   1) El escenario ocupa toda la ventana (sin franjas); el fondo ya usa object-fit: cover.
+   2) La "tablet" del tutorial (cap. 3) se ve como el minimapa: mismo lugar y tamaño, solo el mapa con la capa
+      que explica Zinn-IA, el norte y la escala. Los botones de capas quedan en el mapa completo.
+   3) El cuadro de diálogo es el mismo en todas las escenas y el texto nunca se corta (crece hacia arriba). */
+.escenario { width: 100vw; height: 100dvh; }
+.minimapa.minimapa-real, .tablet-escena {
+  position: absolute; right: 1em; top: 6.4em; left: auto; bottom: auto; width: 260px; height: 260px; aspect-ratio: auto;
+  z-index: 5; overflow: hidden; border: 1px solid var(--aurora-2); border-radius: .7em; background: var(--noche); font-size: 1em;
+}
+.tablet-escena .mapa-real, .tablet-escena .mapa-real-lienzo { width: 100%; height: 100% !important; aspect-ratio: auto; border: 0; border-radius: 0; gap: 0; }
+.tablet-escena .mapa-iconos, .tablet-escena .mapa-coords, .tablet-escena .mapa-leyenda, .tablet-escena .mapa-aviso,
+.tablet-escena .leaflet-control-attribution, .tablet-escena .leaflet-control-zoom, .tablet-escena .perfil,
+.minimapa-real .mapa-coords, .minimapa-real .leaflet-control-attribution, .minimapa-real .leaflet-control-zoom { display: none !important; }
+.escena.con-tablet .zona-dialogo { right: 6%; }
+.escena.con-tablet .dialogo.dialogo-imagen { font-size: 1.5em; }
+.escena.lugar-marte.con-tablet .personaje-astro { left: 44%; bottom: 18%; width: 17%; height: 58%; }
+.escena .dialogo.dialogo-imagen { min-height: auto; height: auto; max-height: 70vh; overflow-y: auto; }
