@@ -16,7 +16,6 @@ import RESPUESTAS from '../data/zinnia_respuestas.json';
 
 const CATEGORIAS = ['Mecánicas', 'Mapa y capas', 'Ciencia de Marte', 'Peligros'];
 
-/** ¿Hay opciones en pantalla ahora mismo? (para mostrar la pista) */
 function opcionesActuales(p, linea) {
   if (!p || p.final) return [];
   const esc = escenaDe(p.escena);
@@ -24,12 +23,11 @@ function opcionesActuales(p, linea) {
   return linea >= n - 1 ? opcionesVisibles(esc, p) : [];
 }
 
-/** Preguntas sugeridas: las del capítulo actual primero. */
 export function sugeridas(p) {
   const cap = p?.capitulo;
   const delCap = cap ? RESPUESTAS.filter((r) => r.capitulos.includes(cap)) : [];
   const generales = ['guardar', 'ganar', 'capas'].map((id) => RESPUESTAS.find((r) => r.id === id));
-  return [...new Set([...delCap, ...generales])].slice(0, 3);
+  return [...new Set([...delCap, ...generales].filter(Boolean))].slice(0, 3);
 }
 
 function Pregunta({ r, p }) {
@@ -77,12 +75,10 @@ export function PanelZinnia() {
         cabecera={<div className="cara">{expresion === 'apagada' ? <ZinnIA expresion="apagada" /> : <ZinniaHablando />}</div>}>
         <div className="cajon-cuerpo">
           {emergencia && <p className="emergencia">Batería en 0: casi no me queda energía. Solo puedo decirte cómo vas y cómo recuperarla.</p>}
-
           <section aria-labelledby="como-voy">
             <h3 id="como-voy">¿Cómo voy?</h3>
             <div className="burbuja"><ul>{lectura.map((t) => <li key={t}>{t}</li>)}</ul></div>
           </section>
-
           {emergencia ? (
             <section><h3>¿Cómo recupero batería?</h3><Pregunta r={bateria} p={p} /></section>
           ) : (
@@ -102,7 +98,6 @@ export function PanelZinnia() {
                   ) : <div className="burbuja">Aquí no tengo una pista especial: mira cómo vas arriba y decide con eso.</div>}
                 </section>
               )}
-
               <section aria-labelledby="preguntas">
                 <h3 id="preguntas">Pregúntale a Zinn-IA</h3>
                 <p className="provisional">Sugeridas para este momento:</p>
@@ -114,7 +109,6 @@ export function PanelZinnia() {
                   </details>
                 ))}
               </section>
-
               <section aria-label="Accesos rápidos" className="accesos">
                 <button className="boton" onClick={() => j.abrir('guia')}>Guía de supervivencia</button>
                 <button className="boton" onClick={() => j.abrir('mapaRuta')}>Mapa de la ruta</button>
@@ -145,13 +139,13 @@ export function Tutorial() {
       setRect({ top: el.top - escenario.top - 6, left: el.left - escenario.left - 6, width: el.width + 12, height: el.height + 12, alto: escenario.height });
     };
     medir();
-    const t = setInterval(medir, 300); // los elementos pueden moverse o animarse
+    const t = setInterval(medir, 300);
     window.addEventListener('resize', medir);
     return () => { clearInterval(t); window.removeEventListener('resize', medir); };
   }, [paso]);
 
   if (!paso) return null;
-  const abajo = !rect || rect.top + rect.height / 2 < rect.alto / 2; // la caja va al lado contrario del foco
+  const abajo = !rect || rect.top + rect.height / 2 < rect.alto / 2;
   return (
     <div className="tutorial" ref={ref} role="dialog" aria-modal="true" aria-label="Tutorial de Zinn-IA" tabIndex={-1}>
       {rect ? <div className="foco" style={{ top: rect.top, left: rect.left, width: rect.width, height: rect.height }} /> : <div className="velo-tutorial" />}
@@ -175,9 +169,8 @@ export function SinConexion() {
   if (!apiActiva || j.conectado || j.sinConexionDescartado) return null;
   return (
     <div className="sin-conexion">
-      <Modal titulo="Sin señal con la Tierra">
-        <Recurso src="/img/zinnia_sin_conexion.gif" alt="Zinn-IA sin conexión"
-          respaldo={<ZinniaHablando />} />
+      <Modal titulo="Sin señal con la Tierra" onCerrar={j.descartarSinConexion}>
+        <Recurso src="/img/zinnia/sin_conexion.gif" alt="Zinn-IA sin conexión" respaldo={<ZinniaHablando />} />
         <p>{formatear('Perdimos la señal con la Tierra. Tranquil{o|a|e}: tu partida se guarda aquí y la mando cuando vuelva la conexión.', j.partida ?? {})}</p>
         <button className="boton principal" onClick={j.descartarSinConexion} autoFocus>Seguir sin conexión</button>
       </Modal>

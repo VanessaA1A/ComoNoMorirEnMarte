@@ -19,19 +19,15 @@ export default function Inicio() {
   const j = useJuego();
   const [confirmar, setConfirmar] = useState(false);
   const auto = leerRanura(0);
+  const srcTitulo = '/img/NombrePaginaTitulo.png';
+  const respaldoTitulo = <h1 className="titulo-texto">Cómo no morir en Marte</h1>;
 
-  // Empezar: si ya hay autoguardado, pedir confirmación antes de reemplazarlo.
   const alEmpezar = () => (auto ? setConfirmar(true) : j.empezar());
 
   return (
     <div className="inicio">
       <header className="inicio-cabecera">
-        <Recurso
-          src="/img/NombrePaginaTitulo.png"
-          alt="Cómo no morir en Marte"
-          className="logo-nombre"
-          respaldo={<h1 className="titulo-texto">Cómo no morir en Marte</h1>}
-        />
+        <Recurso src={srcTitulo} alt="Cómo no morir en Marte" className="logo-nombre" respaldo={respaldoTitulo} />
       </header>
 
       <div className="inicio-cuerpo">
